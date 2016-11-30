@@ -1,0 +1,97 @@
+<resources>
+    <string name="app_name">Broker-X</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="title_activity_splashscreen">SplashscreenActivity</string>
+    <string name="title_activity_broker_home">BrokerHomeActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_broker_details">BrokerDetailsActivity</string>
+    <string name="title_activity_buyer_seller_home">BuyerSellerHomeActivity</string>
+    <string name="title_activity_mycircle">MycircleActivity</string>
+    <string name="title_activity_post_enquiry_first">PostEnquiryFirstActivity</string>
+    <string name="title_activity_add_enquiry_step_one">AddEnquiryStepOneActivity</string>
+
+    <string-array name="qty_options">
+        <item>Kg</item>
+        <item>Litre</item>
+        <item>MT</item>
+        <item>KL</item>
+        <item>ML</item>
+        <item>Gram</item>
+        <item>Piece</item>
+    </string-array>
+
+    <string-array name="select_broker">
+        <item>Select Broker First</item>
+    </string-array>
+    <string-array name="packing">
+        <item>Tanker</item>
+        <item>HDPE Drum</item>
+        <item>HDPE Intact</item>
+        <item>HDPE Intact</item>
+        <item>HDPE Brand New Refil</item>
+        <item>MS Drum Refil</item>
+        <item>MS Intact</item>
+        <item>MS Brand New Refill</item>
+        <item>Naked</item>
+        <item>Carbuoy</item>
+        <item>Bags</item>
+        <item>Custom Made Entry</item>
+    </string-array>
+
+
+    <string name="title_activity_add_enquiry_step_two">add_enquiry_step_two</string>
+    <string name="title_activity_add_enquiry_step_three">add_enquiry_step_three</string>
+    <string name="title_activity_add_enquiry_step_four">AddEnquiryStepFourActivity</string>
+    <string name="title_activity_add_enquiry_step_five">AddEnquiryStepFiveActivity</string>
+    <string name="title_activity_enquiry_details">EnquiryDetailsActivity</string>
+    <string name="title_activity_enquiry__details_">Enquiry_Details_Activity</string>
+    <string name="title_activity_view_history">ViewHistoryActivity</string>
+    <string name="view_all_history">View all History</string>
+    <string name="title_activity_pending_entries">PendingEntriesActivity</string>
+    <string name="title_activity_my_history">MyHistoryActivity</string>
+    <string name="title_activity_my_history_details">MyHistoryDetailsActivity</string>
+    <string name="title_activity_analysis">AnalysisActivity</string>
+    <string name="title_activity_top_brokers">TopBrokersActivity</string>
+    <string name="end_date">End Date</string>
+    <string name="select_date_range">Select Date Range</string>
+    <string name="start_date">Start Date</string>
+    <string name="title_activity_analysis_broker">AnalysisBrokerActivity</string>
+    <string name="top_11_highest_paying_sellers">Top 11 Highest Paying Sellers</string>
+    <string name="top_11_highest_paying_brokerage">Top 11 Highest Paying Brokerage</string>
+    <string name="title_activity_top11_highest_broker">Top11HighestBrokerActivity</string>
+    <string name="title_activity_top11_seller">Top11SellerActivity</string>
+    <string name="title_activity_pie_chart">PieChartActivity</string>
+    <string name="title_activity_notification">NotificationActivity</string>
+    <string name="title_activity_pending_enq_broker">PendingEnqBrokerActivity</string>
+    <string name="title_activity_my_edit_profile">MyEditProfile</string>
+    <string name="edit">Edit</string>
+    <string name="title_activity_edit_profile">EditProfileActivity</string>
+    <string name="logout">Logout</string>
+    <string name="title_activity_chat_list">ChatListActivity</string>
+    <string name="contact_permission_dialog_contents">You can add the brokers from your contact book. Please &lt;b&gt;Allow&lt;\b&gt; the Read contact permission in &lt;b&gt;Next Step.&lt;\b&gt; </string>
+</resources>

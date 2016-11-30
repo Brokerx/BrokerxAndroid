@@ -1,0 +1,50 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.firstidea.android.brokerx.MainActivity">
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/calendar"
+        android:orderInCategory="100"
+        android:title="Calendar"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_wallet"
+        android:icon="@drawable/ic_person_add"
+        android:orderInCategory="100"
+        android:title="Add Enquiry"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/action_add_buyer_enq"
+                android:title="Add Buyer Enquiry" />
+            <item
+                android:id="@+id/action_add_seller_enq"
+                android:title="Add Seller Enquiry" />
+
+        </menu>
+    </item>
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/menu"
+        android:orderInCategory="100"
+        android:title="Menu"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/action_notifications"
+                android:title="Notifications" />
+            <item
+                android:id="@+id/action_profile"
+                android:title="My Profile" />
+            <item
+                android:id="@+id/action_my_ads"
+                android:title="History" />
+            <item
+                android:id="@+id/action_my_favourites"
+                android:title="Settings" />
+
+        </menu>
+    </item>
+</menu>

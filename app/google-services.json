@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "664094642844",
+    "firebase_url": "https://broker-x.firebaseio.com",
+    "project_id": "broker-x",
+    "storage_bucket": "broker-x.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:664094642844:android:fd7a374b8a32ae78",
+        "android_client_info": {
+          "package_name": "com.firstidea.android.brokerx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "664094642844-cbnoi6c0d060jsh5lms9pj6gq3mlr5ka.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCU2bX_4nmVx5LSl1gUHfci6PgP2dAD7AY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

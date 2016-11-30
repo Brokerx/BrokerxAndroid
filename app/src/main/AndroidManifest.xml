@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.firstidea.android.brokerx">
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+
+
+    <application
+        android:name=".BrokerxApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/logo_b"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+
+        <!-- [START firebase_service] -->
+        <service
+            android:name=".fcm.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <!-- [END firebase_service] -->
+        <!-- [START firebase_iid_service] -->
+        <service
+            android:name=".fcm.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <!-- [END firebase_iid_service] -->
+
+
+        <activity
+            android:name=".LoginActivity"
+            android:label="Login To Your Account"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SplashActivity"
+            android:icon="@mipmap/logo_b"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppFullScreenTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SignupActivity"
+            android:label="Signup To Broker-X"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddEnquiryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LeadDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ScreenSlidePagerActivity" />
+        <activity
+            android:name=".BrokerHomeActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".BrokerDetailsActivity"
+            android:label="@string/title_activity_broker_details"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".BuyerSellerHomeActivity"
+            android:label="@string/title_activity_buyer_seller_home"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MycircleActivity"
+            android:label="@string/title_activity_mycircle"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddEnquiryFirstActivity"
+            android:label="@string/title_activity_post_enquiry_first"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddEnquiryStepOneActivity"
+            android:label="@string/title_activity_add_enquiry_step_one"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddEnquiryStepTwoActivity"
+            android:label="@string/title_activity_add_enquiry_step_two"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddEnquiryStepThreeActivity"
+            android:label="@string/title_activity_add_enquiry_step_three"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddEnquiryStepFourActivity"
+            android:label="@string/title_activity_add_enquiry_step_four"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddEnquiryStepFiveActivity"
+            android:label="@string/title_activity_add_enquiry_step_five"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".EnquiryDetailsActivity"
+            android:label="@string/title_activity_enquiry_details"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ViewHistoryActivity"
+            android:label="@string/title_activity_view_history"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PendingEntriesActivity"
+            android:label="@string/title_activity_pending_entries"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MyHistoryActivity"
+            android:label="@string/title_activity_my_history"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MyHistoryDetailsActivity"
+            android:label="@string/title_activity_my_history_details"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AnalysisActivity"
+            android:label="@string/title_activity_analysis"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".TopBrokersActivity"
+            android:label="@string/title_activity_top_brokers"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AnalysisBrokerActivity"
+            android:label="@string/title_activity_analysis_broker"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Top11HighestBrokerActivity"
+            android:label="@string/title_activity_top11_highest_broker"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Top11SellerActivity"
+            android:label="@string/title_activity_top11_seller"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PieChartActivity"
+            android:label="@string/title_activity_pie_chart"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NotificationActivity"
+            android:label="@string/title_activity_notification"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PendingEnqBrokerActivity"
+            android:label="@string/title_activity_pending_enq_broker"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MyProfile"
+            android:label="@string/title_activity_my_edit_profile"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".EditProfileActivity"
+            android:label="@string/title_activity_edit_profile"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Chat.ChatListActivity"
+            android:label="@string/title_activity_chat_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+    </application>
+
+</manifest>

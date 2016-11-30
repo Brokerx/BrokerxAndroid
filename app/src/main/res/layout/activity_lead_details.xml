@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.firstidea.android.brokerx.LeadDetailsActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/layout_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <ayar.oktay.advancedtextview.AdvancedTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Buyer/Seller"
+                android:textSize="16sp"
+                app:font="roboto_bold" />
+
+            <ayar.oktay.advancedtextview.AdvancedTextView
+                android:id="@+id/txt_buyer_seller_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="Govind Kulkarni"
+                android:textSize="15sp"
+                app:font="roboto_regular" />
+
+            <ayar.oktay.advancedtextview.AdvancedTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Broker"
+                android:textSize="16sp"
+                app:font="roboto_bold" />
+
+            <ayar.oktay.advancedtextview.AdvancedTextView
+                android:id="@+id/txt_broker_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="Shrikant Gadge"
+                android:textSize="15sp"
+                app:font="roboto_regular" />
+
+            <ayar.oktay.advancedtextview.AdvancedTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Item to be Sell/Buy"
+                android:textSize="16sp"
+                app:font="roboto_bold" />
+
+            <ayar.oktay.advancedtextview.AdvancedTextView
+                android:id="@+id/txt_item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="ACETONE"
+                android:textSize="15sp"
+                app:font="roboto_regular" />
+
+
+        </LinearLayout>
+
+        <!--<android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/layout_details"/>-->
+        <RelativeLayout
+            android:id="@+id/layout_user_details"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/layout_details"
+            android:layout_marginBottom="60dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp">
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/transperent_btn"
+                android:clickable="true"
+                android:onClick="move"
+                android:tag="-1"
+                android:padding="3dp"
+                android:src="@drawable/arrow_left_gray" />
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/transperent_btn"
+                android:clickable="true"
+                android:onClick="move"
+                android:tag="1"
+                android:padding="3dp"
+                android:src="@drawable/arrow_right_gray" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:weightSum="5">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:padding="10dp"
+                android:src="@drawable/circle_tick" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:padding="10dp"
+                android:src="@drawable/circle_cross" />
+
+            <ImageView
+                android:id="@+id/btn_revert"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:padding="10dp"
+                android:src="@drawable/circle_replay" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:padding="10dp"
+                android:src="@drawable/circle_dots" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:padding="10dp"
+                android:src="@drawable/solid_yellow_circle" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

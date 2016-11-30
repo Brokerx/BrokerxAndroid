@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--<color name="colorPrimary">#C82506</color>-->
+    <color name="colorPrimary">#da3442</color>
+    <!--<color name="colorPrimaryDark">#871101</color>-->
+    <color name="colorPrimaryDark">#da3442</color>
+    <color name="colorPrimaryLight">#e4adba</color>
+    <!--<color name="colorAccent">#97010e</color>-->
+    <color name="colorAccent">#fc4656</color>
+    <color name="teal">#13a697</color>
+    <color name="main_color">#da3442</color>
+    <color name="main_color_lite">#d28087</color>
+    <!--<color name="teal">#009688</color>-->
+
+    <!-- Teal Color
+    <color name="colorPrimary">#009688</color>
+    <color name="main_color">#009688</color>
+    <color name="colorPrimaryDark">#00796B</color>
+    <color name="colorPrimaryLight">#B2DFDB</color>
+    <color name="colorAccent">#009688</color>
+    -->
+
+    <color name="textColorPrimary">#212121</color>
+    <color name="textColorSecondary">#757575</color>
+    <color name="dividerColor">#BDBDBD</color>
+    <!--
+    <color name="colorPrimary">#ffc82506</color>
+    <color name="main_color">#ffc82506</color>
+    <color name="colorPrimaryDark">#FF801501</color>
+    <color name="colorAccent">#f21133</color>
+    -->
+    <color name="white">@android:color/white</color>
+    <color name="black">@android:color/black</color>
+    <color name="divider">#757575</color>
+    <!--<color name="activity_background_color">#f1edee</color>-->
+    <color name="activity_background_color">#f5f6f7</color>
+
+    <color name="black_overlay">#66000000</color>
+    <color name="light_gray">#eae9e9</color>
+
+    <!-- Tag Colors-->
+    <color name="tag1">#1B83AA</color>
+    <color name="tag2">#F4C100</color>
+    <color name="tag3">#F2756F</color>
+    <color name="tag4">#66BCAC</color>
+    <color name="tag5">#B3DB72</color>
+    <color name="tag6">#BB74ED</color>
+</resources>

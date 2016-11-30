@@ -1,0 +1,79 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--<TextView
+        android:id="@+id/txt_history_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="These details are set by buyer/seller while adding the new enqiry. 2:These details are set by buyer/seller while adding the new enqiry. This is the expanded text in case of very long details. we are providing initial 2 lines of description, rest ofthe details will be shown in Read More Section"
+        android:textSize="15sp" />-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+                <ayar.oktay.advancedtextview.AdvancedTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Details (Last altered bay You)"
+                    android:textSize="16sp"
+                    app:font="roboto_bold" />
+
+                <ayar.oktay.advancedtextview.ExpandableTextLayout
+                    android:id="@+id/txt_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ayar.oktay.advancedtextview.AdvancedTextView
+                        android:id="@+id/txt_history_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="2"
+                        android:paddingLeft="5dp"
+                        android:text="These details are set by buyer/seller while adding the new enqiry. 2:These details are set by buyer/seller while adding the new enqiry. This is the expanded text in case of very long details. we are providing initial 2 lines of description, rest ofthe details will be shown in Read More Section"
+                        android:textSize="15sp"
+                        app:expandText="Read More"
+                        app:expandTextColor="@color/main_color"
+                        app:expandTextPosition="right"
+                        app:expandText_marginLeft="2dp"
+                        app:expandable="true"
+                        app:font="roboto_regular" />
+                </ayar.oktay.advancedtextview.ExpandableTextLayout>
+
+                <ayar.oktay.advancedtextview.AdvancedTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Rate"
+                    android:textSize="16sp"
+                    app:font="roboto_bold" />
+
+                <ayar.oktay.advancedtextview.AdvancedTextView
+                    android:id="@+id/txt_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:text="&#8377; 1000"
+                    android:textSize="15sp"
+                    app:font="roboto_regular" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </ScrollView>
+</RelativeLayout>

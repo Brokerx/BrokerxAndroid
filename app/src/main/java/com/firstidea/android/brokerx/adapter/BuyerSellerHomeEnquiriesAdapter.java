@@ -78,7 +78,7 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
     }
 
     @Override protected void onBindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        ViewHolder holder = (ViewHolder) viewHolder;
+        final ViewHolder holder = (ViewHolder) viewHolder;
         holder.mItem = mValues.get(position);
         holder.title.setText(mValues.get(position).getItemName());
         String userName = "<b>Broker: </b>"+mValues.get(position).getBroker().getFullName();
@@ -91,21 +91,17 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO open details activity
-                v.getContext().startActivity(new Intent(v.getContext(),EnquiryDetailsActivity.class));
-
-//                Intent enquiry=new Intent(mContext.getApplicationContext(),EnquiryDetailsActivity.class);
-//                mContext.startActivity(enquiry);
+                Intent enquiry=new Intent(mContext.getApplicationContext(),EnquiryDetailsActivity.class);
+                enquiry.putExtra(Lead.KEY_LEAD, holder.mItem);
+                mContext.startActivity(enquiry);
             }
         });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO open details activity
-                v.getContext().startActivity(new Intent(v.getContext(),EnquiryDetailsActivity.class));
-
-//                Intent enquiry=new Intent(mContext.getApplicationContext(),EnquiryDetailsActivity.class);
-//                mContext.startActivity(enquiry);
+                Intent enquiry=new Intent(mContext.getApplicationContext(),EnquiryDetailsActivity.class);
+                enquiry.putExtra(Lead.KEY_LEAD, holder.mItem);
+                mContext.startActivity(enquiry);
             }
         });
     }

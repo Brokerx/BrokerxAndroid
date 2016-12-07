@@ -13,15 +13,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firstidea.android.brokerx.http.model.Lead;
+
 public class EnquiryDetailsActivity extends AppCompatActivity {
-    private String[] option = {"Benzine etyle alcohol with vinyl copper sulphate"};
-    private String[] charges = {"Charges"};
     private LinearLayout btn_Reject, btn_Accept;
 
     private TextView TxviewHistoryA,TxviewHistoryR;
 
     private LinearLayout Accept, Reject, Pending, Deal_Done,Revert,Rej_Acc_Layout;
 
+    private Lead mLead;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +34,9 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Details");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        mLead = getIntent().getExtras().getParcelable(Lead.KEY_LEAD);
+        initScreen();
         TxviewHistoryA = (TextView) findViewById(R.id.ViewHistory_Accp);
         TxviewHistoryA.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +106,10 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void initScreen() {
+
     }
 
     @Override

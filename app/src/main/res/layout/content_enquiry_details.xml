@@ -192,7 +192,7 @@
                     android:layout_marginRight="@dimen/m10dp"
                     android:layout_marginTop="@dimen/m10dp"
                     android:layout_weight="1"
-                    android:text="Pavan Kalyan Chiluka"
+                    android:text="Benzene Ethenol 500gh"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold" />

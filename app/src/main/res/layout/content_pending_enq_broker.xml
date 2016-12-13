@@ -9,11 +9,6 @@
     tools:context="com.firstidea.android.brokerx.PendingEnqBrokerActivity"
     tools:showIn="@layout/activity_pending_enq_broker">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none">
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/pendingBroker_recycler_view"
             android:layout_width="match_parent"
@@ -21,6 +16,6 @@
             android:background="@color/activity_background_color"
 
             />
-    </ScrollView>
+
 
 </RelativeLayout>

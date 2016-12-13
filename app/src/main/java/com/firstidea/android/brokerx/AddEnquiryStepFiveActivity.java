@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.firstidea.android.brokerx.http.ObjectFactory;
 import com.firstidea.android.brokerx.http.SingletonRestClient;
 import com.firstidea.android.brokerx.http.model.Lead;
 import com.firstidea.android.brokerx.http.model.MessageDTO;
@@ -68,8 +69,9 @@ public class AddEnquiryStepFiveActivity extends AppCompatActivity {
         mLead.setComments(editComments.getText().toString());
 
         final Dialog dialog = AppProgressDialog.show(this);
-        LeadService leadService = SingletonRestClient.createService(LeadService.class, this);
-        leadService.saveLead(mLead, new Callback<MessageDTO>() {
+       /* LeadService leadService = SingletonRestClient.createService(LeadService.class, this);
+        leadService.saveLead(mLead, new Callback<MessageDTO>() {*/
+        ObjectFactory.getInstance().getLeadServiceInstance().saveLead(mLead, new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 dialog.dismiss();
@@ -84,7 +86,6 @@ public class AddEnquiryStepFiveActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-
     }
 
     @Override

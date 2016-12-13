@@ -13,12 +13,10 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+        android:fillViewport="true"
         android:layout_alignParentTop="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:fillViewport="true">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
 
         <LinearLayout
@@ -215,6 +213,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/layout_make"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp">
@@ -223,7 +222,7 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_marginLeft="@dimen/l10dp"
-                        android:src="@drawable/calendar1" />
+                        android:src="@drawable/ic_business_teal" />
 
                     <TextView
                         android:id="@+id/make"
@@ -231,7 +230,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="10dp"
-                        android:text="22nd july,2016 make"
+                        android:text="Garnet Petrochem"
                         android:textColor="@color/teal" />
                 </LinearLayout>
 
@@ -316,7 +315,7 @@
                         android:textStyle="italic|bold" />
 
                     <TextView
-                        android:id="@+id/packing"
+                        android:id="@+id/item_packing"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Tanker"
@@ -405,7 +404,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="10dp"
                                 android:gravity="right"
-                                android:text="Charges"
+                                android:text="Brokerage"
                                 android:textColor="@color/divider"
                                 android:textSize="14sp" />
                         </LinearLayout>
@@ -786,6 +785,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/w40dp"
                         android:layout_weight="1"
+                        android:clickable="true"
                         android:background="@drawable/red_border_box"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:orientation="horizontal">
@@ -806,6 +806,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/w40dp"
                         android:layout_weight="1"
+                        android:clickable="true"
                         android:background="@color/teal"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:orientation="horizontal">

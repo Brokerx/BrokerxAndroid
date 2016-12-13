@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class Lead implements Parcelable {
 
     public static final String KEY_LEAD = "Lead";
+    public static final String KEY_LEAD_ID = "LeadID";
 
     private Integer leadID;
     private int createdUserID;
@@ -46,6 +47,7 @@ public class Lead implements Parcelable {
     User createdUser;
     User broker;
     User assignedToUser;
+    private String fieldsAltered;
 
     public Integer getLeadID() {
         return leadID;
@@ -285,6 +287,14 @@ public class Lead implements Parcelable {
 
     public void setAssignedToUser(User assignedToUser) {
         this.assignedToUser = assignedToUser;
+    }
+
+    public String getFieldsAltered() {
+        return fieldsAltered;
+    }
+
+    public void setFieldsAltered(String fieldsAltered) {
+        this.fieldsAltered = fieldsAltered;
     }
 
     public Lead() {

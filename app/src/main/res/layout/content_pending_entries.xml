@@ -8,12 +8,6 @@
     tools:context="com.firstidea.android.brokerx.PendingEntriesActivity"
     tools:showIn="@layout/activity_pending_entries">
 
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none">
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/pending_recycler_view"
             android:layout_width="match_parent"
@@ -21,6 +15,5 @@
             android:background="@color/activity_background_color"
 
             />
-    </ScrollView>
 
 </RelativeLayout>

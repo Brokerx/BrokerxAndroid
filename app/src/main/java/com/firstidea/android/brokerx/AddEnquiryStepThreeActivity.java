@@ -73,6 +73,17 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
 
             }
         });
+        if(mLead.getLeadID() != null && mLead.getLeadID() > 0) {
+            editBasicPrice.setText(mLead.getBasicPrice()+"");
+            spinnerBasicUnit.setSelection(mLead.getBasicPriceUnit());
+            editExciseDuty.setText(mLead.getExciseDuty()+"");
+            spinnerExciseUnit.setSelection(mLead.getExciseUnit());
+            if(mLead.isAsPerAvailablity()) {
+                checkAsPerAvailability.setChecked(true);
+            }
+            editTransportCharges.setText(mLead.getTransportCharges()+"");
+            editMiscCharges.setText(mLead.getMiscCharges()+"");
+        }
     }
 
     private void validateAndNext() {

@@ -25,13 +25,14 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/Accept"
+                android:id="@+id/cur_status_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@color/white">
 
                 <ImageView
+                    android:id="@+id/cur_statusIcon"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginBottom="10dp"
@@ -40,6 +41,7 @@
                     android:background="@drawable/accept_circle" />
 
                 <TextView
+                    android:id="@+id/cur_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -49,20 +51,22 @@
                     android:textColor="@color/divider" />
 
                 <TextView
-                    android:id="@+id/ViewHistory_Accp"
+                    android:id="@+id/view_status"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="20dp"
                     android:text="View History"
                     android:textColor="@color/black"
-                    android:textStyle="italic" />
+                    android:textStyle="italic"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"/>
 
 
             </LinearLayout>
 
-            <LinearLayout
+            <!--<LinearLayout
                 android:id="@+id/Reject"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -172,7 +176,7 @@
                     android:textStyle="italic" />
 
 
-            </LinearLayout>
+            </LinearLayout>-->
 
 
             <LinearLayout

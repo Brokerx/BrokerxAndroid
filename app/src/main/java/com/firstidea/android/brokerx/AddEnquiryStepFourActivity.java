@@ -35,7 +35,9 @@ public class AddEnquiryStepFourActivity extends AppCompatActivity {
                 validateAndNext();
             }
         });
-
+        if(mLead.getLeadID() != null && mLead.getLeadID() > 0) {
+            editBrokerage.setText(mLead.getBrokerageAmt()+"");
+        }
     }
 
     private void validateAndNext() {

@@ -24,7 +24,9 @@ public class Lead implements Parcelable {
     private Integer itemID;
     private String itemName;
     private String type;
-    private String currentStatus;
+    private String buyerStatus;
+    private String sellerStatus;
+    private String brokerStatus;
     private String make;
     private float qty;
     private Integer qtyUnit;
@@ -44,6 +46,8 @@ public class Lead implements Parcelable {
     private String preferredSellerName;
     private String comments;
     private String createdDttm;
+    private Integer LastUpdUserID;
+    private String lastUpdDateTime;
     User createdUser;
     User broker;
     User assignedToUser;
@@ -105,12 +109,28 @@ public class Lead implements Parcelable {
         this.type = type;
     }
 
-    public String getCurrentStatus() {
-        return currentStatus;
+    public String getBuyerStatus() {
+        return buyerStatus;
     }
 
-    public void setCurrentStatus(String currentStatus) {
-        this.currentStatus = currentStatus;
+    public void setBuyerStatus(String buyerStatus) {
+        this.buyerStatus = buyerStatus;
+    }
+
+    public String getSellerStatus() {
+        return sellerStatus;
+    }
+
+    public void setSellerStatus(String sellerStatus) {
+        this.sellerStatus = sellerStatus;
+    }
+
+    public String getBrokerStatus() {
+        return brokerStatus;
+    }
+
+    public void setBrokerStatus(String brokerStatus) {
+        this.brokerStatus = brokerStatus;
     }
 
     public String getMake() {
@@ -265,6 +285,22 @@ public class Lead implements Parcelable {
         this.createdDttm = createdDttm;
     }
 
+    public Integer getLastUpdUserID() {
+        return LastUpdUserID;
+    }
+
+    public void setLastUpdUserID(Integer lastUpdUserID) {
+        LastUpdUserID = lastUpdUserID;
+    }
+
+    public String getLastUpdDateTime() {
+        return lastUpdDateTime;
+    }
+
+    public void setLastUpdDateTime(String lastUpdDateTime) {
+        this.lastUpdDateTime = lastUpdDateTime;
+    }
+
     public User getCreatedUser() {
         return createdUser;
     }
@@ -300,6 +336,24 @@ public class Lead implements Parcelable {
     public Lead() {
     }
 
+
+    public static Lead createFromJSON(Object object) {
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(object);
+        Lead lead = gson.fromJson(jsonString, Lead.class);
+        return lead;
+    }
+
+    public static ArrayList<Lead> createListFromJson(Object data) {
+        if(data == null) return new  ArrayList<Lead> ();
+
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(data);
+        ArrayList<Lead> leads = gson.fromJson(jsonString,  new TypeToken<ArrayList<Lead>>() {}.getType());
+
+        return leads;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -314,7 +368,9 @@ public class Lead implements Parcelable {
         dest.writeValue(this.itemID);
         dest.writeString(this.itemName);
         dest.writeString(this.type);
-        dest.writeString(this.currentStatus);
+        dest.writeString(this.buyerStatus);
+        dest.writeString(this.sellerStatus);
+        dest.writeString(this.brokerStatus);
         dest.writeString(this.make);
         dest.writeFloat(this.qty);
         dest.writeValue(this.qtyUnit);
@@ -334,9 +390,12 @@ public class Lead implements Parcelable {
         dest.writeString(this.preferredSellerName);
         dest.writeString(this.comments);
         dest.writeString(this.createdDttm);
+        dest.writeValue(this.LastUpdUserID);
+        dest.writeString(this.lastUpdDateTime);
         dest.writeParcelable(this.createdUser, flags);
         dest.writeParcelable(this.broker, flags);
         dest.writeParcelable(this.assignedToUser, flags);
+        dest.writeString(this.fieldsAltered);
     }
 
     protected Lead(Parcel in) {
@@ -347,7 +406,9 @@ public class Lead implements Parcelable {
         this.itemID = (Integer) in.readValue(Integer.class.getClassLoader());
         this.itemName = in.readString();
         this.type = in.readString();
-        this.currentStatus = in.readString();
+        this.buyerStatus = in.readString();
+        this.sellerStatus = in.readString();
+        this.brokerStatus = in.readString();
         this.make = in.readString();
         this.qty = in.readFloat();
         this.qtyUnit = (Integer) in.readValue(Integer.class.getClassLoader());
@@ -367,9 +428,12 @@ public class Lead implements Parcelable {
         this.preferredSellerName = in.readString();
         this.comments = in.readString();
         this.createdDttm = in.readString();
+        this.LastUpdUserID = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.lastUpdDateTime = in.readString();
         this.createdUser = in.readParcelable(User.class.getClassLoader());
         this.broker = in.readParcelable(User.class.getClassLoader());
         this.assignedToUser = in.readParcelable(User.class.getClassLoader());
+        this.fieldsAltered = in.readString();
     }
 
     public static final Creator<Lead> CREATOR = new Creator<Lead>() {
@@ -383,22 +447,4 @@ public class Lead implements Parcelable {
             return new Lead[size];
         }
     };
-
-
-    public static Lead createFromJSON(Object object) {
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(object);
-        Lead lead = gson.fromJson(jsonString, Lead.class);
-        return lead;
-    }
-
-    public static ArrayList<Lead> createListFromJson(Object data) {
-        if(data == null) return new  ArrayList<Lead> ();
-
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(data);
-        ArrayList<Lead> leads = gson.fromJson(jsonString,  new TypeToken<ArrayList<Lead>>() {}.getType());
-
-        return leads;
-    }
 }

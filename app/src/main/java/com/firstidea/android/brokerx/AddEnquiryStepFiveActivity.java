@@ -13,10 +13,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.firstidea.android.brokerx.enums.LeadCurrentStatus;
+import com.firstidea.android.brokerx.enums.LeadType;
 import com.firstidea.android.brokerx.http.ObjectFactory;
 import com.firstidea.android.brokerx.http.SingletonRestClient;
 import com.firstidea.android.brokerx.http.model.Lead;
 import com.firstidea.android.brokerx.http.model.MessageDTO;
+import com.firstidea.android.brokerx.http.model.User;
 import com.firstidea.android.brokerx.http.service.LeadService;
 import com.firstidea.android.brokerx.widget.AppProgressDialog;
 
@@ -58,16 +61,35 @@ public class AddEnquiryStepFiveActivity extends AppCompatActivity {
             }
         });
 
+        if(mLead.getLeadID() != null && mLead.getLeadID() > 0) {
+            editAgainstForm.setText(mLead.getAgainstForm());
+            editCreditPeriod.setText(mLead.getCreditPeriod());
+            editFreeStorage.setText(mLead.getFreeStoragePeriod());
+            editPrefSeller.setText(mLead.getPreferredSellerName());
+            editComments.setText(mLead.getComments());
+        }
     }
 
     private void validateAndCallService() {
         //TODO Tushar: validate all fields
+        User me = User.getSavedUser(this);
         mLead.setAgainstForm(editAgainstForm.getText().toString());
         mLead.setCreditPeriod(editCreditPeriod.getText().toString());
         mLead.setFreeStoragePeriod(editFreeStorage.getText().toString());
         mLead.setPreferredSellerName(editPrefSeller.getText().toString());
         mLead.setComments(editComments.getText().toString());
-
+        mLead.setLastUpdUserID(me.getUserID());
+        if(me.isBroker()) {
+            if(mLead.getLeadID() != null) {
+                mLead.setBrokerStatus(LeadCurrentStatus.Reverted.getStatus());
+            }
+        } else {
+            if (mLead.getType().equals(LeadType.BUYER.getType())) {
+                mLead.setBuyerStatus(LeadCurrentStatus.Accepted.getStatus());
+            } else {
+                mLead.setSellerStatus(LeadCurrentStatus.Accepted.getStatus());
+            }
+        }
         final Dialog dialog = AppProgressDialog.show(this);
        /* LeadService leadService = SingletonRestClient.createService(LeadService.class, this);
         leadService.saveLead(mLead, new Callback<MessageDTO>() {*/

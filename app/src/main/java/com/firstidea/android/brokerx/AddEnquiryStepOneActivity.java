@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +25,7 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
     private final int BROKER_SELECTION_REQUEST = 100;
     private EditText editBroker, editMake, editqty;
     private Spinner spinnerItem, spinnerQtyUnit, spinnerPacking;
-    Lead mLead = new Lead();
+    Lead mLead;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +45,7 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
                 validateAndNext();
             }
         });
-        final String type = getIntent().getExtras().getString("type");
-        mLead.setType(type);
+
         editBroker = (EditText) findViewById(R.id.broker_name);
         editMake = (EditText) findViewById(R.id.make);
         editqty = (EditText) findViewById(R.id.qty);
@@ -97,17 +97,30 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
 
             }
         });
-
+        if (getIntent().hasExtra(Lead.KEY_LEAD)) {
+            mLead = getIntent().getExtras().getParcelable(Lead.KEY_LEAD);
+            editBroker.setEnabled(false);
+            String brokerName = "<b>Broker:</b> "+mLead.getBroker().getFullName();
+            editBroker.setText(Html.fromHtml(brokerName));
+            editMake.setText(mLead.getMake());
+            editqty.setText(mLead.getQty()+"");
+            spinnerQtyUnit.setSelection(mLead.getQtyUnit());
+            spinnerPacking.setSelection(mLead.getPacking());
+        } else {
+            String type = getIntent().getExtras().getString("type");
+            mLead = new Lead();
+            mLead.setType(type);
+            com.firstidea.android.brokerx.http.model.User user = com.firstidea.android.brokerx.http.model.User.getSavedUser(this);
+            mLead.setCreatedUserID(user.getUserID());
+        }
     }
 
     private void validateAndNext() {
         //TODO Tushar: validate all fields
-        com.firstidea.android.brokerx.http.model.User user = com.firstidea.android.brokerx.http.model.User.getSavedUser(this);
-        mLead.setCreatedUserID(user.getUserID());
         mLead.setMake(editMake.getText().toString());
         mLead.setQty(Float.parseFloat(editqty.getText().toString()));
         Intent intent = new Intent(AddEnquiryStepOneActivity.this, AddEnquiryStepTwoActivity.class);
-        intent.putExtra(Lead.KEY_LEAD,mLead);
+        intent.putExtra(Lead.KEY_LEAD, mLead);
         startActivity(intent);
     }
 
@@ -124,7 +137,7 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == BROKER_SELECTION_REQUEST && resultCode == RESULT_OK) {
             User user = data.getExtras().getParcelable(Constants.KEY_USER_TYPE_BROKER);
-            if(TextUtils.isEmpty(user.getBrokerDealsInItems())) {
+            if (TextUtils.isEmpty(user.getBrokerDealsInItems())) {
                 Toast.makeText(this, "Sorry, This broker doesn't deal in any Item", Toast.LENGTH_SHORT).show();
                 return;
             }

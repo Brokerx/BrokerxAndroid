@@ -37,6 +37,9 @@ public class AddEnquiryStepTwoActivity extends AppCompatActivity {
                 validateAndNext();
             }
         });
+        if(mLead.getLeadID() != null && mLead.getLeadID() > 0) {
+            editLocation.setText(mLead.getLocation());
+        }
     }
 
     private void validateAndNext() {

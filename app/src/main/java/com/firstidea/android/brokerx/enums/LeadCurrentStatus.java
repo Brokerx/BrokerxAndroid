@@ -6,7 +6,7 @@ package com.firstidea.android.brokerx.enums;
 
 public enum LeadCurrentStatus {
 
-    Accepted("A"), Rejected("X"), Reverted("R"), Pending("P"),Done("D");
+    Accepted("A"), Rejected("X"), Reverted("R"), Pending("P"),Done("D"), Waiting("W"), Deleted("L");
 
     final String status;
 

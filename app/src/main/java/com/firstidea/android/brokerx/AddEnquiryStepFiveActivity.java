@@ -61,7 +61,7 @@ public class AddEnquiryStepFiveActivity extends AppCompatActivity {
             }
         });
 
-        if(mLead.getLeadID() != null && mLead.getLeadID() > 0) {
+        if (mLead.getLeadID() != null && mLead.getLeadID() > 0) {
             editAgainstForm.setText(mLead.getAgainstForm());
             editCreditPeriod.setText(mLead.getCreditPeriod());
             editFreeStorage.setText(mLead.getFreeStoragePeriod());
@@ -79,16 +79,22 @@ public class AddEnquiryStepFiveActivity extends AppCompatActivity {
         mLead.setPreferredSellerName(editPrefSeller.getText().toString());
         mLead.setComments(editComments.getText().toString());
         mLead.setLastUpdUserID(me.getUserID());
-        if(me.isBroker()) {
-            if(mLead.getLeadID() != null) {
+        if (me.isBroker()) {
+            if (mLead.getLeadID() != null) {
                 mLead.setBrokerStatus(LeadCurrentStatus.Reverted.getStatus());
+            }
+            if (mLead.getType().equals(LeadType.BUYER.getType())) {
+                mLead.setBuyerStatus(LeadCurrentStatus.Waiting.getStatus());
+            } else {
+                mLead.setSellerStatus(LeadCurrentStatus.Waiting.getStatus());
             }
         } else {
             if (mLead.getType().equals(LeadType.BUYER.getType())) {
-                mLead.setBuyerStatus(LeadCurrentStatus.Accepted.getStatus());
+                mLead.setBuyerStatus(LeadCurrentStatus.Reverted.getStatus());
             } else {
-                mLead.setSellerStatus(LeadCurrentStatus.Accepted.getStatus());
+                mLead.setSellerStatus(LeadCurrentStatus.Reverted.getStatus());
             }
+            mLead.setBrokerStatus(LeadCurrentStatus.Waiting.getStatus());
         }
         final Dialog dialog = AppProgressDialog.show(this);
        /* LeadService leadService = SingletonRestClient.createService(LeadService.class, this);

@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.firstidea.android.brokerx.Chat.ChatListActivity;
 import com.firstidea.android.brokerx.adapter.BuyerSellerHomeEnquiriesAdapter;
 import com.firstidea.android.brokerx.constants.AppConstants;
+import com.firstidea.android.brokerx.enums.LeadCurrentStatus;
 import com.firstidea.android.brokerx.enums.LeadType;
 import com.firstidea.android.brokerx.fragment.dummy.DummyContent;
 import com.firstidea.android.brokerx.http.ObjectFactory;
@@ -76,7 +77,8 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
         final Dialog dialog = AppProgressDialog.show(mContext);
         User user = User.getSavedUser(mContext);
         String type = isUserTypeSpinnerInitilized ? spinner_nav.getSelectedItem().toString().toUpperCase().charAt(0)+"":LeadType.BUYER.getType();
-        ObjectFactory.getInstance().getLeadServiceInstance().getLeads(user.getUserID(), type, null, null, null, new Callback<MessageDTO>() {
+        String status = ""+ LeadCurrentStatus.Accepted;
+        ObjectFactory.getInstance().getLeadServiceInstance().getActiveLeads(user.getUserID(), type, new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 if(messageDTO.isSuccess()) {

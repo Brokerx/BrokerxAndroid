@@ -13,10 +13,10 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:fillViewport="true">
 
 
         <LinearLayout
@@ -54,14 +54,14 @@
                     android:id="@+id/view_status"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="20dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
                     android:text="View History"
                     android:textColor="@color/black"
-                    android:textStyle="italic"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:clickable="true"/>
+                    android:textStyle="italic" />
 
 
             </LinearLayout>
@@ -687,8 +687,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
                         android:weightSum="2">
 
                         <LinearLayout
@@ -714,6 +714,7 @@
                                 android:text="15 Days"
                                 android:textColor="@color/divider" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -739,6 +740,7 @@
                         </LinearLayout>
 
                     </LinearLayout>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -789,12 +791,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/w40dp"
                         android:layout_weight="1"
-                        android:clickable="true"
                         android:background="@drawable/red_border_box"
+                        android:clickable="true"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/lbl_reject"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -810,12 +813,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/w40dp"
                         android:layout_weight="1"
-                        android:clickable="true"
                         android:background="@color/teal"
+                        android:clickable="true"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/lbl_accept"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -844,6 +848,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/lbl_revert"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -863,6 +868,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/lbl_chat"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -872,6 +878,64 @@
                             android:textSize="16sp" />
 
                     </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/lbl_cancelled"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="50dp"
+                    android:text="This Deal has been Cancelled"
+                    android:textColor="@color/black"
+                    android:textSize="22sp"
+                    android:gravity="center"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="10dp"
+                    android:background="#9c9b9c"
+                    android:visibility="gone"/>
+
+                <LinearLayout
+                    android:id="@+id/btn_reopen"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/w40dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:background="@color/teal"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/lbl_reopen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_horizontal"
+                        android:text="Reopen This Deal"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btn_pending"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/w40dp"
+                    android:layout_weight="1"
+                    android:background="@color/pending_color"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/lbl_pending"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_horizontal"
+                        android:text="Mark This Deal As Pending"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 

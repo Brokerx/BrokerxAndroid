@@ -29,8 +29,26 @@ public interface LeadService {
                    Callback<MessageDTO> callback);
 
     @FormUrlEncoded
+    @POST("/lead/getHistory")
+    void getHistory(@Field("userID") Integer userID,
+                   @Field("startDate")String startDate,
+                   @Field("endDate")String endDate,
+                   Callback<MessageDTO> callback);
+
+    @FormUrlEncoded
+    @POST("/lead/getActiveLeads")
+    void getActiveLeads(@Field("userID") Integer loginUserID,
+                   @Field("type")String leadType,
+                   Callback<MessageDTO> callback);
+
+    @FormUrlEncoded
     @POST("/lead/getLeadHistory")
     void getLeadHistory(@Field("leadID") Integer leadID,
+                   Callback<MessageDTO> callback);
+
+    @FormUrlEncoded
+    @POST("/lead/dealDone")
+    void dealDone(@Field("leadID") Integer leadID,
                    Callback<MessageDTO> callback);
 
     @FormUrlEncoded

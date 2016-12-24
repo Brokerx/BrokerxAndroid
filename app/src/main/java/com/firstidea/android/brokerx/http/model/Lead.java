@@ -21,6 +21,7 @@ public class Lead implements Parcelable {
     private int createdUserID;
     private Integer brokerID;
     private Integer assignedToUserID;
+    private Integer parentLeadID;
     private Integer itemID;
     private String itemName;
     private String type;
@@ -83,6 +84,14 @@ public class Lead implements Parcelable {
 
     public void setAssignedToUserID(Integer assignedToUserID) {
         this.assignedToUserID = assignedToUserID;
+    }
+
+    public Integer getParentLeadID() {
+        return parentLeadID;
+    }
+
+    public void setParentLeadID(Integer parentLeadID) {
+        this.parentLeadID = parentLeadID;
     }
 
     public Integer getItemID() {
@@ -365,6 +374,7 @@ public class Lead implements Parcelable {
         dest.writeInt(this.createdUserID);
         dest.writeValue(this.brokerID);
         dest.writeValue(this.assignedToUserID);
+        dest.writeValue(this.parentLeadID);
         dest.writeValue(this.itemID);
         dest.writeString(this.itemName);
         dest.writeString(this.type);
@@ -403,6 +413,7 @@ public class Lead implements Parcelable {
         this.createdUserID = in.readInt();
         this.brokerID = (Integer) in.readValue(Integer.class.getClassLoader());
         this.assignedToUserID = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.parentLeadID = (Integer) in.readValue(Integer.class.getClassLoader());
         this.itemID = (Integer) in.readValue(Integer.class.getClassLoader());
         this.itemName = in.readString();
         this.type = in.readString();

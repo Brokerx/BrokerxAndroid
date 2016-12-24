@@ -49,6 +49,7 @@ public class BrokerHomeEnquiriesAdapter extends RecyclerView.Adapter<BrokerHomeE
             @Override
             public void onClick(View v) {
                 Intent next = new Intent(context, EnquiryDetailsActivity.class);
+                next.putExtra(Lead.KEY_LEAD,holder.mItem);
                 context.startActivity(next);
             }
         });

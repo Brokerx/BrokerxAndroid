@@ -28,6 +28,36 @@
                 android:textColor="@color/textColorPrimary"
                 android:textSize="16sp" />
 
+            <LinearLayout
+                android:id="@+id/layout_users"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:visibility="gone">
+                <TextView
+                    android:id="@+id/createdUserName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="First Idea "
+                    android:textColor="@color/textColorSecondary"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/assignedUserName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="First Idea "
+                    android:textColor="@color/textColorSecondary"
+                    android:textSize="14sp" />
+            </LinearLayout>
             <TextView
                 android:id="@+id/userName"
                 android:layout_width="match_parent"

@@ -41,6 +41,8 @@ public class Lead implements Parcelable {
     private float transportCharges;
     private float miscCharges;
     private float brokerageAmt;
+    private float buyerBrokerage;
+    private float sellerBrokerage;
     private String againstForm;
     private String creditPeriod;
     private String freeStoragePeriod;
@@ -246,6 +248,22 @@ public class Lead implements Parcelable {
         this.brokerageAmt = brokerageAmt;
     }
 
+    public float getBuyerBrokerage() {
+        return buyerBrokerage;
+    }
+
+    public void setBuyerBrokerage(float buyerBrokerage) {
+        this.buyerBrokerage = buyerBrokerage;
+    }
+
+    public float getSellerBrokerage() {
+        return sellerBrokerage;
+    }
+
+    public void setSellerBrokerage(float sellerBrokerage) {
+        this.sellerBrokerage = sellerBrokerage;
+    }
+
     public String getAgainstForm() {
         return againstForm;
     }
@@ -394,6 +412,8 @@ public class Lead implements Parcelable {
         dest.writeFloat(this.transportCharges);
         dest.writeFloat(this.miscCharges);
         dest.writeFloat(this.brokerageAmt);
+        dest.writeFloat(this.buyerBrokerage);
+        dest.writeFloat(this.sellerBrokerage);
         dest.writeString(this.againstForm);
         dest.writeString(this.creditPeriod);
         dest.writeString(this.freeStoragePeriod);
@@ -433,6 +453,8 @@ public class Lead implements Parcelable {
         this.transportCharges = in.readFloat();
         this.miscCharges = in.readFloat();
         this.brokerageAmt = in.readFloat();
+        this.buyerBrokerage = in.readFloat();
+        this.sellerBrokerage = in.readFloat();
         this.againstForm = in.readString();
         this.creditPeriod = in.readString();
         this.freeStoragePeriod = in.readString();

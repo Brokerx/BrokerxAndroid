@@ -136,7 +136,7 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == BROKER_SELECTION_REQUEST && resultCode == RESULT_OK) {
-            User user = data.getExtras().getParcelable(Constants.KEY_USER_TYPE_BROKER);
+            User user = data.getExtras().getParcelable(Constants.KEY_SELECTED_USER);
             if (TextUtils.isEmpty(user.getBrokerDealsInItems())) {
                 Toast.makeText(this, "Sorry, This broker doesn't deal in any Item", Toast.LENGTH_SHORT).show();
                 return;

@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
-
     <application
         android:name=".BrokerxApplication"
         android:allowBackup="true"
@@ -20,24 +19,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-
         <!-- [START firebase_service] -->
-        <service
-            android:name=".fcm.MyFirebaseMessagingService">
+        <service android:name=".fcm.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <!-- [END firebase_service] -->
         <!-- [START firebase_iid_service] -->
-        <service
-            android:name=".fcm.MyFirebaseInstanceIDService">
+        <service android:name=".fcm.MyFirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <!-- [END firebase_iid_service] -->
-
 
         <activity
             android:name=".LoginActivity"
@@ -174,6 +169,10 @@
         <activity
             android:name=".Chat.ChatListActivity"
             android:label="@string/title_activity_chat_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".LeadStatusHistoryDetailsActivity"
+            android:label="@string/title_activity_lead_status_history_details"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

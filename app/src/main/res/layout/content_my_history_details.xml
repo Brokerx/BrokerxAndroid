@@ -13,6 +13,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:fillViewport="true">
 
         <LinearLayout
@@ -53,21 +56,11 @@
                         android:layout_marginTop="2dp">
 
                         <TextView
-
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:text="Invoice number -"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
-                            android:textStyle="italic" />
-
-                        <TextView
                             android:id="@+id/InvoiceNo2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
-                            android:text="ECT4433TSD"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="14sp"
                             android:textStyle="italic" />
@@ -125,6 +118,7 @@
                             android:background="@drawable/details_box_border">
 
                             <TextView
+                                android:id="@+id/units_available"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
@@ -183,7 +177,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/total_charg"
+                                android:id="@+id/total_charges"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_horizontal"
@@ -228,73 +222,106 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:weightSum="3">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <ImageView
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/created_user_image"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:layout_gravity="center_horizontal"
                                 android:src="@drawable/ic_personal_circular_symbol" />
 
                             <TextView
+                                android:id="@+id/created_user_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="@dimen/t3dp"
                                 android:text="Ramesh Jha"
                                 android:textColor="@color/black"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/created_user_type"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:text="(Buyer)"
+                                android:textColor="@color/black"
                                 android:textSize="12sp" />
 
                         </LinearLayout>
 
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <ImageView
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/broker_image"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:layout_gravity="center_horizontal"
                                 android:src="@drawable/ic_personal_circular_teal_color" />
 
                             <TextView
+                                android:id="@+id/broker_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="@dimen/t3dp"
                                 android:text="You"
                                 android:textColor="@color/black"
-                                android:textSize="12sp" />
+                                android:textSize="14sp" />
 
+                            <TextView
+                                android:id="@+id/broker_user_type"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:text="(Broker)"
+                                android:textColor="@color/black"
+                                android:textSize="12sp" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <ImageView
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/assigned_user_image"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:layout_gravity="center_horizontal"
                                 android:src="@drawable/ic_personal_circular_symbol" />
 
                             <TextView
+                                android:id="@+id/assigned_user_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="@dimen/t3dp"
                                 android:text="Suresh Tot"
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/assigned_user_type"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:text="(Seller)"
                                 android:textColor="@color/black"
                                 android:textSize="12sp" />
 
@@ -307,16 +334,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:paddingBottom="10dp">
+                        android:paddingBottom="10dp"
+                        android:weightSum="3">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:id="@+id/layout_created_user_brokerage"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/seller_broker"
+                                android:id="@+id/created_user_brokerage"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_horizontal"
@@ -329,13 +358,13 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_horizontal"
-                                android:text="Seller Brokerage"
+                                android:text="Brokerage"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/tx10sp" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
@@ -362,13 +391,15 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+
+                            android:id="@+id/layout_assigned_user_brokerage"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/buyer_broker"
+                                android:id="@+id/assigned_user_brokerage"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_horizontal"
@@ -381,7 +412,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_horizontal"
-                                android:text="Buyer Brokerage"
+                                android:text="Brokerage"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/tx10sp" />
 
@@ -393,7 +424,7 @@
             </android.support.v7.widget.CardView>
 
 
-            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <!--<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -554,6 +585,344 @@
                             android:textSize="10sp" />
                     </LinearLayout>
 
+                </LinearLayout>
+            </android.support.v7.widget.CardView>-->
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardElevation="3dp"
+                card_view:cardPreventCornerOverlap="false"
+                card_view:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="15dp">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="Status"
+                            android:textColor="@color/black"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/lbl_view_details"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="5dp"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:drawablePadding="5dp"
+                            android:drawableRight="@drawable/arrow_right_black_24dp"
+                            android:gravity="center"
+                            android:text="View Details"
+                            android:textColor="@color/black"
+                            android:textStyle="italic" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_horizontal"
+                        android:weightSum="6">
+
+                        <RelativeLayout
+                            android:id="@+id/layout_staus1"
+                            android:layout_width="0dp"
+                            android:layout_height="120dp"
+                            android:layout_weight="1"
+                            android:background="?android:attr/selectableItemBackground">
+
+                            <ImageView
+                                android:id="@+id/circle_status1"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_above="@+id/vertical_bar1"
+                                android:layout_centerHorizontal="true"
+                                android:src="@drawable/accept_circle" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:layout_toRightOf="@+id/circle_status1"
+                                android:background="@color/dividerColor"></View>
+
+                            <View
+                                android:id="@+id/vertical_bar1"
+                                android:layout_width="1dp"
+                                android:layout_height="25dp"
+                                android:layout_above="@+id/lblb_status1"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/dividerColor"></View>
+
+                            <TextView
+                                android:id="@+id/lblb_status1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_centerHorizontal="true"
+                                android:lines="2"
+                                android:text="Deal Done\n"
+                                android:textColor="@color/black"
+                                android:textSize="10sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/layout_staus2"
+                            android:layout_width="0dp"
+                            android:layout_height="120dp"
+                            android:layout_weight="1"
+                            android:background="?android:attr/selectableItemBackground">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:layout_toLeftOf="@+id/circle_status2"
+                                android:background="@color/dividerColor"></View>
+
+                            <ImageView
+                                android:id="@+id/circle_status2"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_below="@+id/vertical_bar2"
+                                android:layout_centerHorizontal="true"
+                                android:src="@drawable/accept_circle_gray" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:layout_toRightOf="@+id/circle_status2"
+                                android:background="@color/dividerColor"></View>
+
+                            <View
+                                android:id="@+id/vertical_bar2"
+                                android:layout_width="1dp"
+                                android:layout_height="25dp"
+                                android:layout_below="@+id/lblb_status2"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/dividerColor"></View>
+
+                            <TextView
+                                android:id="@+id/lblb_status2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:layout_centerHorizontal="true"
+                                android:gravity="bottom"
+                                android:lines="2"
+                                android:text="\nGoods Lifted"
+                                android:textColor="@color/black"
+                                android:textSize="10sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/layout_staus3"
+                            android:layout_width="0dp"
+                            android:layout_height="120dp"
+                            android:layout_weight="1"
+                            android:background="?android:attr/selectableItemBackground">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:layout_toLeftOf="@+id/circle_status3"
+                                android:background="@color/dividerColor"></View>
+
+                            <ImageView
+                                android:id="@+id/circle_status3"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_above="@+id/vertical_bar3"
+                                android:layout_centerHorizontal="true"
+                                android:src="@drawable/accept_circle_gray" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:layout_toRightOf="@+id/circle_status3"
+                                android:background="@color/dividerColor"></View>
+
+                            <View
+                                android:id="@+id/vertical_bar3"
+                                android:layout_width="1dp"
+                                android:layout_height="25dp"
+                                android:layout_above="@+id/lblb_status3"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/dividerColor"></View>
+
+                            <TextView
+                                android:id="@+id/lblb_status3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_centerHorizontal="true"
+                                android:lines="2"
+                                android:text="Documents\n attached"
+                                android:textColor="@color/black"
+                                android:textSize="10sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/layout_staus4"
+                            android:layout_width="0dp"
+                            android:layout_height="120dp"
+                            android:layout_weight="1"
+                            android:background="?android:attr/selectableItemBackground">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:layout_toLeftOf="@+id/circle_status4"
+                                android:background="@color/dividerColor"></View>
+
+                            <ImageView
+                                android:id="@+id/circle_status4"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_below="@+id/vertical_bar4"
+                                android:layout_centerHorizontal="true"
+                                android:src="@drawable/accept_circle_gray" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:layout_toRightOf="@+id/circle_status4"
+                                android:background="@color/dividerColor"></View>
+
+                            <View
+                                android:id="@+id/vertical_bar4"
+                                android:layout_width="1dp"
+                                android:layout_height="25dp"
+                                android:layout_below="@+id/lblb_status4"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/dividerColor"></View>
+
+                            <TextView
+                                android:id="@+id/lblb_status4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:layout_centerHorizontal="true"
+                                android:lines="2"
+                                android:text="Payment\nReceived"
+                                android:textColor="@color/black"
+                                android:textSize="10sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/layout_staus5"
+                            android:layout_width="0dp"
+                            android:layout_height="120dp"
+                            android:layout_weight="1"
+                            android:background="?android:attr/selectableItemBackground">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:layout_toLeftOf="@+id/circle_status5"
+                                android:background="@color/dividerColor"></View>
+
+                            <ImageView
+                                android:id="@+id/circle_status5"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_above="@+id/vertical_bar5"
+                                android:layout_centerHorizontal="true"
+                                android:src="@drawable/accept_circle_gray" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:layout_toRightOf="@+id/circle_status5"
+                                android:background="@color/dividerColor"></View>
+
+                            <View
+                                android:id="@+id/vertical_bar5"
+                                android:layout_width="1dp"
+                                android:layout_height="25dp"
+                                android:layout_above="@+id/lblb_status5"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/dividerColor"></View>
+
+                            <TextView
+                                android:id="@+id/lblb_status5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_centerHorizontal="true"
+                                android:lines="2"
+                                android:text="Documents\nReceived"
+                                android:textColor="@color/black"
+                                android:textSize="10sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/layout_staus6"
+                            android:layout_width="0dp"
+                            android:layout_height="120dp"
+                            android:layout_weight="1"
+                            android:background="?android:attr/selectableItemBackground">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:layout_toLeftOf="@+id/circle_status6"
+                                android:background="@color/dividerColor"></View>
+
+                            <ImageView
+                                android:id="@+id/circle_status6"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_below="@+id/vertical_bar6"
+                                android:layout_centerHorizontal="true"
+                                android:src="@drawable/accept_circle_gray" />
+
+                            <View
+                                android:id="@+id/vertical_bar6"
+                                android:layout_width="1dp"
+                                android:layout_height="25dp"
+                                android:layout_below="@+id/lblb_status6"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/dividerColor"></View>
+
+                            <TextView
+                                android:id="@+id/lblb_status6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:layout_centerHorizontal="true"
+                                android:gravity="bottom"
+                                android:lines="2"
+                                android:text="Deal\nCleared"
+                                android:textColor="@color/black"
+                                android:textSize="10sp" />
+                        </RelativeLayout>
+
+                    </LinearLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 

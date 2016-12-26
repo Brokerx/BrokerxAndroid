@@ -1,6 +1,7 @@
 package com.firstidea.android.brokerx.http.service;
 
 import com.firstidea.android.brokerx.http.model.Lead;
+import com.firstidea.android.brokerx.http.model.LeadStatusHistory;
 import com.firstidea.android.brokerx.http.model.MessageDTO;
 
 import retrofit.Callback;
@@ -19,6 +20,15 @@ public interface LeadService {
     void saveLead(@Body Lead lead,
                            Callback<MessageDTO> callback);
 
+    @POST("/lead/saveLeadStatusHistory")
+    void saveLeadStatusHistory(@Body LeadStatusHistory lead,
+                           Callback<MessageDTO> callback);
+
+    @FormUrlEncoded
+    @POST("/lead/getLeadStatusHistory")
+    void getLeadStatusHistory(@Field("leadID") Integer leadID,
+                              Callback<MessageDTO> callback);
+
     @FormUrlEncoded
     @POST("/lead/getLeads")
     void getLeads(@Field("userID") Integer userID,
@@ -26,6 +36,11 @@ public interface LeadService {
                    @Field("status")String status,
                    @Field("startDate")String startDate,
                    @Field("endDate")String endDate,
+                   Callback<MessageDTO> callback);
+
+    @FormUrlEncoded
+    @POST("/lead/getLeadDocuments")
+    void getLeadDocuments(@Field("leadID") Integer leadID,
                    Callback<MessageDTO> callback);
 
     @FormUrlEncoded

@@ -15,7 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Govind
  */
 public class ApptDateUtils {
@@ -23,13 +22,14 @@ public class ApptDateUtils {
     public static final int SECONDS_IN_A_DAY = 86400;
 
     public static final String dateFormat_yyyy_MM_dd = "yyyy-MM-dd";
-    public static final String dateFormat_yyyy_MMM= "yyyy MMMM";
-    public static final String dateFormat_MMM= "MMMM";
+    public static final String dateFormat_yyyy_MMM = "yyyy MMMM";
+    public static final String dateFormat_MMM = "MMMM";
     public static final String dateFormat_dd_mmm_yyyy = "dd-MMM-yyyy";
     //    public static final String dateFormat_yyyy_MM_dd_hh_mm_ss = "yyyy-MM-dd HH:mm:ss";
     public static final String dateFormat_dd_MMM_yyyy_hh_mm_a = "dd-MMM-yyyy h:mm a";
 
     public static final String javascript_date_time_format = "MMMM dd, yyyy HH:mm:ss";
+    public static final String javascript_date_time_format_am_pm = "MMM dd, yyyy hh:mm:ss a";
     public static final String javascript_date_format = "MMMM dd, yyyy";
 
     public static final String dateFormat_hh_mm_a = "h:mm a";
@@ -268,6 +268,16 @@ public class ApptDateUtils {
         DateFormat dateFormat = new SimpleDateFormat(dateFormat_yyyy_MM_DD_HH_mm_ss);
         try {
             return dateFormat.format(inputDate);
+        } catch (Exception ex) {
+            Logger.getLogger(ApptDateUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "";
+    }
+
+    public static String getCurrentFormatedDateAndTimeString() {
+        DateFormat dateFormat = new SimpleDateFormat(javascript_date_time_format_am_pm);
+        try {
+            return dateFormat.format(new Date());
         } catch (Exception ex) {
             Logger.getLogger(ApptDateUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -555,6 +565,7 @@ public class ApptDateUtils {
         }
         return date;
     }
+
     public static Date getFormatedTimeFromStringWithoutSpace(String dateTime) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(timeFormat_hh_mmss);
         Date date = null;

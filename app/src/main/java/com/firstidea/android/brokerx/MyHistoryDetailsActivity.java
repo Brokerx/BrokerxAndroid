@@ -130,7 +130,7 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
         String unitsAvailable = mLead.getQty() + " " + mUnits[mLead.getQtyUnit()] + " available";
         units_available.setText(unitsAvailable);
         Chemical_Name.setText(mLead.getItemName());
-        if(TextUtils.isEmpty(mLeadStatusHistory.getInvoiceNumber())) {
+        if(!TextUtils.isEmpty(mLeadStatusHistory.getInvoiceNumber())) {
             InvoiceNo.setText(Html.fromHtml("<b> Invoice No: </b>"+mLeadStatusHistory.getInvoiceNumber()));
         } else {
             InvoiceNo.setVisibility(View.GONE);

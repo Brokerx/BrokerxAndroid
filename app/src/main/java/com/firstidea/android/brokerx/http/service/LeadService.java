@@ -8,7 +8,10 @@ import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
+import retrofit.http.Multipart;
 import retrofit.http.POST;
+import retrofit.http.Part;
+import retrofit.mime.TypedFile;
 
 /**
  * Created by Govind on 16-Nov-16.
@@ -74,4 +77,12 @@ public interface LeadService {
                    @Field("startDate")String startDate,
                    @Field("endDate")String endDate,
                    Callback<MessageDTO> callback);
+
+
+    @Multipart
+    @POST("/lead/uploadDocument")
+    void uploadDocument(@Part("file") TypedFile file,
+                  @Part("DataJSON") String advertisementJSON,
+                  Callback<MessageDTO> callback);
+
 }

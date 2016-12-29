@@ -65,8 +65,28 @@ public class AppUtils {
     }
 
     public static String getImagePath(String prefix, Context ctx){
-        return Environment.getExternalStorageDirectory()+ File.separator+ctx.getString(R.string.app_name)+ File.separator+prefix+".jpg";
+        return Environment.getExternalStorageDirectory()+ File.separator+ctx.getString(R.string.app_name)+ File.separator+"IMAGE_"+prefix+".jpg";
     }
+
+	public static String getDocumentFilePath(String fileName, Context ctx){
+		String path = Environment.getExternalStorageDirectory()+ File.separator+ctx.getString(R.string.app_name)+ File.separator+"Documents";
+		File file = new File(path);
+		if(!file.exists()){
+			file.mkdirs();
+		}
+        return Environment.getExternalStorageDirectory()+ File.separator+ctx.getString(R.string.app_name)+ File.separator+"Documents"+ File.separator+fileName;
+    }
+
+	public static boolean isFileAvailable(String fileName,Context ctx) {
+		String filePathString = getDocumentFilePath(fileName,ctx);
+		File f = new File(filePathString);
+		if(f.exists() && !f.isDirectory()) {
+			return true;
+		}
+		return false;
+	}
+
+
 /*
 	public static String LoadGCMKey(Activity activity) {
 		try {

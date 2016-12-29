@@ -151,20 +151,27 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="5dp"
                     android:background="@drawable/ic_arrow_down_gray" />
+                <View
+                    android:id="@+id/document_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_below="@+id/status3_lbl"
+                    android:background="@color/light_gray"
+                    android:visibility="gone" />
                 <LinearLayout
                     android:id="@+id/layout_documents"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/status3_lbl"
+                    android:layout_below="@+id/document_divider"
                     android:orientation="vertical"
                     android:paddingBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:visibility="gone">
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginRight="2dp"
-                        android:background="@color/light_gray" />
+
                 </LinearLayout>
             </RelativeLayout>
 

@@ -21,6 +21,8 @@ public class LeadDocument implements Parcelable {
     private boolean isDeleted;
     private String type;
 
+    public static final String KEY_LEAD_DOCUMENT = "Lead_Document";
+
     public Integer getLeadDocumentID() {
         return leadDocumentID;
     }
@@ -128,6 +130,14 @@ public class LeadDocument implements Parcelable {
         ArrayList<LeadDocument> leads = gson.fromJson(jsonString,  new TypeToken<ArrayList<LeadDocument>>() {}.getType());
 
         return leads;
+    }
+
+
+    public static  LeadDocument getLeadDocument(Object data) {
+        Gson gson = new Gson();
+        String jsonUser = gson.toJson(data);
+        LeadDocument leadDocument = gson.fromJson(jsonUser, LeadDocument.class);
+        return leadDocument;
     }
 
 }

@@ -173,6 +173,10 @@
         <activity
             android:name=".LeadStatusHistoryDetailsActivity"
             android:label="@string/title_activity_lead_status_history_details"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".UploadDocumentActivity"
+            android:label="@string/title_activity_upload_document"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

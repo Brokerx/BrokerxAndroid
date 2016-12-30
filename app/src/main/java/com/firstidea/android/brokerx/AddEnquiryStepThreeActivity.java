@@ -21,6 +21,7 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
     private Spinner spinnerBasicUnit, spinnerExciseUnit;
     private CheckBox checkAsPerAvailability;
     private Lead mLead;
+    private final int NEXT_ACTIVITY_REQ_CODE = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +101,7 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
 
         Intent intent = new Intent(AddEnquiryStepThreeActivity.this,AddEnquiryStepFourActivity.class);
         intent.putExtra(Lead.KEY_LEAD,mLead);
-        startActivity(intent);
+        startActivityForResult(intent, NEXT_ACTIVITY_REQ_CODE);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -115,5 +116,16 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(0, android.R.anim.slide_out_right);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == NEXT_ACTIVITY_REQ_CODE  && resultCode == RESULT_OK) {
+            mLead = data.getExtras().getParcelable(Lead.KEY_LEAD);
+            Intent intent = new Intent();
+            intent.putExtra(Lead.KEY_LEAD,mLead);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 }

@@ -23,6 +23,7 @@ import java.util.List;
 public class AddEnquiryStepOneActivity extends AppCompatActivity {
 
     private final int BROKER_SELECTION_REQUEST = 100;
+    private final int NEXT_ACTIVITY_REQ_CODE = 500;
     private EditText editBroker, editMake, editqty;
     private Spinner spinnerItem, spinnerQtyUnit, spinnerPacking;
     Lead mLead;
@@ -121,7 +122,7 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
         mLead.setQty(Float.parseFloat(editqty.getText().toString()));
         Intent intent = new Intent(AddEnquiryStepOneActivity.this, AddEnquiryStepTwoActivity.class);
         intent.putExtra(Lead.KEY_LEAD, mLead);
-        startActivity(intent);
+        startActivityForResult(intent, NEXT_ACTIVITY_REQ_CODE);
     }
 
     @Override
@@ -150,6 +151,12 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
             ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(AddEnquiryStepOneActivity.this, android.R.layout.simple_list_item_1, items);
             spinnerItem.setAdapter(spinnerAdapter);
             findViewById(R.id.layout_item_spinner).setVisibility(View.VISIBLE);
+        } else if(requestCode == NEXT_ACTIVITY_REQ_CODE  && resultCode == RESULT_OK) {
+            mLead = data.getExtras().getParcelable(Lead.KEY_LEAD);
+            Intent intent = new Intent();
+            intent.putExtra(Lead.KEY_LEAD,mLead);
+            setResult(RESULT_OK, intent);
+            finish();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

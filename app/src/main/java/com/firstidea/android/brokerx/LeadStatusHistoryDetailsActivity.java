@@ -42,6 +42,7 @@ public class LeadStatusHistoryDetailsActivity extends AppCompatActivity {
     LinearLayout documentLayout;
     View documentDivider;
     private final int Attach_DOCUMENT_REQ_CODE = 1001;
+    private boolean isSeller = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class LeadStatusHistoryDetailsActivity extends AppCompatActivity {
         documentLayout = (LinearLayout) findViewById(R.id.layout_documents);
         documentDivider = findViewById(R.id.document_divider);
         mLeadStatusHistory = getIntent().getExtras().getParcelable(LeadStatusHistory.KEY_STATUS_HISTORY);
+        isSeller = getIntent().getExtras().getBoolean("IsSeller", false);
         initScreen();
     }
 
@@ -190,7 +192,7 @@ public class LeadStatusHistoryDetailsActivity extends AppCompatActivity {
                         } catch (ActivityNotFoundException e) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(LeadStatusHistoryDetailsActivity.this);
                             builder.setTitle("No Application Found");
-                            builder.setMessage("Download one from Android Market?");
+                            builder.setMessage("Download one from Android Play Store?");
                             builder.setPositiveButton("Yes, Please",
                                     new DialogInterface.OnClickListener() {
                                         @Override
@@ -212,16 +214,18 @@ public class LeadStatusHistoryDetailsActivity extends AppCompatActivity {
             });
             documentLayout.addView(row);
         }
-        View row = View.inflate(this, R.layout.row_attach_more_documents, null);
-        row.findViewById(R.id.upload).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LeadStatusHistoryDetailsActivity.this, UploadDocumentActivity.class);
-                intent.putExtra(Lead.KEY_LEAD_ID, mLeadStatusHistory.getLeadID());
-                startActivityForResult(intent, Attach_DOCUMENT_REQ_CODE);
-            }
-        });
-        documentLayout.addView(row);
+        if (isSeller) {
+            View row = View.inflate(this, R.layout.row_attach_more_documents, null);
+            row.findViewById(R.id.upload).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(LeadStatusHistoryDetailsActivity.this, UploadDocumentActivity.class);
+                    intent.putExtra(Lead.KEY_LEAD_ID, mLeadStatusHistory.getLeadID());
+                    startActivityForResult(intent, Attach_DOCUMENT_REQ_CODE);
+                }
+            });
+            documentLayout.addView(row);
+        }
     }
 
     private void downloadFile(String documentURL, final View row) {

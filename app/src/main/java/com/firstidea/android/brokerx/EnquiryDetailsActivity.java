@@ -451,11 +451,11 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             AlertDialog.Builder builder =
                     new AlertDialog.Builder(this);
             builder.setTitle("Please Confirm");
-            String assigneeType = "Seller";
-            if(mLead.getType().equals(LeadType.SELLER.getType())) {
-                assigneeType = "Buyer";
+            String createdUserType = "Seller";
+            if(mLead.getType().equals(LeadType.BUYER.getType())) {
+                createdUserType = "Buyer";
             }
-            String msg = "Are you sure, do you want to assign <b>"+selectedUser.getFullName()+"</b> as <b>"+assigneeType+"</b> "+ " to this deal ?" ;
+            String msg = "Are you sure, do you want to assign <b>"+selectedUser.getFullName()+"</b> as <b>"+createdUserType+"</b> "+ " to this deal ?" ;
             builder.setMessage(Html.fromHtml(msg));
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override

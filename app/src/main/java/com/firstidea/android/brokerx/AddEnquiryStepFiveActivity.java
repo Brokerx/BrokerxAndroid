@@ -103,9 +103,14 @@ public class AddEnquiryStepFiveActivity extends AppCompatActivity {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 dialog.dismiss();
-                Intent intent = new Intent(AddEnquiryStepFiveActivity.this, EnquiryDetailsActivity.class);
+                /*Intent intent = new Intent(AddEnquiryStepFiveActivity.this, EnquiryDetailsActivity.class);
                 intent.putExtra(Lead.KEY_LEAD, mLead);
-                startActivity(intent);
+                startActivity(intent);*/
+                mLead = Lead.createFromJSON(messageDTO.getData());
+                Intent intent = new Intent();
+                intent.putExtra(Lead.KEY_LEAD,mLead);
+                setResult(RESULT_OK, intent);
+                finish();
             }
 
             @Override

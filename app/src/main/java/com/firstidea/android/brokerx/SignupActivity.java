@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -82,6 +83,8 @@ public class SignupActivity extends AppCompatActivity {
             isFroEdit = true;
             mUser = User.getSavedUser(this);
             updateViews();
+            setTitle("My Profile");
+            ((Button) findViewById(R.id.btn_signup)).setText("Update Profile");
         }
         for (String permission : APP_PERMISSIONS) {
             int result = ContextCompat.checkSelfPermission(this, permission);
@@ -110,6 +113,11 @@ public class SignupActivity extends AppCompatActivity {
         if (!mUser.getBroker()) {
             editDealsIn.setVisibility(View.GONE);
             mBrokerTip.setVisibility(View.GONE);
+        } else {
+            mCheckIsBroker.setVisibility(View.VISIBLE);
+            mCheckIsBroker.setChecked(true);
+            editDealsIn.setVisibility(View.VISIBLE);
+            mBrokerTip.setVisibility(View.VISIBLE);
         }
         editName.setText(mUser.getFullName());
         editEmail.setText(mUser.getEmail());
@@ -274,7 +282,7 @@ public class SignupActivity extends AppCompatActivity {
     private void registerUser() {
         final Dialog dialog = AppProgressDialog.show(mContext);
         User user = new User();
-        if(isFroEdit) {
+        if (isFroEdit) {
             user.setUserID(mUser.getUserID());
         }
         user.setFullName(editName.getText().toString());
@@ -283,7 +291,9 @@ public class SignupActivity extends AppCompatActivity {
         user.setAddress(editAddress.getText().toString());
         user.setCity(editCity.getText().toString());
         user.setBroker(mCheckIsBroker.isChecked());
-        user.setPassword(edtPassword.getText().toString());
+        if (!isFroEdit) {
+            user.setPassword(edtPassword.getText().toString());
+        }
         user.setAbout(editAbout.getText().toString());
         user.setBrokerDealsInItems(editDealsIn.getText().toString());
 //        String deviceID = AppUtils.getDeviceId(mContext);

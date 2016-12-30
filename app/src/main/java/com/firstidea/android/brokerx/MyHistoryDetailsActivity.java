@@ -55,6 +55,7 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
     private Lead mLead;
     private String[] mUnits, mPackings;
     private LeadStatusHistory mLeadStatusHistory;
+    private boolean isSeller = false;;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,6 +213,7 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MyHistoryDetailsActivity.this, LeadStatusHistoryDetailsActivity.class);
                 intent.putExtra(LeadStatusHistory.KEY_STATUS_HISTORY, mLeadStatusHistory);
+                intent.putExtra("IsSeller", isSeller);
                 startActivity(intent);
             }
         });
@@ -232,7 +234,6 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
 
         }
 
-        boolean isSeller = false;
         if(me.isBroker()) {
             isSeller = false;
         }else if (mLead.getType().equals(LeadType.BUYER.getType())) {

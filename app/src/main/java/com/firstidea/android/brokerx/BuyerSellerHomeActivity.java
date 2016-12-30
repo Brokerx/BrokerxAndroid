@@ -49,6 +49,7 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
     private String type;
     private ArrayList<Lead> mLeads;
     private boolean isUserTypeSpinnerInitilized = false;
+    private final int NEXT_ACTIVITY_REQ_CODE = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,8 +174,14 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
         adapter.notifyDataSetChanged();
     }
 
-//    @Override
-//    public void OnCardClick(Enquiry item) {
-//
-//    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == NEXT_ACTIVITY_REQ_CODE  && resultCode == RESULT_OK) {
+            Lead mLead = data.getExtras().getParcelable(Lead.KEY_LEAD);
+            mLeads.add(mLead);
+            initializeRecyclerView();
+            fillRecyclerView();
+        }
+
+    }
 }

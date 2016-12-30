@@ -14,6 +14,7 @@ import com.firstidea.android.brokerx.http.model.Lead;
 public class AddEnquiryFirstActivity extends AppCompatActivity {
 
     private Lead mLead= null;
+    private final int NEXT_ACTIVITY_REQ_CODE = 500;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +37,7 @@ public class AddEnquiryFirstActivity extends AppCompatActivity {
                 if(mLead!= null) {
                     intent.putExtra(Lead.KEY_LEAD,mLead);
                 }
-                startActivity(intent);
+                startActivityForResult(intent,NEXT_ACTIVITY_REQ_CODE);
             }
         });
         if(mLead!= null) {
@@ -47,7 +48,7 @@ public class AddEnquiryFirstActivity extends AppCompatActivity {
                     if(mLead!= null) {
                         intent.putExtra(Lead.KEY_LEAD,mLead);
                     }
-                    startActivity(intent);
+                    startActivityForResult(intent,NEXT_ACTIVITY_REQ_CODE);
                 }
             });
             findViewById(R.id.layout_step_three).setOnClickListener(new View.OnClickListener() {
@@ -57,7 +58,7 @@ public class AddEnquiryFirstActivity extends AppCompatActivity {
                     if(mLead!= null) {
                         intent.putExtra(Lead.KEY_LEAD,mLead);
                     }
-                    startActivity(intent);
+                    startActivityForResult(intent,NEXT_ACTIVITY_REQ_CODE);
                 }
             });
             findViewById(R.id.layout_step_four).setOnClickListener(new View.OnClickListener() {
@@ -67,7 +68,7 @@ public class AddEnquiryFirstActivity extends AppCompatActivity {
                     if(mLead!= null) {
                         intent.putExtra(Lead.KEY_LEAD,mLead);
                     }
-                    startActivity(intent);
+                    startActivityForResult(intent,NEXT_ACTIVITY_REQ_CODE);
                 }
             });
             findViewById(R.id.layout_step_five).setOnClickListener(new View.OnClickListener() {
@@ -77,7 +78,7 @@ public class AddEnquiryFirstActivity extends AppCompatActivity {
                     if(mLead!= null) {
                         intent.putExtra(Lead.KEY_LEAD,mLead);
                     }
-                    startActivity(intent);
+                    startActivityForResult(intent,NEXT_ACTIVITY_REQ_CODE);
                 }
             });
 
@@ -91,5 +92,17 @@ public class AddEnquiryFirstActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == NEXT_ACTIVITY_REQ_CODE  && resultCode == RESULT_OK) {
+            mLead = data.getExtras().getParcelable(Lead.KEY_LEAD);
+            Intent intent = new Intent();
+            intent.putExtra(Lead.KEY_LEAD,mLead);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+
     }
 }

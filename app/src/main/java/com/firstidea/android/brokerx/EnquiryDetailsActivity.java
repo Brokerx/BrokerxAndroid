@@ -346,6 +346,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 Intent intent = new Intent(EnquiryDetailsActivity.this, MycircleActivity.class);
                                 intent.putExtra(Constants.KEY_IS_FOR_SELECTION, true);
+                                intent.putExtra(Constants.KEY_EXCLUDE_USER_ID, mLead.getCreatedUserID());
                                 startActivityForResult(intent, ASIGN_USER_REQ_CODE);;;
                             }
                         });
@@ -452,7 +453,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                     new AlertDialog.Builder(this);
             builder.setTitle("Please Confirm");
             String createdUserType = "Seller";
-            if(mLead.getType().equals(LeadType.BUYER.getType())) {
+            if(mLead.getType().equals(LeadType.SELLER.getType())) {
                 createdUserType = "Buyer";
             }
             String msg = "Are you sure, do you want to assign <b>"+selectedUser.getFullName()+"</b> as <b>"+createdUserType+"</b> "+ " to this deal ?" ;

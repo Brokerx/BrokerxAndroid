@@ -17,28 +17,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firstidea.android.brokerx.adapter.Analysis11HighestBrokerAdapter;
+import com.firstidea.android.brokerx.adapter.Top11BuyerSellerAdapter;
+import com.firstidea.android.brokerx.enums.LeadType;
 import com.firstidea.android.brokerx.http.ObjectFactory;
 import com.firstidea.android.brokerx.http.model.Lead;
 import com.firstidea.android.brokerx.http.model.MessageDTO;
 import com.firstidea.android.brokerx.http.model.User;
-import com.firstidea.android.brokerx.model.AnalysisItem;
+import com.firstidea.android.brokerx.model.TopBroketItem;
 import com.firstidea.android.brokerx.widget.AppProgressDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class Top11HighestBrokerActivity extends AppCompatActivity implements Analysis11HighestBrokerAdapter.OnAnalysisHBCardListener {
+public class Top11BuyerSellerActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
     private ArrayList<Lead> mList;
     private Context mContext;
+
 
     private TextView mStartDateView,mEndDateView;
     private int startDay, endDay;
@@ -47,40 +49,50 @@ public class Top11HighestBrokerActivity extends AppCompatActivity implements Ana
     private Date mStartDate,mEndDate;
     SimpleDateFormat SDF = new SimpleDateFormat("dd MMM yyyy");
 
+
+    private String mLeadType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_top11_highest_broker);
+        setContentView(R.layout.activity_top11_seller);
+        mLeadType = getIntent().getExtras().getString(LeadType.KEY_LEAD_TYPE);
+        String title = "Top 11 Highest Paying Sellers";
+        if (mLeadType.equals(LeadType.BUYER.getType())) {
+            title = "Top 11 Highest Paying Buyers";
+        }
+        mContext = this;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Top 11 highest Brokerage");
+        getSupportActionBar().setTitle(title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        mContext = this;
 
         mStartDateView = (TextView) findViewById(R.id.starDate);
         mEndDateView = (TextView) findViewById(R.id.endDate);
-        mRecyclerView = (RecyclerView) findViewById(R.id.topHighestBroker_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.top11seller_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
         getLeads();
     }
 
     private void getLeads() {
         final Dialog dialog = AppProgressDialog.show(this);
         User me = User.getSavedUser(this);
-        ObjectFactory.getInstance().getAnalysisServiceInstance().getBrokerTopHighestPayingLeads(me.getUserID(), null, null, new Callback<MessageDTO>() {
+        ObjectFactory.getInstance().getAnalysisServiceInstance().getBrokerTopHighestPayingUsers(me.getUserID(),mLeadType, null, null, new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
-                if(messageDTO.isSuccess()) {
+                if (messageDTO.isSuccess()) {
                     mList = Lead.createListFromJson(messageDTO.getData());
-                    Analysis11HighestBrokerAdapter mAdapter = new Analysis11HighestBrokerAdapter(mContext, mList, Top11HighestBrokerActivity.this);
+                    Top11BuyerSellerAdapter mAdapter = new Top11BuyerSellerAdapter(mContext, mList, mLeadType);
                     mRecyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
-                }else {
+                }
+                {
                     Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
                 }
                 dialog.dismiss();
@@ -130,10 +142,7 @@ public class Top11HighestBrokerActivity extends AppCompatActivity implements Ana
     }
 
 
-    @Override
-    public void OnCardClick(AnalysisItem item) {
 
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -142,9 +151,11 @@ public class Top11HighestBrokerActivity extends AppCompatActivity implements Ana
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void finish() {
         super.finish();
         overridePendingTransition(0, android.R.anim.slide_out_right);
     }
+
 }

@@ -13,15 +13,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firstidea.android.brokerx.adapter.PendingEnqBrokerAdapter;
 import com.firstidea.android.brokerx.constants.AppConstants;
 import com.firstidea.android.brokerx.fragment.broker.BrokerHomeFragment;
+import com.firstidea.android.brokerx.http.SingletonRestClient;
 import com.firstidea.android.brokerx.http.model.User;
 import com.firstidea.android.brokerx.model.PendingEntries;
 import com.firstidea.android.brokerx.utils.AppUtils;
 import com.firstidea.android.brokerx.utils.SharedPreferencesUtil;
+import com.squareup.picasso.Picasso;
 
 public class BrokerHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -52,7 +56,7 @@ public class BrokerHomeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        /*Button viewProfileButton = (Button) navigationView.getHeaderView(0).findViewById(R.id.editProfileButton);
+        Button viewProfileButton = (Button) navigationView.getHeaderView(0).findViewById(R.id.editProfileButton);
         viewProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,7 +65,8 @@ public class BrokerHomeActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-        navigationView.getHeaderView(0).findViewById(R.id.user_image).setOnClickListener(new View.OnClickListener() {
+        ImageView userImage = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.user_image);
+        userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(BrokerHomeActivity.this, SignupActivity.class);
@@ -69,8 +74,15 @@ public class BrokerHomeActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-        //TODO init header
-        if(TextUtils.isEmpty())*/
+        if(!TextUtils.isEmpty(me.getImageURL())) {
+            String imgUrl = SingletonRestClient.BASE_PROFILE_IMAGE_URL + me.getImageURL();
+            Picasso.with(this).load(imgUrl)
+                    .error(R.drawable.user_img)
+                    .placeholder(R.drawable.user_img)
+                    .into(userImage);
+        }
+        ((TextView)navigationView.getHeaderView(0).findViewById(R.id.user_name)).setText(me.getFullName());
+        ((TextView)navigationView.getHeaderView(0).findViewById(R.id.user_phone)).setText(me.getMobile());
         AppUtils.loadFCMid(this);
     }
 

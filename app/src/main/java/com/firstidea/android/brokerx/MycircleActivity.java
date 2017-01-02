@@ -53,6 +53,7 @@ public class MycircleActivity extends AppCompatActivity implements MyCircleRecyc
     private List<User> mUsers;
     RecyclerView recyclerView;
     private Context mContext;
+    private Integer excludeUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,9 @@ public class MycircleActivity extends AppCompatActivity implements MyCircleRecyc
         mContext = this;
         mUser = User.getSavedUser(this);
 
+        if(getIntent().hasExtra(Constants.KEY_EXCLUDE_USER_ID)) {
+            excludeUserID = getIntent().getExtras().getInt(Constants.KEY_EXCLUDE_USER_ID);
+        }
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         getMyCircle();
@@ -99,7 +103,10 @@ public class MycircleActivity extends AppCompatActivity implements MyCircleRecyc
             if (user.getStatus().equals(ConnectionStatus.PENDING.getStatus())) {
                 pendingUsers.add(user);
             } else if (user.getStatus().equals(ConnectionStatus.ACCEPTED.getStatus())) {
-                acceptedUsers.add(user);
+                if(!(excludeUserID != null && excludeUserID.equals(user.getUserID()))) {
+                    acceptedUsers.add(user);
+                }
+
             }
         }
         List<List<User>> adapterUsers = new ArrayList<>();
@@ -247,6 +254,14 @@ public class MycircleActivity extends AppCompatActivity implements MyCircleRecyc
                     User user = messageDTO.getUser();
                     if(mUser.getUserID() == user.getUserID()) {
                         Toast.makeText(mContext, "You can not send request to yourself", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        return;
+                    } else if(!mUser.isBroker() && !user.isBroker()) {
+                        Toast.makeText(mContext, "This User Is not registered as broker", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        return;
+                    } else if(mUser.isBroker() && user.isBroker()) {
+                        Toast.makeText(mContext, "This User is not registered as Buyer/Seller", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         return;
                     }

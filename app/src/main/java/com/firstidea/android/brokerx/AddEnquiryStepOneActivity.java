@@ -101,7 +101,10 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
         if (getIntent().hasExtra(Lead.KEY_LEAD)) {
             mLead = getIntent().getExtras().getParcelable(Lead.KEY_LEAD);
             editBroker.setEnabled(false);
-            String brokerName = "<b>Broker:</b> "+mLead.getBroker().getFullName();
+            String brokerName = "<b>Broker:</b> You";
+            if (mLead.getBroker() != null) {
+                brokerName = "<b>Broker:</b> "+mLead.getBroker().getFullName();
+            }
             editBroker.setText(Html.fromHtml(brokerName));
             editMake.setText(mLead.getMake());
             editqty.setText(mLead.getQty()+"");
@@ -143,7 +146,7 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
                 return;
             }
             editBroker.setText(user.getFullName());
-            mLead.setBrokerID(1);
+            mLead.setBrokerID(user.getUserID());
             List<String> items = new ArrayList<>();
             for (String id : user.getBrokerDealsInItems().split(",")) {
                 items.add(id);

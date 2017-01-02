@@ -90,7 +90,7 @@ public class PendingEntriesActivity extends AppCompatActivity {
         User me = User.getSavedUser(mContext);
         final Dialog dialog = AppProgressDialog.show(mContext);
         String type = spinner_nav.getSelectedItemPosition() == 0 ? LeadType.BUYER.getType() : LeadType.SELLER.getType();
-        ObjectFactory.getInstance().getLeadServiceInstance().getLeads(me.getUserID(), type, "P", null, null, new Callback<MessageDTO>() {
+        ObjectFactory.getInstance().getLeadServiceInstance().getLeads(me.getUserID(), type, "P",null,null, null, null, new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 if (messageDTO.isSuccess()) {

@@ -30,13 +30,11 @@ public class MyHistoryAdapter extends RecyclerView.Adapter<MyHistoryAdapter.Hist
     private final List<Lead> mValues;
     private String[] qtys;
     private final boolean isBroker;
-    private final OnHostoryCardListener onHostoryCardListener;
 
-    public MyHistoryAdapter(Context context,List<Lead> items, boolean isBroker, OnHostoryCardListener onHostoryCardListener) {
+    public MyHistoryAdapter(Context context,List<Lead> items, boolean isBroker) {
         mValues = items;
         qtys = context.getResources().getStringArray(R.array.qty_options);
         this.isBroker=isBroker;
-        this.onHostoryCardListener = onHostoryCardListener;
     }
 
     /**

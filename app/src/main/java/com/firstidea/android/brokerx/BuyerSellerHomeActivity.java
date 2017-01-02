@@ -66,7 +66,7 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
             public void onClick(View view) {
                 Intent intent = new Intent(BuyerSellerHomeActivity.this, AddEnquiryFirstActivity.class);
                 intent.putExtra("type", type);
-                startActivity(intent);
+                startActivityForResult(intent, NEXT_ACTIVITY_REQ_CODE);
             }
         });
         AppUtils.loadFCMid(this);
@@ -177,10 +177,7 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == NEXT_ACTIVITY_REQ_CODE  && resultCode == RESULT_OK) {
-            Lead mLead = data.getExtras().getParcelable(Lead.KEY_LEAD);
-            mLeads.add(mLead);
-            initializeRecyclerView();
-            fillRecyclerView();
+            getLeads();
         }
 
     }

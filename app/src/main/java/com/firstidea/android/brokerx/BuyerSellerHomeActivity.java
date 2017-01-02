@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.firstidea.android.brokerx.Chat.ChatListActivity;
 import com.firstidea.android.brokerx.adapter.BuyerSellerHomeEnquiriesAdapter;
 import com.firstidea.android.brokerx.constants.AppConstants;
+import com.firstidea.android.brokerx.enums.LeadCurrentStatus;
 import com.firstidea.android.brokerx.enums.LeadType;
 import com.firstidea.android.brokerx.fragment.dummy.DummyContent;
 import com.firstidea.android.brokerx.http.ObjectFactory;
@@ -48,6 +49,7 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
     private String type;
     private ArrayList<Lead> mLeads;
     private boolean isUserTypeSpinnerInitilized = false;
+    private final int NEXT_ACTIVITY_REQ_CODE = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,8 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
         final Dialog dialog = AppProgressDialog.show(mContext);
         User user = User.getSavedUser(mContext);
         String type = isUserTypeSpinnerInitilized ? spinner_nav.getSelectedItem().toString().toUpperCase().charAt(0)+"":LeadType.BUYER.getType();
-        ObjectFactory.getInstance().getLeadServiceInstance().getLeads(user.getUserID(), type, null, null, null, new Callback<MessageDTO>() {
+        String status = ""+ LeadCurrentStatus.Accepted;
+        ObjectFactory.getInstance().getLeadServiceInstance().getActiveLeads(user.getUserID(), type, new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 if(messageDTO.isSuccess()) {
@@ -171,8 +174,14 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
         adapter.notifyDataSetChanged();
     }
 
-//    @Override
-//    public void OnCardClick(Enquiry item) {
-//
-//    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == NEXT_ACTIVITY_REQ_CODE  && resultCode == RESULT_OK) {
+            Lead mLead = data.getExtras().getParcelable(Lead.KEY_LEAD);
+            mLeads.add(mLead);
+            initializeRecyclerView();
+            fillRecyclerView();
+        }
+
+    }
 }

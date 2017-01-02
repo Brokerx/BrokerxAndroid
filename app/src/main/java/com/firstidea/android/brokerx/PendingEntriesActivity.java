@@ -1,5 +1,7 @@
 package com.firstidea.android.brokerx;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,16 +12,34 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.firstidea.android.brokerx.adapter.MyHistoryAdapter;
 import com.firstidea.android.brokerx.adapter.PendingEntriesAdapter;
+import com.firstidea.android.brokerx.enums.LeadType;
+import com.firstidea.android.brokerx.http.ObjectFactory;
+import com.firstidea.android.brokerx.http.model.Lead;
+import com.firstidea.android.brokerx.http.model.MessageDTO;
+import com.firstidea.android.brokerx.http.model.User;
 import com.firstidea.android.brokerx.model.PendingEntries;
+import com.firstidea.android.brokerx.widget.AppProgressDialog;
 
 import java.util.ArrayList;
 
-public class PendingEntriesActivity extends AppCompatActivity implements PendingEntriesAdapter.OnCardListener {
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
+public class PendingEntriesActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
-    private ArrayList<PendingEntries> mList;
+    private Context mContext;
+    private ArrayList<Lead> mLeads;
+    private Spinner spinner_nav;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,8 +49,11 @@ public class PendingEntriesActivity extends AppCompatActivity implements Pending
         getSupportActionBar().setTitle("Pending Entries");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        mContext = this;
 
-        mRecyclerView = (RecyclerView)findViewById(R.id.pending_recycler_view);
+        spinner_nav = (Spinner) findViewById(R.id.spinner_nav);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.pending_recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
         mLayoutManager = new LinearLayoutManager(this);
@@ -38,61 +61,64 @@ public class PendingEntriesActivity extends AppCompatActivity implements Pending
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
 
-        mList = new ArrayList<PendingEntries>();
-        initList();
+        initActionbarSpinner();
 
-        PendingEntriesAdapter mAdapter = new PendingEntriesAdapter(this, mList, this);
-        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void initActionbarSpinner() {
+
+        final String[] spinnerItems = {"As Buyer", " As Seller"};
+        ArrayAdapter<String> spinnerAdapert = new ArrayAdapter<String>(mContext, R.layout.buyer_seller_actiobar_spinner_item, spinnerItems);
+        spinner_nav.setAdapter(spinnerAdapert);
+        spinner_nav.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //Toast.makeText(PendingEntriesActivity.this, "Showing "+spinnerItems[position]+" Enquiries", Toast.LENGTH_SHORT).show();
+                getLeads();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
     }
 
-    private void initList() {
+    private void getLeads() {
+        User me = User.getSavedUser(mContext);
+        final Dialog dialog = AppProgressDialog.show(mContext);
+        String type = spinner_nav.getSelectedItemPosition() == 0 ? LeadType.BUYER.getType() : LeadType.SELLER.getType();
+        ObjectFactory.getInstance().getLeadServiceInstance().getLeads(me.getUserID(), type, "P", null, null, new Callback<MessageDTO>() {
+            @Override
+            public void success(MessageDTO messageDTO, Response response) {
+                if (messageDTO.isSuccess()) {
+                    ArrayList<Lead> leads = Lead.createListFromJson(messageDTO.getData());
+                    if (leads.isEmpty()) {
+                        findViewById(R.id.empty_list).setVisibility(View.VISIBLE);
+                        mRecyclerView.setVisibility(View.GONE);
+                    } else {
+                        findViewById(R.id.empty_list).setVisibility(View.GONE);
+                        mRecyclerView.setVisibility(View.VISIBLE);
+                        mLeads = new ArrayList<Lead>();
+                        mLeads.addAll(leads);
+                        PendingEntriesAdapter mAdapter = new PendingEntriesAdapter(mContext, mLeads);
+                        mRecyclerView.setAdapter(mAdapter);
+                    }
 
-        PendingEntries item1 = new PendingEntries();
-        item1.setChemicalName("Benzene Toluene Ethyl benzene,Xylenes");
-        item1.setPostedName("Posted by Mohan");
-        item1.setAddress("JSD Warehouse,Dhisar,Mumbai");
-        item1.setGetPercentage("3000Rs/Unit");
-        item1.setAvailability("440 units Available");
-        mList.add(item1);
+                } else {
+                    Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();
+            }
 
-        PendingEntries item2 = new PendingEntries();
-        item2.setChemicalName("Benzene Toluene Ethyl benzene,Xylenes");
-        item2.setPostedName("Posted by Mohan");
-        item2.setAddress("JSD Warehouse,Dhisar,Mumbai");
-        item2.setGetPercentage("3000Rs/Unit");
-        item2.setAvailability("440 units Available");
-        mList.add(item2);
-
-        PendingEntries item3 = new PendingEntries();
-        item3.setChemicalName("Benzene Toluene Ethyl benzene,Xylenes");
-        item3.setPostedName("Posted by Mohan");
-        item3.setAddress("JSD Warehouse,Dhisar,Mumbai");
-        item3.setGetPercentage("3090Rs/Unit");
-        item3.setAvailability("359 units Available");
-        mList.add(item3);
-
-        PendingEntries item4 = new PendingEntries();
-        item4.setChemicalName("Benzene Toluene Ethyl benzene,Xylenes");
-        item4.setPostedName("Posted by Mohan");
-        item4.setAddress("JSD Warehouse,Dhisar,Mumbai");
-        item4.setGetPercentage("3800Rs/Unit");
-        item4.setAvailability("460 units Available");
-        mList.add(item4);
-
-        PendingEntries item5 = new PendingEntries();
-        item5.setChemicalName("Benzene Toluene Ethyl benzene,Xylenes");
-        item5.setPostedName("Posted by Mohan");
-        item5.setAddress("JSD Warehouse,Dhisar,Mumbai");
-        item5.setGetPercentage("3050Rs/Unit");
-        item5.setAvailability("440 units Available");
-        mList.add(item5);
-    }
-
-    @Override
-    public void OnCardClick(PendingEntries item) {
-
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(mContext, "Please Check your Internet Connection", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
     }
 
     @Override

@@ -20,10 +20,10 @@ public class SingletonRestClient {
 	private static RestAdapter restAdapter = null;
 //		public static String BASE_URL = "https://secure.reachx.in/";
 		public static String BASE_URL = "http://reachx.in:8080/Brokerx/";
-//	private static String BASE_URL = "http://192.168.0.103:8080/Brokerx/";
+//	private static String BASE_URL = "http://192.168.0.101:8080/Brokerx/";
 	public static String BASE_IMAGE_URL = BASE_URL + "Images/";
 	public static String BASE_PROFILE_IMAGE_URL = BASE_URL + "Images/UserProfilePhotos/";
-	public static String BASE_FILES_URL = BASE_URL + "files/";
+	public static String BASE_DOCUMENT_FILES_URL = BASE_URL + "files/LeadDocuments/";
 	public static String ADVT_BASE_IMAGE_URL = BASE_IMAGE_URL + "Advertisements/";
 	private static String BASE_API_URL = BASE_URL + "webresources/";
 	private static void initRestAdapter(Context mContext) {

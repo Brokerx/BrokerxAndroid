@@ -10,4 +10,6 @@ public interface Constants {
     String KEY_USER_TYPE_BROKER = "Broker";
     String KEY_IS_FOR_SELECTION = "IsForSelection";
     String IS_FROM_NOTIFICATION = "isFromNotification";
+
+    String KEY_SELECTED_USER = "SelectedUser";
 }

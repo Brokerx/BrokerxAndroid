@@ -105,7 +105,7 @@ public class MyCircleRecyclerViewAdapter extends SectionedRecyclerViewAdapter<My
             public void onClick(View v) {
                 if (isForSelection) {
                     Intent intent = new Intent();
-                    intent.putExtra(Constants.KEY_USER_TYPE_BROKER, holder.mItem);
+                    intent.putExtra(Constants.KEY_SELECTED_USER, holder.mItem);
                     activity.setResult(Activity.RESULT_OK, intent);
                     activity.finish();
                 } else {

@@ -2,6 +2,7 @@ package com.firstidea.android.brokerx;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,12 +17,24 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firstidea.android.brokerx.adapter.MyHistoryAdapter;
+import com.firstidea.android.brokerx.enums.LeadCurrentStatus;
+import com.firstidea.android.brokerx.enums.LeadType;
+import com.firstidea.android.brokerx.http.ObjectFactory;
+import com.firstidea.android.brokerx.http.model.Lead;
+import com.firstidea.android.brokerx.http.model.MessageDTO;
+import com.firstidea.android.brokerx.http.model.User;
 import com.firstidea.android.brokerx.model.MyHistroyItem;
+import com.firstidea.android.brokerx.widget.AppProgressDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MyHistoryActivity extends AppCompatActivity implements MyHistoryAdapter.OnHostoryCardListener {
     private RecyclerView.LayoutManager mLayoutManager;
@@ -33,6 +46,9 @@ public class MyHistoryActivity extends AppCompatActivity implements MyHistoryAda
     private int day;
     private int month;
     private int year;
+    private Context mContext;
+    private ArrayList<Lead> mLeads;
+    private User me;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +58,8 @@ public class MyHistoryActivity extends AppCompatActivity implements MyHistoryAda
         getSupportActionBar().setTitle("My History");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        mContext = this;
+        me = User.getSavedUser(this);
 
         mStartDate = (EditText) findViewById(R.id.starDate);
         mEndDate = (EditText) findViewById(R.id.endDate);
@@ -59,8 +77,8 @@ public class MyHistoryActivity extends AppCompatActivity implements MyHistoryAda
         mList = new ArrayList<MyHistroyItem>();
         initList();
 
-        MyHistoryAdapter mAdapter = new MyHistoryAdapter(this, mList, this);
-        mRecyclerView.setAdapter(mAdapter);
+        getHistory();
+
 
 
         cal = Calendar.getInstance();
@@ -70,6 +88,31 @@ public class MyHistoryActivity extends AppCompatActivity implements MyHistoryAda
 
         showDate(year, month + 1, day);
 
+    }
+
+    private void getHistory() {
+        final Dialog dialog = AppProgressDialog.show(mContext);
+        ObjectFactory.getInstance().getLeadServiceInstance().getHistory(me.getUserID(), null,null, new Callback<MessageDTO>() {
+            @Override
+            public void success(MessageDTO messageDTO, Response response) {
+                if(messageDTO.isSuccess()) {
+                    ArrayList<Lead> leads= Lead.createListFromJson(messageDTO.getData());
+                    mLeads= new ArrayList<Lead>();
+                    mLeads.addAll(leads);
+                    MyHistoryAdapter mAdapter = new MyHistoryAdapter(mContext, mLeads,me.isBroker(), MyHistoryActivity.this);
+                    mRecyclerView.setAdapter(mAdapter);
+                } else {
+                    Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(mContext, "Please Check your Internet Connection", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
     }
 
     @SuppressWarnings("deprecation")

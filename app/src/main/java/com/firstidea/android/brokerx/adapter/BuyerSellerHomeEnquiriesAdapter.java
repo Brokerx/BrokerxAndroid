@@ -91,19 +91,12 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent enquiry=new Intent(mContext.getApplicationContext(),EnquiryDetailsActivity.class);
+                Intent enquiry=new Intent(v.getContext(),EnquiryDetailsActivity.class);
                 enquiry.putExtra(Lead.KEY_LEAD, holder.mItem);
-                mContext.startActivity(enquiry);
+                v.getContext().startActivity(enquiry);
             }
         });
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent enquiry=new Intent(mContext.getApplicationContext(),EnquiryDetailsActivity.class);
-                enquiry.putExtra(Lead.KEY_LEAD, holder.mItem);
-                mContext.startActivity(enquiry);
-            }
-        });
+
     }
 
    /* @Override protected void onBindFooterViewHolder(RecyclerView.ViewHolder holder, int position) {

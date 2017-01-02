@@ -1,6 +1,7 @@
 package com.firstidea.android.brokerx.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,83 +9,97 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.firstidea.android.brokerx.EnquiryDetailsActivity;
 import com.firstidea.android.brokerx.R;
+import com.firstidea.android.brokerx.http.model.Lead;
+import com.firstidea.android.brokerx.http.model.User;
 import com.firstidea.android.brokerx.model.PendingEntries;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by user on 9/20/2016.
  */
-public class PendingEntriesAdapter extends RecyclerView.Adapter<PendingEntriesAdapter.PendingViewHolder> {
-    private ArrayList<PendingEntries> mList;
-    private Context mContext;
-    private OnCardListener mListner;
+public class PendingEntriesAdapter extends RecyclerView.Adapter<PendingEntriesAdapter.ViewHolder> {
 
-    /**
-     * <b>public interface OnCardListener</b>
-     * <br>Interface to implement the OnClick on Card</br>
-     */
-    public interface OnCardListener {
-        void OnCardClick(PendingEntries item);
+    private final List<Lead> mValues;
+    private String[] qtys;
+    private String[] mUnits;
+    private boolean isBroker;
+
+
+    public PendingEntriesAdapter(Context context,List<Lead> items) {
+        mValues = items;
+        qtys = context.getResources().getStringArray(R.array.qty_options);
+        mUnits = context.getResources().getStringArray(R.array.qty_options);
+        User me = User.getSavedUser(context);
+        isBroker = me.isBroker();
     }
 
-    public class PendingViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public PendingEntriesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.fragment_buyer_seller_enq_item, parent, false);
+        return new PendingEntriesAdapter.ViewHolder(view);
+    }
 
-        public LinearLayout mParentlayout;
-        private TextView mChemicalName;
-        private TextView mPostName;
-        private TextView mAddress;
-        private TextView mGetPercentage;
-        private TextView mAvaibility;
-        public PendingViewHolder(View itemView) {
-            super(itemView);
-
-            mParentlayout = (LinearLayout) itemView.findViewById(R.id.linear_parent);
-            mChemicalName = (TextView) itemView.findViewById(R.id.chemical_name);
-            mPostName = (TextView) itemView.findViewById(R.id.post_name);
-            mAddress = (TextView) itemView.findViewById(R.id.addresspend);
-            mGetPercentage = (TextView) itemView.findViewById(R.id.get_percentage);
-            mAvaibility = (TextView) itemView.findViewById(R.id.avaibility);
+    @Override
+    public void onBindViewHolder(final PendingEntriesAdapter.ViewHolder holder, int position) {
+        holder.mItem = mValues.get(position);
+        holder.title.setText(mValues.get(position).getItemName());
+        if(!isBroker) {
+            holder.userName.setText("Broker: " + mValues.get(position).getBroker().getFullName());
+        } else {
+            holder.userName.setText("Posted by "+mValues.get(position).getCreatedUser().getFullName());
         }
-    }
-
-    public PendingEntriesAdapter(Context mContext, ArrayList<PendingEntries> mList, OnCardListener mListner) {
-        this.mContext = mContext;
-        this.mList = mList;
-        this.mListner = mListner;
-    }
-    @Override
-    public PendingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        View v = LayoutInflater.from(mContext).inflate(R.layout.pending_entries_card, parent, false);
-        PendingViewHolder pendingViewHolder = new PendingViewHolder(v);
-        return pendingViewHolder;
-
-    }
-
-    @Override
-    public void onBindViewHolder(PendingViewHolder holder, int position) {
-        final PendingEntries mItem = mList.get(position);
-        holder.mChemicalName.setText(mItem.getChemicalName());
-        holder.mPostName.setText(mItem.getPostedName());
-        holder.mAddress.setText(mItem.getAddress());
-        holder.mGetPercentage.setText(mItem.getGetPercentage());
-        holder.mAvaibility.setText(mItem.getAvailability());
-
-        holder.mParentlayout.setOnClickListener(new View.OnClickListener() {
+        holder.address.setText(mValues.get(position).getLocation());
+        if(!isBroker) {
+            String basicPriceString = mValues.get(position).getBasicPrice() + " Rs/" + mUnits[mValues.get(position).getBasicPriceUnit()];
+            holder.brokerage.setText(basicPriceString);
+        } else {
+            holder.brokerage.setText("You get "+mValues.get(position).getBrokerageAmt());
+        }
+        holder.qty.setText(mValues.get(position).getQty()+" "+qtys[mValues.get(position).getQtyUnit()]+" Available");
+        final Context context = holder.qty.getContext();
+        holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                mListner.OnCardClick(mItem);
-
+            public void onClick(View v) {
+                Intent next = new Intent(context, EnquiryDetailsActivity.class);
+                next.putExtra(Lead.KEY_LEAD,holder.mItem);
+                context.startActivity(next);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        return mValues.size();
     }
 
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public final View mView;
+        public final TextView title;
+        public final TextView userName;
+        public final TextView address;
+        public final TextView brokerage;
+        public final TextView qty;
+        public Lead mItem;
+
+        public ViewHolder(View view) {
+            super(view);
+            mView = view.findViewById(R.id.main_view);
+            title = (TextView) view.findViewById(R.id.title);
+            userName = (TextView) view.findViewById(R.id.userName);
+            address = (TextView) view.findViewById(R.id.address);
+            brokerage = (TextView) view.findViewById(R.id.brokerage);
+            qty = (TextView) view.findViewById(R.id.qty);
+        }
+
+        @Override
+        public String toString() {
+            return super.toString() + " '" + userName.getText() + "'";
+        }
+    }
 
 }

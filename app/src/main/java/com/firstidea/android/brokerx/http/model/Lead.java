@@ -15,15 +15,19 @@ import java.util.ArrayList;
 public class Lead implements Parcelable {
 
     public static final String KEY_LEAD = "Lead";
+    public static final String KEY_LEAD_ID = "LeadID";
 
     private Integer leadID;
     private int createdUserID;
     private Integer brokerID;
     private Integer assignedToUserID;
+    private Integer parentLeadID;
     private Integer itemID;
     private String itemName;
     private String type;
-    private String currentStatus;
+    private String buyerStatus;
+    private String sellerStatus;
+    private String brokerStatus;
     private String make;
     private float qty;
     private Integer qtyUnit;
@@ -37,15 +41,20 @@ public class Lead implements Parcelable {
     private float transportCharges;
     private float miscCharges;
     private float brokerageAmt;
+    private float buyerBrokerage;
+    private float sellerBrokerage;
     private String againstForm;
     private String creditPeriod;
     private String freeStoragePeriod;
     private String preferredSellerName;
     private String comments;
     private String createdDttm;
+    private Integer LastUpdUserID;
+    private String lastUpdDateTime;
     User createdUser;
     User broker;
     User assignedToUser;
+    private String fieldsAltered;
 
     public Integer getLeadID() {
         return leadID;
@@ -79,6 +88,14 @@ public class Lead implements Parcelable {
         this.assignedToUserID = assignedToUserID;
     }
 
+    public Integer getParentLeadID() {
+        return parentLeadID;
+    }
+
+    public void setParentLeadID(Integer parentLeadID) {
+        this.parentLeadID = parentLeadID;
+    }
+
     public Integer getItemID() {
         return itemID;
     }
@@ -103,12 +120,28 @@ public class Lead implements Parcelable {
         this.type = type;
     }
 
-    public String getCurrentStatus() {
-        return currentStatus;
+    public String getBuyerStatus() {
+        return buyerStatus;
     }
 
-    public void setCurrentStatus(String currentStatus) {
-        this.currentStatus = currentStatus;
+    public void setBuyerStatus(String buyerStatus) {
+        this.buyerStatus = buyerStatus;
+    }
+
+    public String getSellerStatus() {
+        return sellerStatus;
+    }
+
+    public void setSellerStatus(String sellerStatus) {
+        this.sellerStatus = sellerStatus;
+    }
+
+    public String getBrokerStatus() {
+        return brokerStatus;
+    }
+
+    public void setBrokerStatus(String brokerStatus) {
+        this.brokerStatus = brokerStatus;
     }
 
     public String getMake() {
@@ -215,6 +248,22 @@ public class Lead implements Parcelable {
         this.brokerageAmt = brokerageAmt;
     }
 
+    public float getBuyerBrokerage() {
+        return buyerBrokerage;
+    }
+
+    public void setBuyerBrokerage(float buyerBrokerage) {
+        this.buyerBrokerage = buyerBrokerage;
+    }
+
+    public float getSellerBrokerage() {
+        return sellerBrokerage;
+    }
+
+    public void setSellerBrokerage(float sellerBrokerage) {
+        this.sellerBrokerage = sellerBrokerage;
+    }
+
     public String getAgainstForm() {
         return againstForm;
     }
@@ -263,6 +312,22 @@ public class Lead implements Parcelable {
         this.createdDttm = createdDttm;
     }
 
+    public Integer getLastUpdUserID() {
+        return LastUpdUserID;
+    }
+
+    public void setLastUpdUserID(Integer lastUpdUserID) {
+        LastUpdUserID = lastUpdUserID;
+    }
+
+    public String getLastUpdDateTime() {
+        return lastUpdDateTime;
+    }
+
+    public void setLastUpdDateTime(String lastUpdDateTime) {
+        this.lastUpdDateTime = lastUpdDateTime;
+    }
+
     public User getCreatedUser() {
         return createdUser;
     }
@@ -287,92 +352,16 @@ public class Lead implements Parcelable {
         this.assignedToUser = assignedToUser;
     }
 
+    public String getFieldsAltered() {
+        return fieldsAltered;
+    }
+
+    public void setFieldsAltered(String fieldsAltered) {
+        this.fieldsAltered = fieldsAltered;
+    }
+
     public Lead() {
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.leadID);
-        dest.writeInt(this.createdUserID);
-        dest.writeValue(this.brokerID);
-        dest.writeValue(this.assignedToUserID);
-        dest.writeValue(this.itemID);
-        dest.writeString(this.itemName);
-        dest.writeString(this.type);
-        dest.writeString(this.currentStatus);
-        dest.writeString(this.make);
-        dest.writeFloat(this.qty);
-        dest.writeValue(this.qtyUnit);
-        dest.writeValue(this.packing);
-        dest.writeString(this.location);
-        dest.writeFloat(this.basicPrice);
-        dest.writeValue(this.basicPriceUnit);
-        dest.writeFloat(this.exciseDuty);
-        dest.writeValue(this.exciseUnit);
-        dest.writeByte(this.asPerAvailablity ? (byte) 1 : (byte) 0);
-        dest.writeFloat(this.transportCharges);
-        dest.writeFloat(this.miscCharges);
-        dest.writeFloat(this.brokerageAmt);
-        dest.writeString(this.againstForm);
-        dest.writeString(this.creditPeriod);
-        dest.writeString(this.freeStoragePeriod);
-        dest.writeString(this.preferredSellerName);
-        dest.writeString(this.comments);
-        dest.writeString(this.createdDttm);
-        dest.writeParcelable(this.createdUser, flags);
-        dest.writeParcelable(this.broker, flags);
-        dest.writeParcelable(this.assignedToUser, flags);
-    }
-
-    protected Lead(Parcel in) {
-        this.leadID = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.createdUserID = in.readInt();
-        this.brokerID = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.assignedToUserID = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.itemID = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.itemName = in.readString();
-        this.type = in.readString();
-        this.currentStatus = in.readString();
-        this.make = in.readString();
-        this.qty = in.readFloat();
-        this.qtyUnit = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.packing = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.location = in.readString();
-        this.basicPrice = in.readFloat();
-        this.basicPriceUnit = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.exciseDuty = in.readFloat();
-        this.exciseUnit = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.asPerAvailablity = in.readByte() != 0;
-        this.transportCharges = in.readFloat();
-        this.miscCharges = in.readFloat();
-        this.brokerageAmt = in.readFloat();
-        this.againstForm = in.readString();
-        this.creditPeriod = in.readString();
-        this.freeStoragePeriod = in.readString();
-        this.preferredSellerName = in.readString();
-        this.comments = in.readString();
-        this.createdDttm = in.readString();
-        this.createdUser = in.readParcelable(User.class.getClassLoader());
-        this.broker = in.readParcelable(User.class.getClassLoader());
-        this.assignedToUser = in.readParcelable(User.class.getClassLoader());
-    }
-
-    public static final Creator<Lead> CREATOR = new Creator<Lead>() {
-        @Override
-        public Lead createFromParcel(Parcel source) {
-            return new Lead(source);
-        }
-
-        @Override
-        public Lead[] newArray(int size) {
-            return new Lead[size];
-        }
-    };
 
 
     public static Lead createFromJSON(Object object) {
@@ -391,4 +380,104 @@ public class Lead implements Parcelable {
 
         return leads;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.leadID);
+        dest.writeInt(this.createdUserID);
+        dest.writeValue(this.brokerID);
+        dest.writeValue(this.assignedToUserID);
+        dest.writeValue(this.parentLeadID);
+        dest.writeValue(this.itemID);
+        dest.writeString(this.itemName);
+        dest.writeString(this.type);
+        dest.writeString(this.buyerStatus);
+        dest.writeString(this.sellerStatus);
+        dest.writeString(this.brokerStatus);
+        dest.writeString(this.make);
+        dest.writeFloat(this.qty);
+        dest.writeValue(this.qtyUnit);
+        dest.writeValue(this.packing);
+        dest.writeString(this.location);
+        dest.writeFloat(this.basicPrice);
+        dest.writeValue(this.basicPriceUnit);
+        dest.writeFloat(this.exciseDuty);
+        dest.writeValue(this.exciseUnit);
+        dest.writeByte(this.asPerAvailablity ? (byte) 1 : (byte) 0);
+        dest.writeFloat(this.transportCharges);
+        dest.writeFloat(this.miscCharges);
+        dest.writeFloat(this.brokerageAmt);
+        dest.writeFloat(this.buyerBrokerage);
+        dest.writeFloat(this.sellerBrokerage);
+        dest.writeString(this.againstForm);
+        dest.writeString(this.creditPeriod);
+        dest.writeString(this.freeStoragePeriod);
+        dest.writeString(this.preferredSellerName);
+        dest.writeString(this.comments);
+        dest.writeString(this.createdDttm);
+        dest.writeValue(this.LastUpdUserID);
+        dest.writeString(this.lastUpdDateTime);
+        dest.writeParcelable(this.createdUser, flags);
+        dest.writeParcelable(this.broker, flags);
+        dest.writeParcelable(this.assignedToUser, flags);
+        dest.writeString(this.fieldsAltered);
+    }
+
+    protected Lead(Parcel in) {
+        this.leadID = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.createdUserID = in.readInt();
+        this.brokerID = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.assignedToUserID = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.parentLeadID = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.itemID = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.itemName = in.readString();
+        this.type = in.readString();
+        this.buyerStatus = in.readString();
+        this.sellerStatus = in.readString();
+        this.brokerStatus = in.readString();
+        this.make = in.readString();
+        this.qty = in.readFloat();
+        this.qtyUnit = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.packing = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.location = in.readString();
+        this.basicPrice = in.readFloat();
+        this.basicPriceUnit = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.exciseDuty = in.readFloat();
+        this.exciseUnit = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.asPerAvailablity = in.readByte() != 0;
+        this.transportCharges = in.readFloat();
+        this.miscCharges = in.readFloat();
+        this.brokerageAmt = in.readFloat();
+        this.buyerBrokerage = in.readFloat();
+        this.sellerBrokerage = in.readFloat();
+        this.againstForm = in.readString();
+        this.creditPeriod = in.readString();
+        this.freeStoragePeriod = in.readString();
+        this.preferredSellerName = in.readString();
+        this.comments = in.readString();
+        this.createdDttm = in.readString();
+        this.LastUpdUserID = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.lastUpdDateTime = in.readString();
+        this.createdUser = in.readParcelable(User.class.getClassLoader());
+        this.broker = in.readParcelable(User.class.getClassLoader());
+        this.assignedToUser = in.readParcelable(User.class.getClassLoader());
+        this.fieldsAltered = in.readString();
+    }
+
+    public static final Creator<Lead> CREATOR = new Creator<Lead>() {
+        @Override
+        public Lead createFromParcel(Parcel source) {
+            return new Lead(source);
+        }
+
+        @Override
+        public Lead[] newArray(int size) {
+            return new Lead[size];
+        }
+    };
 }

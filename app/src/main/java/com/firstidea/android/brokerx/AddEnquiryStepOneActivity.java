@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,9 +23,10 @@ import java.util.List;
 public class AddEnquiryStepOneActivity extends AppCompatActivity {
 
     private final int BROKER_SELECTION_REQUEST = 100;
+    private final int NEXT_ACTIVITY_REQ_CODE = 500;
     private EditText editBroker, editMake, editqty;
     private Spinner spinnerItem, spinnerQtyUnit, spinnerPacking;
-    Lead mLead = new Lead();
+    Lead mLead;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +46,7 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
                 validateAndNext();
             }
         });
-        final String type = getIntent().getExtras().getString("type");
-        mLead.setType(type);
+
         editBroker = (EditText) findViewById(R.id.broker_name);
         editMake = (EditText) findViewById(R.id.make);
         editqty = (EditText) findViewById(R.id.qty);
@@ -97,18 +98,31 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
 
             }
         });
-
+        if (getIntent().hasExtra(Lead.KEY_LEAD)) {
+            mLead = getIntent().getExtras().getParcelable(Lead.KEY_LEAD);
+            editBroker.setEnabled(false);
+            String brokerName = "<b>Broker:</b> "+mLead.getBroker().getFullName();
+            editBroker.setText(Html.fromHtml(brokerName));
+            editMake.setText(mLead.getMake());
+            editqty.setText(mLead.getQty()+"");
+            spinnerQtyUnit.setSelection(mLead.getQtyUnit());
+            spinnerPacking.setSelection(mLead.getPacking());
+        } else {
+            String type = getIntent().getExtras().getString("type");
+            mLead = new Lead();
+            mLead.setType(type);
+            com.firstidea.android.brokerx.http.model.User user = com.firstidea.android.brokerx.http.model.User.getSavedUser(this);
+            mLead.setCreatedUserID(user.getUserID());
+        }
     }
 
     private void validateAndNext() {
         //TODO Tushar: validate all fields
-        com.firstidea.android.brokerx.http.model.User user = com.firstidea.android.brokerx.http.model.User.getSavedUser(this);
-        mLead.setCreatedUserID(user.getUserID());
         mLead.setMake(editMake.getText().toString());
         mLead.setQty(Float.parseFloat(editqty.getText().toString()));
         Intent intent = new Intent(AddEnquiryStepOneActivity.this, AddEnquiryStepTwoActivity.class);
-        intent.putExtra(Lead.KEY_LEAD,mLead);
-        startActivity(intent);
+        intent.putExtra(Lead.KEY_LEAD, mLead);
+        startActivityForResult(intent, NEXT_ACTIVITY_REQ_CODE);
     }
 
     @Override
@@ -123,8 +137,8 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == BROKER_SELECTION_REQUEST && resultCode == RESULT_OK) {
-            User user = data.getExtras().getParcelable(Constants.KEY_USER_TYPE_BROKER);
-            if(TextUtils.isEmpty(user.getBrokerDealsInItems())) {
+            User user = data.getExtras().getParcelable(Constants.KEY_SELECTED_USER);
+            if (TextUtils.isEmpty(user.getBrokerDealsInItems())) {
                 Toast.makeText(this, "Sorry, This broker doesn't deal in any Item", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -137,6 +151,12 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
             ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(AddEnquiryStepOneActivity.this, android.R.layout.simple_list_item_1, items);
             spinnerItem.setAdapter(spinnerAdapter);
             findViewById(R.id.layout_item_spinner).setVisibility(View.VISIBLE);
+        } else if(requestCode == NEXT_ACTIVITY_REQ_CODE  && resultCode == RESULT_OK) {
+            mLead = data.getExtras().getParcelable(Lead.KEY_LEAD);
+            Intent intent = new Intent();
+            intent.putExtra(Lead.KEY_LEAD,mLead);
+            setResult(RESULT_OK, intent);
+            finish();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

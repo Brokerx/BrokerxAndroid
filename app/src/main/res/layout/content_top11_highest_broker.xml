@@ -46,66 +46,88 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="From Date"
                         android:layout_marginLeft="15dp"
-                        android:layout_weight="1"
-                        android:text="@string/start_date"
-                        android:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        tools:ignore="RtlHardcoded" />
-
+                        android:layout_weight="1"
+                        android:textColor="@color/black"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="40dp"
-                        android:layout_marginRight="@dimen/left10"
-                        android:layout_weight="1"
-                        android:text="@string/end_date"
-                        android:textColor="@color/black"
+                        android:text="To Date"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        tools:ignore="RtlHardcoded" />
+                        android:layout_weight="1"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginRight="@dimen/left10"
+                        android:textColor="@color/black"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:weightSum="2.5"
                     android:orientation="horizontal">
 
-                    <EditText
+                    <TextView
                         android:id="@+id/starDate"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/left10"
-                        android:layout_weight="1"
+                        android:layout_weight="1.1"
                         android:background="@drawable/date_box"
-                        android:inputType=""
-                        android:onClick="SetDate"
-                        android:padding="@dimen/pdd5"
+                        android:onClick="setStartDate"
+                        android:padding="5dp"
                         android:textColor="@color/dividerColor"
+                        android:drawableLeft="@drawable/calendar1"
+                        android:drawablePadding="10dp"
+                        android:gravity="center_vertical"
+                        android:text="Select Date"
                         android:textSize="14sp"
-                        tools:ignore="RtlHardcoded,TextFields" />
+                        android:clickable="true"
+                        android:foreground="?android:attr/selectableItemBackground"/>
 
                     <View
-                        android:layout_width="40dp"
+                        android:layout_width="0dp"
                         android:layout_height="2dp"
+                        android:layout_weight="0.3"
                         android:layout_gravity="center_vertical"
                         android:background="@color/black_overlay" />
 
-                    <EditText
+                    <TextView
                         android:id="@+id/endDate"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/left10"
-                        android:layout_weight="1"
+                        android:layout_weight="1.1"
                         android:background="@drawable/date_box"
-                        android:onClick="SetDate"
-                        android:padding="@dimen/pdd5"
+                        android:onClick="setEndDate"
+                        android:padding="5dp"
                         android:textColor="@color/dividerColor"
+                        android:drawableLeft="@drawable/calendar1"
+                        android:drawablePadding="10dp"
+                        android:gravity="center_vertical"
+                        android:text="Select Date"
                         android:textSize="14sp"
-                        tools:ignore="RtlHardcoded,TextFields" />
+                        android:clickable="true"
+                        android:foreground="?android:attr/selectableItemBackground"/>
+
                 </LinearLayout>
+                <Button
+                    android:text="Refresh"
+                    android:layout_width="125dp"
+                    android:layout_height="40dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="right"
+                    android:background="@drawable/app_btn"
+                    android:id="@+id/button_refresh"
+                    android:layout_weight="0.52" />
 
             </LinearLayout>
 

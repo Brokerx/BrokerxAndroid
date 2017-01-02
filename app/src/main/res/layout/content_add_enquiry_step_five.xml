@@ -58,9 +58,10 @@
                         android:id="@+id/credit_period"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Credit Period"
+                        android:hint="Credit Period(In days)"
                         android:maxLines="1"
                         android:paddingLeft="5dp"
+                        android:inputType="number"
                         android:singleLine="true" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -73,7 +74,8 @@
                         android:id="@+id/free_storage_period"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Free Storage Period"
+                        android:hint="Free Storage Period(In days)"
+                        android:inputType="number"
                         android:maxLines="1"
                         android:paddingLeft="5dp"
                         android:singleLine="true" />

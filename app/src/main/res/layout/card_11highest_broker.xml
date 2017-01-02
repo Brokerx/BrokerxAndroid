@@ -47,7 +47,7 @@
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
-                <EditText
+                <TextView
                     android:id="@+id/totalChargeBH"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -69,25 +69,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:weightSum="2"
                 >
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/basic"
+                        android:id="@+id/buyer_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/l10dp"
-                        android:text=" Ramesh Jha"
+                        android:padding="5dp"
+                        android:gravity="center_horizontal"
+                        android:text=" Ramesh Jha\n(Buyer)"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
 
-                    <EditText
-                        android:id="@+id/broker1"
+                    <TextView
+                        android:id="@+id/buyer_brokerage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:text="3000Rs"
                         android:padding="5dp"
                         android:textSize="14sp"
@@ -99,22 +103,26 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
 
                     <TextView
+                        android:id="@+id/seller_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/l10dp"
-                        android:text="Suresh Tot"
+                        android:padding="5dp"
+                        android:gravity="center_horizontal"
+                        android:text="Suresh Tot\n(Seller)"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
 
-                    <EditText
-                        android:id="@+id/broker2"
+                    <TextView
+                        android:id="@+id/seller_brokerage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:text="3000Rs"
                         android:padding="5dp"
                         android:textSize="14sp"

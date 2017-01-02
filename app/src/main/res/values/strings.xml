@@ -82,6 +82,7 @@
     <string name="start_date">Start Date</string>
     <string name="title_activity_analysis_broker">AnalysisBrokerActivity</string>
     <string name="top_11_highest_paying_sellers">Top 11 Highest Paying Sellers</string>
+    <string name="top_11_highest_paying_buyer">Top 11 Highest Paying Buyer</string>
     <string name="top_11_highest_paying_brokerage">Top 11 Highest Paying Brokerage</string>
     <string name="title_activity_top11_highest_broker">Top11HighestBrokerActivity</string>
     <string name="title_activity_top11_seller">Top11SellerActivity</string>

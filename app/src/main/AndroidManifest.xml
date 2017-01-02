@@ -162,7 +162,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Top11SellerActivity"
+            android:name=".Top11BuyerSellerActivity"
             android:label="@string/title_activity_top11_seller"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait" />

@@ -22,11 +22,8 @@
             android:layout_marginTop="10dp"
             android:orientation="vertical">
 
-
-
-
             <TextView
-                android:id="@+id/brokerNameS"
+                android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/l10dp"
@@ -34,8 +31,48 @@
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="18sp" />
+            <TextView
+                android:id="@+id/chemical_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="@dimen/l10dp"
+                android:text="(Benzene Toluene Ethyl benzene,Xylenes)"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                >
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="Brokerage"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/totalBrokerage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3000 Rs"
+                    android:paddingLeft="@dimen/p10dp"
+                    android:paddingRight="@dimen/p10dp"
+                    android:paddingTop="@dimen/p3dp"
+                    android:paddingBottom="@dimen/p3dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:background="@color/teal"
+                    android:layout_marginLeft="10dp"/>
+
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

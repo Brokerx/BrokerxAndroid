@@ -38,7 +38,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Start Date"
+                    android:text="From Date"
                     android:layout_marginLeft="15dp"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -47,7 +47,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="End Date"
+                    android:text="To Date"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_weight="1"
@@ -60,37 +60,66 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:weightSum="2.5"
                 android:orientation="horizontal">
 
-                <EditText
+                <TextView
                     android:id="@+id/starDate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/left10"
-                    android:layout_weight="1"
-                    android:padding="@dimen/pdd5"
-                    android:textSize="14sp"
-                    android:onClick="SetDate"
+                    android:layout_weight="1.1"
                     android:background="@drawable/date_box"
-                    android:textColor="@color/dividerColor"/>
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="2dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@color/black_overlay"/>
+                    android:onClick="setStartDate"
+                    android:padding="5dp"
+                    android:textColor="@color/dividerColor"
+                    android:drawableLeft="@drawable/calendar1"
+                    android:drawablePadding="10dp"
+                    android:gravity="center_vertical"
+                    android:text="Select Date"
+                    android:textSize="14sp"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"/>
 
-                <EditText
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_weight="0.3"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/black_overlay" />
+
+                <TextView
                     android:id="@+id/endDate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textSize="14sp"
-                    android:onClick="SetDate"
-                    android:padding="@dimen/pdd5"
-                    android:background="@drawable/date_box"
                     android:layout_marginRight="@dimen/left10"
-                    android:textColor="@color/dividerColor"/>
+                    android:layout_weight="1.1"
+                    android:background="@drawable/date_box"
+                    android:onClick="setEndDate"
+                    android:padding="5dp"
+                    android:textColor="@color/dividerColor"
+                    android:drawableLeft="@drawable/calendar1"
+                    android:drawablePadding="10dp"
+                    android:gravity="center_vertical"
+                    android:text="Select Date"
+                    android:textSize="14sp"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"/>
+
             </LinearLayout>
+            <Button
+                android:text="Search"
+                android:layout_width="125dp"
+                android:layout_height="40dp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="right"
+                android:background="@drawable/app_btn"
+                android:id="@+id/button_search"
+                android:layout_weight="0.52" />
 
         </LinearLayout>
 

@@ -33,7 +33,8 @@ public class BrokerHomeActivity extends AppCompatActivity
     private android.support.v4.app.FragmentManager fragmentManager;
     private android.support.v4.app.Fragment currentFragment = null;
     private Button mEditProfle;
-
+    NavigationView navigationView;
+    private User me;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,14 +47,14 @@ public class BrokerHomeActivity extends AppCompatActivity
         fragmentManager.beginTransaction()
                 .replace(R.id.content, fragment).commit();
 
-        User me = User.getSavedUser(this);
+        me = User.getSavedUser(this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         Button viewProfileButton = (Button) navigationView.getHeaderView(0).findViewById(R.id.editProfileButton);
@@ -65,6 +66,11 @@ public class BrokerHomeActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+        initDrawerHeader();
+        AppUtils.loadFCMid(this);
+    }
+
+    private void initDrawerHeader() {
         ImageView userImage = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.user_image);
         userImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +89,6 @@ public class BrokerHomeActivity extends AppCompatActivity
         }
         ((TextView)navigationView.getHeaderView(0).findViewById(R.id.user_name)).setText(me.getFullName());
         ((TextView)navigationView.getHeaderView(0).findViewById(R.id.user_phone)).setText(me.getMobile());
-        AppUtils.loadFCMid(this);
     }
 
 

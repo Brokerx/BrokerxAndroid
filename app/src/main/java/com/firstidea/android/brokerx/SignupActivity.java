@@ -328,7 +328,7 @@ public class SignupActivity extends AppCompatActivity {
                     }
 
                 } else {
-                    Toast.makeText(SignupActivity.this, "Some Error Occured, Please try again..", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignupActivity.this, messageDTO.getMessageText(), Toast.LENGTH_SHORT).show();
                 }
                 dialog.dismiss();
             }

@@ -5,6 +5,8 @@ package com.firstidea.android.brokerx;
  */
 public interface Constants {
     String KEY_ENQ_TYPE = "EnquiryType";
+    String KEY_IS_READ_ONLY = "IsReadOnly";
+    String KEY_IS_REFRESH_PARENT = "IsRefreshParent";
     String KEY_USER_TYPE_SELLER = "Seller";
     String KEY_USER_TYPE_BUYER = "Buyer";
     String KEY_USER_TYPE_BROKER = "Broker";

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -56,6 +57,7 @@ public class MyHistoryActivity extends AppCompatActivity {
     private int startYear, endYear;
     private Date mStartDate,mEndDate;
     SimpleDateFormat SDF = new SimpleDateFormat("dd MMM yyyy");
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +92,22 @@ public class MyHistoryActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                R.color.colorPrimaryLight,
+                R.color.teal,
+                R.color.teal);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                if(mIsFromAnalysis) {
+                    getLeads();
+                } else {
+                    getHistory();
+                }
+            }
+        });
 
         if(mIsFromAnalysis) {
             getLeads();
@@ -115,12 +133,14 @@ public class MyHistoryActivity extends AppCompatActivity {
                     Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
                 }
                 dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Toast.makeText(mContext, "Please Check your Internet Connection", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -140,12 +160,14 @@ public class MyHistoryActivity extends AppCompatActivity {
                     Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
                 }
                 dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Toast.makeText(mContext, "Please Check your Internet Connection", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
     }

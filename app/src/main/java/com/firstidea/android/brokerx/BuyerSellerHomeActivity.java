@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +51,8 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
     private ArrayList<Lead> mLeads;
     private boolean isUserTypeSpinnerInitilized = false;
     private final int NEXT_ACTIVITY_REQ_CODE = 500;
+    private final int ACTION_ACTIVITY = 700;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +73,18 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
             }
         });
         AppUtils.loadFCMid(this);
-
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                R.color.colorPrimaryLight,
+                R.color.teal,
+                R.color.teal);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                getLeads();
+            }
+        });
         getLeads();
     }
 
@@ -96,12 +110,14 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
                     Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
                 }
                 dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Toast.makeText(mContext, "Please Check your Internet Connection", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -155,7 +171,14 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
     }
 
     private void initializeRecyclerView() {
-        adapter = new BuyerSellerHomeEnquiriesAdapter(this,mLeads);
+        adapter = new BuyerSellerHomeEnquiriesAdapter(this, mLeads, new BuyerSellerHomeEnquiriesAdapter.OnCardClickListener() {
+            @Override
+            public void onCardClick(Lead lead) {
+                Intent enquiry = new Intent(mContext, EnquiryDetailsActivity.class);
+                enquiry.putExtra(Lead.KEY_LEAD, lead);
+                startActivityForResult(enquiry, ACTION_ACTIVITY);
+            }
+        });
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
@@ -177,6 +200,8 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == NEXT_ACTIVITY_REQ_CODE  && resultCode == RESULT_OK) {
+            getLeads();
+        } else if(requestCode == ACTION_ACTIVITY && resultCode == RESULT_OK) {
             getLeads();
         }
 

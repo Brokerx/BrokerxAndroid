@@ -1,5 +1,6 @@
 package com.firstidea.android.brokerx;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -35,6 +36,9 @@ public class BrokerHomeActivity extends AppCompatActivity
     private Button mEditProfle;
     NavigationView navigationView;
     private User me;
+
+    public static final int ACTION_ACTIVITY = 1007;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,6 +170,15 @@ public class BrokerHomeActivity extends AppCompatActivity
         if (currentFragment != null) {
             fragmentManager.beginTransaction()
                     .replace(R.id.content, currentFragment).commit();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == ACTION_ACTIVITY && resultCode == Activity.RESULT_OK) {
+            currentFragment = new BrokerHomeFragment();
+            changeFragment();
         }
     }
 }

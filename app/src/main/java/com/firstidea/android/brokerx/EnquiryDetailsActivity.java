@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
@@ -115,8 +117,11 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
     private Lead mLead;
     private User me;
     private String[] mUnits, mPackings;
+    private boolean mIsReadOnly = false;
+    private boolean isRefreshParent = false;
 
     private final int ASIGN_USER_REQ_CODE= 100;
+    private final int ACTION_ACTIVITY_REQ_CODE= 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +142,9 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         mPackings = getResources().getStringArray(R.array.packing);
         CurStatusLayout.setVisibility(View.GONE);
 
+        if(getIntent().hasExtra(Constants.KEY_IS_READ_ONLY)) {
+            mIsReadOnly = getIntent().getBooleanExtra(Constants.KEY_IS_READ_ONLY, false);
+        }
         initScreen();
         String viewHistoryLabel = "<u><i>View History</i></u>";
         btnViewHistory.setText(Html.fromHtml(viewHistoryLabel));
@@ -168,7 +176,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(EnquiryDetailsActivity.this, AddEnquiryFirstActivity.class);
                 intent.putExtra(Lead.KEY_LEAD, mLead);
-                startActivity(intent);
+                startActivityForResult(intent, ACTION_ACTIVITY_REQ_CODE);
             }
         });
     }
@@ -197,6 +205,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 dialog.dismiss();
+                isRefreshParent = true;
                 initScreen();
             }
 
@@ -378,7 +387,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
 //        Revert_Chat_layout.setVisibility(View.VISIBLE);
 //        Rej_Acc_Layout.setVisibility(View.GONE);
 
-        if (myStatus.equals(LeadCurrentStatus.Accepted.getStatus()) || myStatus.equals(LeadCurrentStatus.Reverted.getStatus())) {
+        if (myStatus.equals(LeadCurrentStatus.Accepted.getStatus())) {
             currentStatus.setText("Accepted");
             curStatusIcon.setImageResource(R.drawable.accept_circle);
         } else if (myStatus.equals(LeadCurrentStatus.Rejected.getStatus())) {
@@ -387,8 +396,21 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         } else if (myStatus.equals(LeadCurrentStatus.Pending.getStatus())) {
             currentStatus.setText("Pending");
             curStatusIcon.setImageResource(R.drawable.pending_circle);
+        } else if (myStatus.equals(LeadCurrentStatus.Reverted.getStatus())) {
+            currentStatus.setText("Reverted");
+            curStatusIcon.setImageResource(R.drawable.accept_circle_gray);
+        } else if (myStatus.equals(LeadCurrentStatus.Waiting.getStatus())) {
+            currentStatus.setText("Waiting for your response");
+            curStatusIcon.setImageResource(R.drawable.waiting_circle);
         }
 
+        if(mIsReadOnly) {
+            Revert_Chat_layout.setVisibility(View.GONE);
+            Rej_Acc_Layout.setVisibility(View.GONE);
+            btnReOpen.setVisibility(View.GONE);
+            CurStatusLayout.setVisibility(View.GONE);
+            btnPending.setVisibility(View.GONE);
+        }
     }
 
     private void showDelaDoneConfirmation() {
@@ -419,6 +441,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 dialog.dismiss();
+                isRefreshParent = true;
                 finish();
             }
 
@@ -441,6 +464,11 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
+        if(isRefreshParent) {
+            Intent intent = new Intent();
+            intent.putExtra(Constants.KEY_IS_REFRESH_PARENT, true);
+            setResult(RESULT_OK, intent);
+        }
         super.finish();
         overridePendingTransition(0, android.R.anim.slide_out_right);
     }
@@ -471,6 +499,13 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             });
             builder.show();
 
+        } else if(resultCode == RESULT_OK && requestCode == ACTION_ACTIVITY_REQ_CODE) {
+            if(data.hasExtra(Lead.KEY_LEAD)) {
+                mLead = data.getExtras().getParcelable(Lead.KEY_LEAD);
+//                initScreen();
+                isRefreshParent = true;
+                finish();
+            }
         }
     }
 
@@ -495,6 +530,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 dialog.dismiss();
+                isRefreshParent = true;
                 initScreen();
             }
 
@@ -505,4 +541,5 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             }
         });
     }
+
 }

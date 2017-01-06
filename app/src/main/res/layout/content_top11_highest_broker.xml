@@ -9,140 +9,145 @@
     tools:context="com.firstidea.android.brokerx.Top11HighestBrokerActivity"
     tools:showIn="@layout/activity_top11_highest_broker">
 
-    <ScrollView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none"
-        tools:ignore="UselessParent">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/left10"
-                android:layout_marginTop="5dp"
-                android:text="@string/select_date_range"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                tools:ignore="RtlHardcoded" />
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            tools:ignore="UselessParent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="From Date"
-                        android:layout_marginLeft="15dp"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:layout_weight="1"
-                        android:textColor="@color/black"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="To Date"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="40dp"
-                        android:layout_marginRight="@dimen/left10"
-                        android:textColor="@color/black"/>
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/left10"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/select_date_range"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:ignore="RtlHardcoded" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:weightSum="2.5"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/starDate"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_weight="1"
+                            android:text="From Date"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:layout_marginRight="@dimen/left10"
+                            android:layout_weight="1"
+                            android:text="To Date"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/left10"
-                        android:layout_weight="1.1"
-                        android:background="@drawable/date_box"
-                        android:onClick="setStartDate"
-                        android:padding="5dp"
-                        android:textColor="@color/dividerColor"
-                        android:drawableLeft="@drawable/calendar1"
-                        android:drawablePadding="10dp"
-                        android:gravity="center_vertical"
-                        android:text="Select Date"
-                        android:textSize="14sp"
-                        android:clickable="true"
-                        android:foreground="?android:attr/selectableItemBackground"/>
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2.5">
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="0.3"
-                        android:layout_gravity="center_vertical"
-                        android:background="@color/black_overlay" />
+                        <TextView
+                            android:id="@+id/starDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/left10"
+                            android:layout_weight="1.1"
+                            android:background="@drawable/date_box"
+                            android:clickable="true"
+                            android:drawableLeft="@drawable/calendar1"
+                            android:drawablePadding="10dp"
+                            android:gravity="center_vertical"
+                            android:onClick="setStartDate"
+                            android:padding="5dp"
+                            android:text="Select Date"
+                            android:textColor="@color/dividerColor"
+                            android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/endDate"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/left10"
-                        android:layout_weight="1.1"
-                        android:background="@drawable/date_box"
-                        android:onClick="setEndDate"
-                        android:padding="5dp"
-                        android:textColor="@color/dividerColor"
-                        android:drawableLeft="@drawable/calendar1"
-                        android:drawablePadding="10dp"
-                        android:gravity="center_vertical"
-                        android:text="Select Date"
-                        android:textSize="14sp"
-                        android:clickable="true"
-                        android:foreground="?android:attr/selectableItemBackground"/>
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.3"
+                            android:background="@color/black_overlay" />
+
+                        <TextView
+                            android:id="@+id/endDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/left10"
+                            android:layout_weight="1.1"
+                            android:background="@drawable/date_box"
+                            android:clickable="true"
+                            android:drawableLeft="@drawable/calendar1"
+                            android:drawablePadding="10dp"
+                            android:gravity="center_vertical"
+                            android:onClick="setEndDate"
+                            android:padding="5dp"
+                            android:text="Select Date"
+                            android:textColor="@color/dividerColor"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/button_refresh"
+                        android:layout_width="125dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="right"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="0.52"
+                        android:background="@drawable/app_btn"
+                        android:text="Refresh"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
 
                 </LinearLayout>
-                <Button
-                    android:text="Refresh"
-                    android:layout_width="125dp"
-                    android:layout_height="40dp"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:layout_marginBottom="10dp"
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/topHighestBroker_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_gravity="right"
-                    android:background="@drawable/app_btn"
-                    android:id="@+id/button_refresh"
-                    android:layout_weight="0.52" />
+                    android:background="@color/activity_background_color"
+                    android:paddingBottom="5dp"
+
+                    />
 
             </LinearLayout>
-
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/topHighestBroker_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:background="@color/activity_background_color"
-                android:paddingBottom="5dp"
-
-                />
-
-        </LinearLayout>
-    </ScrollView>
-
+        </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

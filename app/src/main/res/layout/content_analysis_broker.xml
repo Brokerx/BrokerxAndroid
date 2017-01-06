@@ -138,7 +138,6 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/white"
                 android:orientation="vertical"
-
                 android:weightSum="1">
 
                 <TextView
@@ -205,8 +204,7 @@
                             android:gravity="center_vertical"
                             android:text="From Date"
                             android:textSize="14sp"
-                            android:clickable="true"
-                            android:foreground="?android:attr/selectableItemBackground"/>
+                            android:clickable="true"/>
 
                         <View
                             android:layout_width="0dp"
@@ -230,8 +228,7 @@
                             android:gravity="center_vertical"
                             android:text="To Date"
                             android:textSize="14sp"
-                            android:clickable="true"
-                            android:foreground="?android:attr/selectableItemBackground"/>
+                            android:clickable="true"/>
 
                     </LinearLayout>
 

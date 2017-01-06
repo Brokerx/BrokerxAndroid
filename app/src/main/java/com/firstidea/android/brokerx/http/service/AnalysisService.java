@@ -43,7 +43,7 @@ public interface AnalysisService {
 
     @FormUrlEncoded
     @POST("/analysis/getTopBrokers")
-    void getActiveLeads(@Field("userID") Integer userID,
+    void getTopBrokers(@Field("userID") Integer userID,
                         @Field("type")String type,
                         @Field("startDate") String startDate,
                         @Field("endDate") String endDate,

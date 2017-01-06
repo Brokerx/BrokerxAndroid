@@ -51,12 +51,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/l10dp"
-                        android:text=" Basic Charge"
+                        android:text=" No. of deals"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
 
-                    <EditText
-                        android:id="@+id/basicChargeT"
+                    <TextView
+                        android:id="@+id/no_of_deals"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="3000Rs"
@@ -82,7 +82,7 @@
                         android:textColor="@color/black"
                         android:textSize="14sp" />
 
-                    <EditText
+                    <TextView
                         android:id="@+id/totalChargeT"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

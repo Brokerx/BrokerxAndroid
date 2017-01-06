@@ -1,22 +1,23 @@
 package com.firstidea.android.brokerx.fragment.broker;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.firstidea.android.brokerx.BrokerHomeActivity;
+import com.firstidea.android.brokerx.EnquiryDetailsActivity;
 import com.firstidea.android.brokerx.R;
 import com.firstidea.android.brokerx.adapter.BrokerHomeEnquiriesAdapter;
-import com.firstidea.android.brokerx.fragment.dummy.DummyContent;
 import com.firstidea.android.brokerx.http.model.Lead;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -25,7 +26,6 @@ import java.util.List;
  */
 public class BrokerHomeBuyerFragment extends Fragment {
     private ArrayList<Lead> mLeads;
-
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -59,11 +59,19 @@ public class BrokerHomeBuyerFragment extends Fragment {
 
         // Set the adapter
         if (view instanceof RecyclerView) {
-            Context context = view.getContext();
+            final Context context = getActivity();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            recyclerView.setAdapter(new BrokerHomeEnquiriesAdapter(context, mLeads));
+            recyclerView.setAdapter(new BrokerHomeEnquiriesAdapter(context, mLeads, new BrokerHomeEnquiriesAdapter.OnCardClickListener(){
+
+                @Override
+                public void onCardClick(Lead lead) {
+                    Intent next = new Intent(context, EnquiryDetailsActivity.class);
+                    next.putExtra(Lead.KEY_LEAD,lead);
+                    getActivity().startActivityForResult(next, BrokerHomeActivity.ACTION_ACTIVITY);
+                }
+            }));
         }
         return view;
     }
@@ -79,5 +87,6 @@ public class BrokerHomeBuyerFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
+
 
 }

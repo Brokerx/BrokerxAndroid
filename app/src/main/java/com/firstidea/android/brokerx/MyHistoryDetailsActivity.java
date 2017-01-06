@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -56,6 +57,7 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
     private String[] mUnits, mPackings;
     private LeadStatusHistory mLeadStatusHistory;
     private boolean isSeller = false;;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,18 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
         mContext = this;
         me = User.getSavedUser(this);
         mLead = getIntent().getExtras().getParcelable(Lead.KEY_LEAD);
-
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                R.color.colorPrimaryLight,
+                R.color.teal,
+                R.color.teal);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                getLeadStatusHistory();
+            }
+        });
         getLeadStatusHistory();
 
     }
@@ -84,6 +97,7 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
                     mLeadStatusHistory = LeadStatusHistory.createFromJSON(messageDTO.getData());
                     initScreen();
                     dialog.dismiss();
+                    mSwipeRefreshLayout.setRefreshing(false);
                 } else {
                     Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();

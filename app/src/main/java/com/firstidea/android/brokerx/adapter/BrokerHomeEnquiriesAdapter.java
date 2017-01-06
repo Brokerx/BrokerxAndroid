@@ -1,14 +1,12 @@
 package com.firstidea.android.brokerx.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.firstidea.android.brokerx.EnquiryDetailsActivity;
 import com.firstidea.android.brokerx.R;
 import com.firstidea.android.brokerx.http.model.Lead;
 
@@ -22,10 +20,15 @@ public class BrokerHomeEnquiriesAdapter extends RecyclerView.Adapter<BrokerHomeE
 
     private final List<Lead> mValues;
     private String[] qtys;
+    private OnCardClickListener mOnCardClickListener;
 
-    public BrokerHomeEnquiriesAdapter(Context context,List<Lead> items) {
+    public interface OnCardClickListener {
+        void onCardClick(Lead lead);
+    }
+    public BrokerHomeEnquiriesAdapter(Context context,List<Lead> items, OnCardClickListener mOnCardClickListener) {
         mValues = items;
         qtys = context.getResources().getStringArray(R.array.qty_options);
+        this.mOnCardClickListener = mOnCardClickListener;
 
     }
 
@@ -48,9 +51,7 @@ public class BrokerHomeEnquiriesAdapter extends RecyclerView.Adapter<BrokerHomeE
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent next = new Intent(context, EnquiryDetailsActivity.class);
-                next.putExtra(Lead.KEY_LEAD,holder.mItem);
-                context.startActivity(next);
+                mOnCardClickListener.onCardClick(holder.mItem);
             }
         });
     }

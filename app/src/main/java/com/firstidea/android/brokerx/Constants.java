@@ -13,6 +13,6 @@ public interface Constants {
     String KEY_IS_FOR_SELECTION = "IsForSelection";
     String IS_FROM_NOTIFICATION = "isFromNotification";
     String KEY_EXCLUDE_USER_ID = "ExcludeuserID";
-
     String KEY_SELECTED_USER = "SelectedUser";
+    String KEY_BUYER_SELLER_PREFERANCE = "BuyerSellerPreferance";
 }

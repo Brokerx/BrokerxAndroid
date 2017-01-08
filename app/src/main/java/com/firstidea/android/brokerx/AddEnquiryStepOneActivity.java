@@ -121,6 +121,19 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
 
     private void validateAndNext() {
         //TODO Tushar: validate all fields
+        /*if(TextUtils.isEmpty(editMake.getText().toString())) {
+            editMake.setError("Enter Make");
+            return;
+        }
+        if(TextUtils.isEmpty(editqty.getText().toString())) {
+            editqty.setError("Enter Quantity");
+        }
+        if(mLead.getLeadID() == null ) {
+            if(mLead.getBrokerID() == null) {
+                editBroker.setError("Select Broker");
+                return;
+            }
+        }*/
         mLead.setMake(editMake.getText().toString());
         mLead.setQty(Float.parseFloat(editqty.getText().toString()));
         Intent intent = new Intent(AddEnquiryStepOneActivity.this, AddEnquiryStepTwoActivity.class);

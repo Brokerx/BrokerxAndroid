@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
@@ -108,11 +109,16 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
     }
 
     private void validateAndNext() {
-        //TODO Tushar: validate all fields also add textchange listener to all price edittext and calculate and set total charges edittext
+        //TODO Tushar: validate all fields
+        if(TextUtils.isEmpty(editBasicPrice.getText().toString())) {
+            editBasicPrice.setError("Please Enter Basic Price");
+            return;
+        }
         float basicPrice = Float.parseFloat(editBasicPrice.getText().toString());
         float exciseDuty = Float.parseFloat(editExciseDuty.getText().toString());
         float transportChrg = Float.parseFloat(editTransportCharges.getText().toString());
         float miscChrg = Float.parseFloat(editMiscCharges.getText().toString());
+
         mLead.setBasicPrice(basicPrice);
         mLead.setExciseDuty(exciseDuty);
         mLead.setTransportCharges(transportChrg);

@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,11 +32,15 @@ import com.firstidea.android.brokerx.http.model.User;
 import com.firstidea.android.brokerx.model.Enquiry;
 import com.firstidea.android.brokerx.model.HomeHeader;
 import com.firstidea.android.brokerx.utils.AppUtils;
+import com.firstidea.android.brokerx.utils.ApptDateUtils;
 import com.firstidea.android.brokerx.utils.SharedPreferencesUtil;
 import com.firstidea.android.brokerx.widget.AppProgressDialog;
 import com.firstidea.android.brokerx.widget.HeaderSpanSizeLookup;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -85,7 +90,7 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
                 getLeads();
             }
         });
-        getLeads();
+        initActionbarSpinner();
     }
 
     private void getLeads() {
@@ -100,10 +105,20 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
                     ArrayList<Lead> leads= Lead.createListFromJson(messageDTO.getData());
                     mLeads= new ArrayList<Lead>();
                     mLeads.add(new Lead());
+                    Collections.sort(leads, new Comparator<Lead>() {
+                        @Override
+                        public int compare(Lead lhs, Lead rhs) {
+                            String lhsString = lhs.getLastUpdDateTime();
+                            String rhsString = rhs.getLastUpdDateTime();
+                            Date lhsDate = ApptDateUtils.getServerFormatedDateAndTime(lhs.getLastUpdDateTime());
+                            Date rhsDate = ApptDateUtils.getServerFormatedDateAndTime(rhs.getLastUpdDateTime());
+                            return (lhsDate.getTime() > rhsDate.getTime() ? -1 : 1);
+                        }
+                    });
                     mLeads.addAll(leads);
-                    if(!isUserTypeSpinnerInitilized){
+                    /*if(!isUserTypeSpinnerInitilized){
                         initActionbarSpinner();
-                    }
+                    }*/
                     initializeRecyclerView();
                     fillRecyclerView();
                 } else {
@@ -157,9 +172,10 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
         spinner_nav.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(!isUserTypeSpinnerInitilized) isUserTypeSpinnerInitilized = true;
+                if(!isUserTypeSpinnerInitilized) return;
                 Toast.makeText(BuyerSellerHomeActivity.this, "Showing "+spinnerItems[position]+" Enquiries", Toast.LENGTH_SHORT).show();
                 type = (spinnerItems[position].charAt(0)+"").toUpperCase();
+                SharedPreferencesUtil.putSharedPreferencesInt(mContext, Constants.KEY_BUYER_SELLER_PREFERANCE, position);
                 getLeads();
             }
 
@@ -168,6 +184,9 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
 
             }
         });
+        int prevSelection = SharedPreferencesUtil.getSharedPreferencesInt(mContext, Constants.KEY_BUYER_SELLER_PREFERANCE, 0);
+        if(!isUserTypeSpinnerInitilized) isUserTypeSpinnerInitilized = true;
+        spinner_nav.setSelection(prevSelection);
     }
 
     private void initializeRecyclerView() {

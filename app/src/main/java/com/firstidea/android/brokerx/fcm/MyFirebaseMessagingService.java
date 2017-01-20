@@ -14,12 +14,17 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.firstidea.android.brokerx.BrokerHomeActivity;
+import com.firstidea.android.brokerx.ChatActivity;
 import com.firstidea.android.brokerx.Constants;
 import com.firstidea.android.brokerx.MycircleActivity;
 import com.firstidea.android.brokerx.R;
 import com.firstidea.android.brokerx.SplashActivity;
+import com.firstidea.android.brokerx.enums.ChatType;
+import com.firstidea.android.brokerx.http.model.Chat;
+import com.firstidea.android.brokerx.utils.SharedPreferencesUtil;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 
 import java.util.Map;
 
@@ -30,6 +35,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static String TYPE_NEW_LEAD_ADDED = "NewLeadAdded";
     public static String TYPE_CONNECTION_REQUEST_ACCEPTED = "ConnectionRequestAccepted";
     public static String TYPE_CONNECTION_REQUEST_REJECTED = "ConnectionRequestRejected";
+    public static String TYPE_USER_COMMUNICATION = "UserCommunication";
 
     /**
      * Called when message is received.
@@ -60,16 +66,34 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String type = dataMap.get("type");
             if(type != null && type.equals(TYPE_CONNECTION_REQUEST)) {
                 String dataContent =  dataMap.get("data");
-                generateNotification(dataContent, "Please add me to your circle", type);
+                generateNotification(dataContent, "Please add me to your circle", type, null);
             } else if(type != null && type.equals(TYPE_NEW_LEAD_ADDED)) {
                 String dataContent =  dataMap.get("data");
-                generateNotification("Broker-X", dataContent+" has created a lead for you", type);
+                generateNotification("Broker-X", dataContent+" has created a lead for you", type, null);
             }else if(type != null && type.equals(TYPE_CONNECTION_REQUEST_ACCEPTED)) {
                 String dataContent =  dataMap.get("data");
-                generateNotification("Broker-X", dataContent+" Has Accepted Your Request", type);
+                generateNotification("Broker-X", dataContent+" Has Accepted Your Request", type, null);
             }else if(type != null && type.equals(TYPE_CONNECTION_REQUEST_REJECTED)) {
                 String dataContent =  dataMap.get("data");
-                generateNotification("Broker-X", dataContent+" Has Rejected Your Request", type);
+                generateNotification("Broker-X", dataContent+" Has Rejected Your Request", type, null);
+            }else if(type != null && type.equals(TYPE_USER_COMMUNICATION)) {
+                String dataContent =  dataMap.get("data");
+                Gson gson = new Gson();
+                Chat chat = gson.fromJson(dataContent, Chat.class);
+                int ActiveCommUserID = SharedPreferencesUtil.getSharedPreferencesInt(this, Constants.KEY_ACTIVE_COMMUNICATION_USER_ID, -1);
+                int ActiveCommAdID = SharedPreferencesUtil.getSharedPreferencesInt(this, Constants.KEY_ACTIVE_COMMUNICATION_LEAD_ID, -1);
+                if(ActiveCommUserID == chat.getFromUserID()
+                        && ActiveCommAdID == chat.getLeadID()) {
+//                LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+                    Intent broadcastIntent = new Intent();
+                    broadcastIntent.setAction(Constants.ACTION_NEW_MESSAGE);
+                    broadcastIntent.putExtra(Constants.KEY_USER_COMMUNICATION, chat);
+                    this.sendBroadcast(broadcastIntent);
+                } else {
+                    String msg = chat.getType().equals(ChatType.TEXT.getType()) ? chat.getMessage(): "Image";
+                    generateNotification(chat.getFromUserName(), msg, type, chat);
+                }
+
             }
         }
 
@@ -88,12 +112,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      *
      * @param title FCM message body received.
      */
-    private void generateNotification(String title, String content, String type) {
+    private void generateNotification(String title, String content, String type, Chat chat) {
         Intent intent;
         if(type.equals(TYPE_NEW_LEAD_ADDED)) {
             intent = new Intent(this, BrokerHomeActivity.class);
         } else if(type.equals(TYPE_CONNECTION_REQUEST)) {
             intent = new Intent(this, MycircleActivity.class);
+        } else if(type.equals(TYPE_USER_COMMUNICATION)) {
+            intent = new Intent(this, ChatActivity.class);
+            intent.putExtra(Constants.OTHER_USER_NAME, chat.getFromUserName());
+            intent.putExtra(Constants.ITEM_NAME, chat.getItemName());
+            intent.putExtra(Constants.KEY_USER_TYPE, chat.getFromUserType());
+            Integer userID = chat.getFromUserID();
+            intent.putExtra(Constants.OTHER_USER_ID, userID);
+            intent.putExtra(Constants.LEAD_ID, chat.getLeadID());
         } else {
             return;
         }

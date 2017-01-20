@@ -97,4 +97,5 @@
     <string name="contact_permission_dialog_contents">You can add the brokers from your contact book. Please &lt;b&gt;Allow&lt;\b&gt; the Read contact permission in &lt;b&gt;Next Step.&lt;\b&gt; </string>
     <string name="title_activity_lead_status_history_details">LeadStatusHistoryDetails</string>
     <string name="title_activity_upload_document">UploadDocumentActivity</string>
+    <string name="title_activity_chat">ChatActivity</string>
 </resources>

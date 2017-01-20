@@ -5,9 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
@@ -18,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firstidea.android.brokerx.Chat.ChatListActivity;
 import com.firstidea.android.brokerx.enums.LeadCurrentStatus;
 import com.firstidea.android.brokerx.enums.LeadType;
 import com.firstidea.android.brokerx.http.ObjectFactory;
@@ -228,19 +225,25 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         String packingString = mPackings[mLead.getPacking()];
         packing.setText(packingString);
 
-        String userNameString = "", userImageUrl = "", userTypeString = "";
+        final StringBuilder userNameString = new StringBuilder("");
+        String userImageUrl = "";
+        final StringBuilder userOtherTypeString = new StringBuilder("");;
+        final StringBuilder userTypeString = new StringBuilder("");;
+
         if (me.getUserID().equals(mLead.getCreatedUserID())) {
-            userNameString = mLead.getBroker().getFullName();
+            userNameString.append(mLead.getBroker().getFullName());
             userImageUrl = mLead.getBroker().getImageURL();
-            userTypeString = "Broker";
+            userOtherTypeString.append("Broker");
+            userTypeString.append(mLead.getType().toLowerCase().startsWith("B") ? "Buyer" : "Seller");
         } else {
-            userNameString = mLead.getCreatedUser().getFullName();
+            userNameString.append(mLead.getCreatedUser().getFullName());
             userImageUrl = mLead.getCreatedUser().getImageURL();
-            userTypeString = mLead.getType().toLowerCase().startsWith("B") ? "Buyer" : "Seller";
+            userOtherTypeString.append(mLead.getType().toLowerCase().startsWith("B") ? "Buyer" : "Seller");
+            userTypeString.append("Broker");
         }
 
-        userName.setText(userNameString);
-        userType.setText(userTypeString);
+        userName.setText(userNameString.toString());
+        userType.setText(userOtherTypeString.toString());
         brokerageAmt.setText(mLead.getBrokerageAmt() + " Rs");
         if (!TextUtils.isEmpty(userImageUrl)) {
             String imgUrl = SingletonRestClient.BASE_PROFILE_IMAGE_URL + "thumb_" + userImageUrl;
@@ -368,8 +371,19 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                     btnReOpen.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(EnquiryDetailsActivity.this, ChatListActivity.class);
-                            intent.putExtra(Lead.KEY_LEAD_ID, mLead.getLeadID());
+                            Intent intent = new Intent(EnquiryDetailsActivity.this, ChatActivity.class);
+                            intent.putExtra(Constants.OTHER_USER_NAME, userNameString.toString());
+                            intent.putExtra(Constants.ITEM_NAME, itemName.getText().toString());
+                            intent.putExtra(Constants.KEY_USER_TYPE, userOtherTypeString.toString());
+                            intent.putExtra(Constants.KEY_USER_TYPE+"1", userTypeString.toString());
+                            Integer userID = 0;
+                            if (me.getUserID().equals(mLead.getCreatedUserID())) {
+                                userID = mLead.getBrokerID();
+                            } else {
+                                userID = mLead.getCreatedUserID();
+                            }
+                            intent.putExtra(Constants.OTHER_USER_ID, userID);
+                            intent.putExtra(Constants.LEAD_ID, mLead.getLeadID());
                             startActivity(intent);
                         }
                     });
@@ -382,6 +396,25 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                     });
                 }
             }
+            btnChat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(EnquiryDetailsActivity.this, ChatActivity.class);
+                    intent.putExtra(Constants.OTHER_USER_NAME, userNameString.toString());
+                    intent.putExtra(Constants.ITEM_NAME, itemName.getText().toString());
+                    intent.putExtra(Constants.KEY_USER_TYPE, userOtherTypeString.toString());
+                    intent.putExtra(Constants.KEY_USER_TYPE+"1", userTypeString.toString());
+                    Integer userID = 0;
+                    if (me.getUserID().equals(mLead.getCreatedUserID())) {
+                        userID = mLead.getBrokerID();
+                    } else {
+                        userID = mLead.getCreatedUserID();
+                    }
+                    intent.putExtra(Constants.OTHER_USER_ID, userID);
+                    intent.putExtra(Constants.LEAD_ID, mLead.getLeadID());
+                    startActivity(intent);
+                }
+            });
         }
         CurStatusLayout.setVisibility(View.VISIBLE);
 //        Revert_Chat_layout.setVisibility(View.VISIBLE);

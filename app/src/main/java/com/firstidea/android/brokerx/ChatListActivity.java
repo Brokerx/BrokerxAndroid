@@ -1,23 +1,19 @@
-package com.firstidea.android.brokerx.Chat;
+package com.firstidea.android.brokerx;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.firstidea.android.brokerx.R;
-import com.firstidea.android.brokerx.adapter.ChatAdapter;
+import com.firstidea.android.brokerx.adapter.ChatListAdapter;
 import com.firstidea.android.brokerx.model.ChatItem;
 
 import java.util.ArrayList;
 
-public class ChatListActivity extends AppCompatActivity implements ChatAdapter.ChatCardListener {
+public class ChatListActivity extends AppCompatActivity implements ChatListAdapter.ChatCardListener {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
     private ArrayList<ChatItem> mList;
@@ -42,7 +38,7 @@ public class ChatListActivity extends AppCompatActivity implements ChatAdapter.C
         mList = new ArrayList<ChatItem>();
         initList();
 
-        ChatAdapter mAdapter = new ChatAdapter(this, mList, this);
+        ChatListAdapter mAdapter = new ChatListAdapter(this, mList, this);
         mRecyclerView.setAdapter(mAdapter);
 
 

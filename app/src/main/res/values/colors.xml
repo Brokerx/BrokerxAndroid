@@ -47,4 +47,7 @@
     <color name="tag4">#66BCAC</color>
     <color name="tag5">#B3DB72</color>
     <color name="tag6">#BB74ED</color>
+
+    <color name="dark_gray">#B2B2B2</color>
+    <color name="lite_gray">#D3CFCE</color>
 </resources>

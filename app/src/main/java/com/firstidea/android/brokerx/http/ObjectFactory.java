@@ -2,6 +2,7 @@ package com.firstidea.android.brokerx.http;
 
 import com.firstidea.android.brokerx.BrokerxApplication;
 import com.firstidea.android.brokerx.http.service.AnalysisService;
+import com.firstidea.android.brokerx.http.service.ChatService;
 import com.firstidea.android.brokerx.http.service.LeadService;
 import com.firstidea.android.brokerx.http.service.UserService;
 
@@ -14,6 +15,7 @@ public class ObjectFactory {
     private UserService userService;
     private LeadService leadService;
     private AnalysisService analysisService;
+    private ChatService chatService;
 
     public static synchronized ObjectFactory getInstance() {
         if (null == mObjectFactory) {
@@ -49,5 +51,13 @@ public class ObjectFactory {
         }
 
         return this.analysisService;
+    }
+
+    public synchronized ChatService getChatServiceInstance() {
+        if (null == this.chatService) {
+            this.chatService = SingletonRestClient.createService(ChatService.class, BrokerxApplication.getContext());
+        }
+
+        return this.chatService;
     }
 }

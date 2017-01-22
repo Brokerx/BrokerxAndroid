@@ -145,10 +145,11 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
         if(id == R.id.action_notification) {
             Intent intent = new Intent(BuyerSellerHomeActivity.this, NotificationActivity.class);
             startActivity(intent);
-        } else if(id == R.id.action_chat) {
+        } /*else if(id == R.id.action_chat) {
             Intent intent = new Intent(BuyerSellerHomeActivity.this, ChatListActivity.class);
             startActivity(intent);
-        }else if(id == R.id.action_logout) {
+        }*/
+        else if(id == R.id.action_logout) {
             SharedPreferencesUtil.clearAll(this);
             Intent intent = new Intent(BuyerSellerHomeActivity.this, SplashActivity.class);
             startActivity(intent);

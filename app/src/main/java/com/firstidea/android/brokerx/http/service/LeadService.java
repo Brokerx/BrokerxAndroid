@@ -44,6 +44,11 @@ public interface LeadService {
                   Callback<MessageDTO> callback);
 
     @FormUrlEncoded
+    @POST("/lead/getLeads")
+    void getLeadsByID(@Field("leadID") Integer leadID,
+                      Callback<MessageDTO> callback);
+
+    @FormUrlEncoded
     @POST("/lead/getLeadDocuments")
     void getLeadDocuments(@Field("leadID") Integer leadID,
                           Callback<MessageDTO> callback);

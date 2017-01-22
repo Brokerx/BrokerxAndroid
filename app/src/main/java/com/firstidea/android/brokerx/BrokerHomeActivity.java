@@ -1,6 +1,7 @@
 package com.firstidea.android.brokerx;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -116,10 +117,12 @@ public class BrokerHomeActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_chat) {
+        /*if (id == R.id.action_chat) {
             return true;
-        }
+        }*/
         if (id == R.id.action_notification) {
+            Intent intent = new Intent(this, NotificationActivity.class);
+            startActivity(intent);
             return true;
         }
 

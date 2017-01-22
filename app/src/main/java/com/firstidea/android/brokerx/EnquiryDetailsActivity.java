@@ -26,6 +26,8 @@ import com.firstidea.android.brokerx.http.model.User;
 import com.firstidea.android.brokerx.widget.AppProgressDialog;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit.Callback;
@@ -133,7 +135,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        mLead = getIntent().getExtras().getParcelable(Lead.KEY_LEAD);
+
         me = User.getSavedUser(this);
         mUnits = getResources().getStringArray(R.array.qty_options);
         mPackings = getResources().getStringArray(R.array.packing);
@@ -142,7 +144,14 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         if(getIntent().hasExtra(Constants.KEY_IS_READ_ONLY)) {
             mIsReadOnly = getIntent().getBooleanExtra(Constants.KEY_IS_READ_ONLY, false);
         }
-        initScreen();
+        if(getIntent().hasExtra(Lead.KEY_LEAD)) {
+            mLead = getIntent().getExtras().getParcelable(Lead.KEY_LEAD);
+            initScreen();
+        } else {
+            Integer leadID = getIntent().getExtras().getInt(Lead.KEY_LEAD_ID);
+            getLeadByID(leadID);
+        }
+
         String viewHistoryLabel = "<u><i>View History</i></u>";
         btnViewHistory.setText(Html.fromHtml(viewHistoryLabel));
         btnViewHistory.setOnClickListener(new View.OnClickListener() {
@@ -178,6 +187,28 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         });
     }
 
+    private void getLeadByID(Integer leadID) {
+        final Dialog dialog = AppProgressDialog.show(this);
+        ObjectFactory.getInstance().getLeadServiceInstance().getLeadsByID(leadID, new Callback<MessageDTO>() {
+            @Override
+            public void success(MessageDTO messageDTO, Response response) {
+                if(messageDTO.isSuccess()) {
+                    List<Lead> leads = Lead.createListFromJson(messageDTO.getData());
+                    mLead = leads.get(0);
+                    initScreen();
+                }
+                dialog.dismiss();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(EnquiryDetailsActivity.this, "Unable to get Lead Details...", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                finish();
+            }
+        });
+    }
+
     private void changeStatus(String myStatus, String otherUserStatus) {
         if (me.isBroker()) {
             mLead.setBrokerStatus(myStatus);
@@ -195,6 +226,10 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             mLead.setBrokerStatus(otherUserStatus);
         }
 
+        if(myStatus.equals(otherUserStatus) && myStatus.equals(LeadCurrentStatus.Pending.getStatus())) {
+            mLead.setMoveToPending(true);
+        }
+        mLead.setLastUpdUserID(me.getUserID());
         final Dialog dialog = AppProgressDialog.show(this);
        /* LeadService leadService = SingletonRestClient.createService(LeadService.class, this);
         leadService.saveLead(mLead, new Callback<MessageDTO>() {*/
@@ -556,6 +591,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         }
         mLead.setLeadID(null);
         mLead.setBrokerStatus(LeadCurrentStatus.Reverted.getStatus());
+        mLead.setLastUpdUserID(me.getUserID());
         final Dialog dialog = AppProgressDialog.show(this);
        /* LeadService leadService = SingletonRestClient.createService(LeadService.class, this);
         leadService.saveLead(mLead, new Callback<MessageDTO>() {*/

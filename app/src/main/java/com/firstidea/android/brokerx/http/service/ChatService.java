@@ -20,6 +20,11 @@ public interface ChatService {
                   Callback<MessageDTO> callback);
 
     @FormUrlEncoded
+    @POST("/chat/getNotifications")
+    void getNotifications(@Field("userID") Integer userID,
+                          Callback<MessageDTO> callback);
+
+    @FormUrlEncoded
     @POST("/chat/sendMsg")
     void sendMsg(@Field("fromUserID") Integer fromUserID,
                  @Field("fromUserName") String fromUserName,

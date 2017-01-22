@@ -17,6 +17,7 @@ import com.firstidea.android.brokerx.BrokerHomeActivity;
 import com.firstidea.android.brokerx.ChatActivity;
 import com.firstidea.android.brokerx.Constants;
 import com.firstidea.android.brokerx.MycircleActivity;
+import com.firstidea.android.brokerx.NotificationActivity;
 import com.firstidea.android.brokerx.R;
 import com.firstidea.android.brokerx.SplashActivity;
 import com.firstidea.android.brokerx.enums.ChatType;
@@ -36,7 +37,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static String TYPE_CONNECTION_REQUEST_ACCEPTED = "ConnectionRequestAccepted";
     public static String TYPE_CONNECTION_REQUEST_REJECTED = "ConnectionRequestRejected";
     public static String TYPE_USER_COMMUNICATION = "UserCommunication";
-
+    public static String TYPE_NEW_NOTIFICATION = "NewNotification";
     /**
      * Called when message is received.
      *
@@ -70,6 +71,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             } else if(type != null && type.equals(TYPE_NEW_LEAD_ADDED)) {
                 String dataContent =  dataMap.get("data");
                 generateNotification("Broker-X", dataContent+" has created a lead for you", type, null);
+            }else if(type != null && type.equals(TYPE_NEW_NOTIFICATION)) {
+                String dataContent =  dataMap.get("data");
+                generateNotification("Broker-X", "New Notification", type, null);
             }else if(type != null && type.equals(TYPE_CONNECTION_REQUEST_ACCEPTED)) {
                 String dataContent =  dataMap.get("data");
                 generateNotification("Broker-X", dataContent+" Has Accepted Your Request", type, null);
@@ -118,6 +122,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             intent = new Intent(this, BrokerHomeActivity.class);
         } else if(type.equals(TYPE_CONNECTION_REQUEST)) {
             intent = new Intent(this, MycircleActivity.class);
+        } else if(type.equals(TYPE_NEW_NOTIFICATION)) {
+            intent = new Intent(this, NotificationActivity.class);
         } else if(type.equals(TYPE_USER_COMMUNICATION)) {
             intent = new Intent(this, ChatActivity.class);
             intent.putExtra(Constants.OTHER_USER_NAME, chat.getFromUserName());

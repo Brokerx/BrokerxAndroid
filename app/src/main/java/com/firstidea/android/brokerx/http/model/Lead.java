@@ -55,6 +55,7 @@ public class Lead implements Parcelable {
     User broker;
     User assignedToUser;
     private String fieldsAltered;
+    private Boolean isMoveToPending;
 
     public Integer getLeadID() {
         return leadID;
@@ -358,6 +359,14 @@ public class Lead implements Parcelable {
 
     public void setFieldsAltered(String fieldsAltered) {
         this.fieldsAltered = fieldsAltered;
+    }
+
+    public Boolean getMoveToPending() {
+        return isMoveToPending;
+    }
+
+    public void setMoveToPending(Boolean moveToPending) {
+        isMoveToPending = moveToPending;
     }
 
     public Lead() {

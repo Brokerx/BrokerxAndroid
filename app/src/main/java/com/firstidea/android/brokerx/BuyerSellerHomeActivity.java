@@ -1,8 +1,10 @@
 package com.firstidea.android.brokerx;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firstidea.android.brokerx.adapter.BuyerSellerHomeEnquiriesAdapter;
@@ -54,6 +57,7 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
     private final int NEXT_ACTIVITY_REQ_CODE = 500;
     private final int ACTION_ACTIVITY = 700;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    public TextView unreadNotifCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +91,32 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
             }
         });
         initActionbarSpinner();
+        getUnreadNotificationCount();
+    }
+
+    private void getUnreadNotificationCount() {
+        User me = User.getSavedUser(this);
+        ObjectFactory.getInstance().getChatServiceInstance().getUnreadNotificationCount(me.getUserID(), new Callback<MessageDTO>() {
+            @Override
+            public void success(MessageDTO messageDTO, Response response) {
+                if(messageDTO.isSuccess()) {
+                    Integer count = ((int) Float.parseFloat(messageDTO.getData().toString()));
+                    if(unreadNotifCount == null) {
+                        return;
+                    }
+                    if(count <= 0) {
+                        unreadNotifCount.setVisibility(View.GONE);
+                        return;
+                    }
+                    unreadNotifCount.setVisibility(View.VISIBLE);
+                    unreadNotifCount.setText(count.toString());
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+            }
+        });
     }
 
     private void getLeads() {
@@ -136,6 +166,16 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_buyer_seller_home, menu);
+        View count = menu.findItem(R.id.action_notification).getActionView();
+        unreadNotifCount = (TextView) count.findViewById(R.id.counter);
+        count.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                unreadNotifCount.setVisibility(View.GONE);
+                Intent intent = new Intent(BuyerSellerHomeActivity.this, NotificationActivity.class);
+                startActivity(intent);
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -221,5 +261,38 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
             getLeads();
         }
 
+    }
+
+
+
+    BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Constants.ACTION_NEW_NOTIFICATION)) {
+                Integer count = 1;
+                if(unreadNotifCount.getVisibility() == View.VISIBLE) {
+                    String countString = unreadNotifCount.getText().toString();
+                    count = Integer.parseInt(countString)+1;
+                } else {
+                    unreadNotifCount.setVisibility(View.VISIBLE);
+                }
+                unreadNotifCount.setText(count+"");
+
+            }
+        }
+    };
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.ACTION_NEW_NOTIFICATION);
+        registerReceiver(notificationReceiver, filter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(notificationReceiver);
     }
 }

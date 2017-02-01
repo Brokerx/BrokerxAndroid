@@ -74,6 +74,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }else if(type != null && type.equals(TYPE_NEW_NOTIFICATION)) {
                 String dataContent =  dataMap.get("data");
                 generateNotification("Broker-X", "New Notification", type, null);
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.setAction(Constants.ACTION_NEW_NOTIFICATION);
+                this.sendBroadcast(broadcastIntent);
             }else if(type != null && type.equals(TYPE_CONNECTION_REQUEST_ACCEPTED)) {
                 String dataContent =  dataMap.get("data");
                 generateNotification("Broker-X", dataContent+" Has Accepted Your Request", type, null);

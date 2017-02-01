@@ -9,6 +9,7 @@
         android:icon="@drawable/ic_menu_chat"/>-->
     <item
         android:id="@+id/action_notification"
+        app:actionLayout="@layout/notification_badge"
         android:orderInCategory="100"
         android:title="Notifications"
         app:showAsAction="always"

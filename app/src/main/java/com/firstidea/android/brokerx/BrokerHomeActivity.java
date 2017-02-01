@@ -1,8 +1,10 @@
 package com.firstidea.android.brokerx;
 
 import android.app.Activity;
-import android.app.Notification;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,17 +19,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.firstidea.android.brokerx.adapter.PendingEnqBrokerAdapter;
 import com.firstidea.android.brokerx.constants.AppConstants;
 import com.firstidea.android.brokerx.fragment.broker.BrokerHomeFragment;
+import com.firstidea.android.brokerx.http.ObjectFactory;
 import com.firstidea.android.brokerx.http.SingletonRestClient;
+import com.firstidea.android.brokerx.http.model.MessageDTO;
 import com.firstidea.android.brokerx.http.model.User;
-import com.firstidea.android.brokerx.model.PendingEntries;
 import com.firstidea.android.brokerx.utils.AppUtils;
 import com.firstidea.android.brokerx.utils.SharedPreferencesUtil;
 import com.squareup.picasso.Picasso;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class BrokerHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,7 +40,8 @@ public class BrokerHomeActivity extends AppCompatActivity
     private android.support.v4.app.FragmentManager fragmentManager;
     private android.support.v4.app.Fragment currentFragment = null;
     private Button mEditProfle;
-    NavigationView navigationView;
+    private NavigationView navigationView;
+    public TextView unreadNotifCount;
     private User me;
 
     public static final int ACTION_ACTIVITY = 1007;
@@ -72,7 +78,32 @@ public class BrokerHomeActivity extends AppCompatActivity
             }
         });
         initDrawerHeader();
+        getUnreadNotificationCount();
         AppUtils.loadFCMid(this);
+    }
+
+    private void getUnreadNotificationCount() {
+        ObjectFactory.getInstance().getChatServiceInstance().getUnreadNotificationCount(me.getUserID(), new Callback<MessageDTO>() {
+            @Override
+            public void success(MessageDTO messageDTO, Response response) {
+                if(messageDTO.isSuccess()) {
+                    Integer count = ((int) Float.parseFloat(messageDTO.getData().toString()));
+                    if(unreadNotifCount == null) {
+                        return;
+                    }
+                    if(count <= 0) {
+                        unreadNotifCount.setVisibility(View.GONE);
+                        return;
+                    }
+                    unreadNotifCount.setVisibility(View.VISIBLE);
+                    unreadNotifCount.setText(count.toString());
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+            }
+        });
     }
 
     private void initDrawerHeader() {
@@ -111,6 +142,17 @@ public class BrokerHomeActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.broker_home, menu);
+        View count = menu.findItem(R.id.action_notification).getActionView();
+        unreadNotifCount = (TextView) count.findViewById(R.id.counter);
+        count.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                unreadNotifCount.setVisibility(View.GONE);
+                Intent intent = new Intent(BrokerHomeActivity.this, NotificationActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return true;
     }
 
@@ -183,5 +225,37 @@ public class BrokerHomeActivity extends AppCompatActivity
             currentFragment = new BrokerHomeFragment();
             changeFragment();
         }
+    }
+
+
+    BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Constants.ACTION_NEW_NOTIFICATION)) {
+                Integer count = 1;
+                if(unreadNotifCount.getVisibility() == View.VISIBLE) {
+                    String countString = unreadNotifCount.getText().toString();
+                    count = Integer.parseInt(countString)+1;
+                } else {
+                    unreadNotifCount.setVisibility(View.VISIBLE);
+                }
+                unreadNotifCount.setText(count+"");
+
+            }
+        }
+    };
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.ACTION_NEW_NOTIFICATION);
+        registerReceiver(notificationReceiver, filter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(notificationReceiver);
     }
 }

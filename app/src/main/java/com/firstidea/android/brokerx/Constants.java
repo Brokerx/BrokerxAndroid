@@ -27,4 +27,5 @@ public interface Constants {
     String KEY_USER_COMMUNICATION = "UserCommunication";
     //Constants for Intent Actions
     String ACTION_NEW_MESSAGE = "NewMessageReceived";
+    String ACTION_NEW_NOTIFICATION = "NewNotificationReceived";
 }

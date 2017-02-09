@@ -159,9 +159,10 @@ public class BrokerHomeActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        /*if (id == R.id.action_chat) {
-            return true;
-        }*/
+        if (id == R.id.action_chat) {
+            Intent intent = new Intent(BrokerHomeActivity.this, ChatListActivity.class);
+            startActivity(intent);
+        }
         if (id == R.id.action_notification) {
             Intent intent = new Intent(this, NotificationActivity.class);
             startActivity(intent);

@@ -185,10 +185,10 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
         if(id == R.id.action_notification) {
             Intent intent = new Intent(BuyerSellerHomeActivity.this, NotificationActivity.class);
             startActivity(intent);
-        } /*else if(id == R.id.action_chat) {
+        } else if(id == R.id.action_chat) {
             Intent intent = new Intent(BuyerSellerHomeActivity.this, ChatListActivity.class);
             startActivity(intent);
-        }*/
+        }
         else if(id == R.id.action_logout) {
             SharedPreferencesUtil.clearAll(this);
             Intent intent = new Intent(BuyerSellerHomeActivity.this, SplashActivity.class);
@@ -227,7 +227,8 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
     }
 
     private void initializeRecyclerView() {
-        adapter = new BuyerSellerHomeEnquiriesAdapter(this, mLeads, new BuyerSellerHomeEnquiriesAdapter.OnCardClickListener() {
+        String type = isUserTypeSpinnerInitilized ? spinner_nav.getSelectedItem().toString().toUpperCase().charAt(0)+"":LeadType.BUYER.getType();
+        adapter = new BuyerSellerHomeEnquiriesAdapter(this, mLeads, type, new BuyerSellerHomeEnquiriesAdapter.OnCardClickListener() {
             @Override
             public void onCardClick(Lead lead) {
                 Intent enquiry = new Intent(mContext, EnquiryDetailsActivity.class);

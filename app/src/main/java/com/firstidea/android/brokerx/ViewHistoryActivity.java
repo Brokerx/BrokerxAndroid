@@ -111,6 +111,8 @@ public class ViewHistoryActivity extends AppCompatActivity {
                 Intent intent = new Intent(ViewHistoryActivity.this, EnquiryDetailsActivity.class);
                 intent.putExtra(Lead.KEY_LEAD, lead);
                 intent.putExtra(Constants.KEY_IS_READ_ONLY, true);
+                intent.putExtra(Constants.KEY_ALTERED_FIELDS, lead.getFieldsAltered());
+
                 startActivity(intent);
             }
         });

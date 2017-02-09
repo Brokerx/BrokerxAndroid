@@ -40,8 +40,8 @@
         <item>Litre</item>
         <item>MT</item>
         <item>KL</item>
-        <item>ML</item>
-        <item>Gram</item>
+        <!--<item>ML</item>-->
+        <!--<item>Gram</item>-->
         <item>Piece</item>
     </string-array>
 
@@ -51,7 +51,7 @@
     <string-array name="packing">
         <item>Tanker</item>
         <item>HDPE Drum</item>
-        <item>HDPE Intact</item>
+        <item>Drum</item>
         <item>HDPE Intact</item>
         <item>HDPE Brand New Refil</item>
         <item>MS Drum Refil</item>

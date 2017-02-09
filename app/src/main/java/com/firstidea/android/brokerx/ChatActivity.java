@@ -56,6 +56,7 @@ public class ChatActivity extends AppCompatActivity {
     private ArrayList<Chat> mChats;
     private ChatAdapter mChatAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private boolean iSetResult = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +140,7 @@ public class ChatActivity extends AppCompatActivity {
                     mChatAdapter.notifyDataSetChanged();
                     mRecyclerView.scrollToPosition(0);
                     playSound(R.raw.send_message);
+                    iSetResult = true;
                 }
                 dialog.dismiss();
             }
@@ -230,6 +232,9 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
+        if(iSetResult) {
+            setResult(RESULT_OK);
+        }
         super.finish();
         overridePendingTransition(0, android.R.anim.slide_out_right);
     }

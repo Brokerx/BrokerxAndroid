@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -117,6 +118,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
     private User me;
     private String[] mUnits, mPackings;
     private boolean mIsReadOnly = false;
+    private String alteredFields;
     private boolean isRefreshParent = false;
 
     private final int ASIGN_USER_REQ_CODE= 100;
@@ -143,7 +145,9 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
 
         if(getIntent().hasExtra(Constants.KEY_IS_READ_ONLY)) {
             mIsReadOnly = getIntent().getBooleanExtra(Constants.KEY_IS_READ_ONLY, false);
+            alteredFields = getIntent().getStringExtra(Constants.KEY_ALTERED_FIELDS);
         }
+
         if(getIntent().hasExtra(Lead.KEY_LEAD)) {
             mLead = getIntent().getExtras().getParcelable(Lead.KEY_LEAD);
             initScreen();
@@ -479,6 +483,77 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             CurStatusLayout.setVisibility(View.GONE);
             btnPending.setVisibility(View.GONE);
         }
+        if(!TextUtils.isEmpty(alteredFields)) {
+            hiLightFields();
+        }
+    }
+
+    private void hiLightFields() {
+        alteredFields = alteredFields.toLowerCase();
+        int hilightColor = ContextCompat.getColor(this, R.color.altered_fields_color);
+        if(alteredFields.contains("itemname")) {
+            itemName.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("make")) {
+            make.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("qty") || alteredFields.contains("qtyunit")) {
+            qtyUnit.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("location")) {
+            location.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("basicprice")|| alteredFields.contains("basicpriceunit")) {
+            basicPriceWithUnit.setBackgroundColor(hilightColor);
+            basicPricePerUnit.setBackgroundColor(hilightColor);
+            totalCharges.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("brokerageamt")|| alteredFields.contains("buyerbrokerage") || alteredFields.contains("sellersrokerage")) {
+            brokerageAmt.setBackgroundColor(hilightColor);
+            totalCharges.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("exciseunit") || alteredFields.contains("exciseduty")) {
+            exciseDutyWithUnit.setBackgroundColor(hilightColor);
+            totalCharges.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("misccharges")) {
+            miscCharges.setBackgroundColor(hilightColor);
+            totalCharges.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("transportcharges")) {
+            transportCharges.setBackgroundColor(hilightColor);
+            totalCharges.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("againstform")) {
+            againstForm.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("creditperiod,")) {
+            creditPeriod.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("freeStorageperiod,")) {
+            freeStorage.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("preferredsellername,")) {
+            preferedSellerName.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("comments,")) {
+            comments.setBackgroundColor(hilightColor);
+        }
+
+
     }
 
     private void showDelaDoneConfirmation() {

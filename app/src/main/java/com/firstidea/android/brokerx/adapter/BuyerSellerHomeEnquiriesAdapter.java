@@ -33,6 +33,7 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
     private final List<Lead> mValues;
     private Context mContext;
     private String[] qtys;
+    String availableLabel;
     //    private BuyerSellerHomeEnquiriesAdapter.OnCardListener mListner;
     private OnCardClickListener mOnCardClickListener;
 
@@ -40,10 +41,11 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
         void onCardClick(Lead lead);
     }
 
-    public BuyerSellerHomeEnquiriesAdapter(Context context, List<Lead> items, OnCardClickListener mOnCardClickListener) {
+    public BuyerSellerHomeEnquiriesAdapter(Context context, List<Lead> items, String type, OnCardClickListener mOnCardClickListener) {
         mValues = items;
         qtys = context.getResources().getStringArray(R.array.qty_options);
         this.mOnCardClickListener = mOnCardClickListener;
+        this.availableLabel = type.startsWith("B")?" to Buy":" to Sell";
     }
 
     private static final String LOG_TAG = BuyerSellerHomeEnquiriesAdapter.class.getSimpleName();
@@ -93,7 +95,7 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
         holder.address.setText(mValues.get(position).getLocation());
         String brokerage = "<b>Brokerage: </b>" + mValues.get(position).getBrokerageAmt();
         holder.brokerage.setText(Html.fromHtml(brokerage));
-        holder.qty.setText(mValues.get(position).getQty() + " " + qtys[mValues.get(position).getQtyUnit()] + " Available");
+        holder.qty.setText(mValues.get(position).getQty() + " " + qtys[mValues.get(position).getQtyUnit()] +availableLabel);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

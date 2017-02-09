@@ -1,10 +1,13 @@
 package com.firstidea.android.brokerx;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,26 +18,28 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firstidea.android.brokerx.Chat.ChatListActivity;
 import com.firstidea.android.brokerx.adapter.BuyerSellerHomeEnquiriesAdapter;
 import com.firstidea.android.brokerx.constants.AppConstants;
 import com.firstidea.android.brokerx.enums.LeadCurrentStatus;
 import com.firstidea.android.brokerx.enums.LeadType;
-import com.firstidea.android.brokerx.fragment.dummy.DummyContent;
 import com.firstidea.android.brokerx.http.ObjectFactory;
 import com.firstidea.android.brokerx.http.model.Lead;
 import com.firstidea.android.brokerx.http.model.MessageDTO;
 import com.firstidea.android.brokerx.http.model.User;
-import com.firstidea.android.brokerx.model.Enquiry;
 import com.firstidea.android.brokerx.model.HomeHeader;
 import com.firstidea.android.brokerx.utils.AppUtils;
+import com.firstidea.android.brokerx.utils.ApptDateUtils;
 import com.firstidea.android.brokerx.utils.SharedPreferencesUtil;
 import com.firstidea.android.brokerx.widget.AppProgressDialog;
 import com.firstidea.android.brokerx.widget.HeaderSpanSizeLookup;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -50,6 +55,9 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
     private ArrayList<Lead> mLeads;
     private boolean isUserTypeSpinnerInitilized = false;
     private final int NEXT_ACTIVITY_REQ_CODE = 500;
+    private final int ACTION_ACTIVITY = 700;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    public TextView unreadNotifCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +74,49 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
             public void onClick(View view) {
                 Intent intent = new Intent(BuyerSellerHomeActivity.this, AddEnquiryFirstActivity.class);
                 intent.putExtra("type", type);
-                startActivity(intent);
+                startActivityForResult(intent, NEXT_ACTIVITY_REQ_CODE);
             }
         });
         AppUtils.loadFCMid(this);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                R.color.colorPrimaryLight,
+                R.color.teal,
+                R.color.teal);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                getLeads();
+            }
+        });
+        initActionbarSpinner();
+        getUnreadNotificationCount();
+    }
 
-        getLeads();
+    private void getUnreadNotificationCount() {
+        User me = User.getSavedUser(this);
+        ObjectFactory.getInstance().getChatServiceInstance().getUnreadNotificationCount(me.getUserID(), new Callback<MessageDTO>() {
+            @Override
+            public void success(MessageDTO messageDTO, Response response) {
+                if(messageDTO.isSuccess()) {
+                    Integer count = ((int) Float.parseFloat(messageDTO.getData().toString()));
+                    if(unreadNotifCount == null) {
+                        return;
+                    }
+                    if(count <= 0) {
+                        unreadNotifCount.setVisibility(View.GONE);
+                        return;
+                    }
+                    unreadNotifCount.setVisibility(View.VISIBLE);
+                    unreadNotifCount.setText(count.toString());
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+            }
+        });
     }
 
     private void getLeads() {
@@ -86,22 +131,34 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
                     ArrayList<Lead> leads= Lead.createListFromJson(messageDTO.getData());
                     mLeads= new ArrayList<Lead>();
                     mLeads.add(new Lead());
+                    Collections.sort(leads, new Comparator<Lead>() {
+                        @Override
+                        public int compare(Lead lhs, Lead rhs) {
+                            String lhsString = lhs.getLastUpdDateTime();
+                            String rhsString = rhs.getLastUpdDateTime();
+                            Date lhsDate = ApptDateUtils.getServerFormatedDateAndTime(lhs.getLastUpdDateTime());
+                            Date rhsDate = ApptDateUtils.getServerFormatedDateAndTime(rhs.getLastUpdDateTime());
+                            return (lhsDate.getTime() > rhsDate.getTime() ? -1 : 1);
+                        }
+                    });
                     mLeads.addAll(leads);
-                    if(!isUserTypeSpinnerInitilized){
+                    /*if(!isUserTypeSpinnerInitilized){
                         initActionbarSpinner();
-                    }
+                    }*/
                     initializeRecyclerView();
                     fillRecyclerView();
                 } else {
                     Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
                 }
                 dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Toast.makeText(mContext, "Please Check your Internet Connection", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -109,6 +166,16 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_buyer_seller_home, menu);
+        View count = menu.findItem(R.id.action_notification).getActionView();
+        unreadNotifCount = (TextView) count.findViewById(R.id.counter);
+        count.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                unreadNotifCount.setVisibility(View.GONE);
+                Intent intent = new Intent(BuyerSellerHomeActivity.this, NotificationActivity.class);
+                startActivity(intent);
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -121,7 +188,8 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
         } else if(id == R.id.action_chat) {
             Intent intent = new Intent(BuyerSellerHomeActivity.this, ChatListActivity.class);
             startActivity(intent);
-        }else if(id == R.id.action_logout) {
+        }
+        else if(id == R.id.action_logout) {
             SharedPreferencesUtil.clearAll(this);
             Intent intent = new Intent(BuyerSellerHomeActivity.this, SplashActivity.class);
             startActivity(intent);
@@ -141,9 +209,10 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
         spinner_nav.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(!isUserTypeSpinnerInitilized) isUserTypeSpinnerInitilized = true;
+                if(!isUserTypeSpinnerInitilized) return;
                 Toast.makeText(BuyerSellerHomeActivity.this, "Showing "+spinnerItems[position]+" Enquiries", Toast.LENGTH_SHORT).show();
                 type = (spinnerItems[position].charAt(0)+"").toUpperCase();
+                SharedPreferencesUtil.putSharedPreferencesInt(mContext, Constants.KEY_BUYER_SELLER_PREFERANCE, position);
                 getLeads();
             }
 
@@ -152,10 +221,21 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
 
             }
         });
+        int prevSelection = SharedPreferencesUtil.getSharedPreferencesInt(mContext, Constants.KEY_BUYER_SELLER_PREFERANCE, 0);
+        if(!isUserTypeSpinnerInitilized) isUserTypeSpinnerInitilized = true;
+        spinner_nav.setSelection(prevSelection);
     }
 
     private void initializeRecyclerView() {
-        adapter = new BuyerSellerHomeEnquiriesAdapter(this,mLeads);
+        String type = isUserTypeSpinnerInitilized ? spinner_nav.getSelectedItem().toString().toUpperCase().charAt(0)+"":LeadType.BUYER.getType();
+        adapter = new BuyerSellerHomeEnquiriesAdapter(this, mLeads, type, new BuyerSellerHomeEnquiriesAdapter.OnCardClickListener() {
+            @Override
+            public void onCardClick(Lead lead) {
+                Intent enquiry = new Intent(mContext, EnquiryDetailsActivity.class);
+                enquiry.putExtra(Lead.KEY_LEAD, lead);
+                startActivityForResult(enquiry, ACTION_ACTIVITY);
+            }
+        });
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
@@ -177,11 +257,43 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == NEXT_ACTIVITY_REQ_CODE  && resultCode == RESULT_OK) {
-            Lead mLead = data.getExtras().getParcelable(Lead.KEY_LEAD);
-            mLeads.add(mLead);
-            initializeRecyclerView();
-            fillRecyclerView();
+            getLeads();
+        } else if(requestCode == ACTION_ACTIVITY && resultCode == RESULT_OK) {
+            getLeads();
         }
 
+    }
+
+
+
+    BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Constants.ACTION_NEW_NOTIFICATION)) {
+                Integer count = 1;
+                if(unreadNotifCount.getVisibility() == View.VISIBLE) {
+                    String countString = unreadNotifCount.getText().toString();
+                    count = Integer.parseInt(countString)+1;
+                } else {
+                    unreadNotifCount.setVisibility(View.VISIBLE);
+                }
+                unreadNotifCount.setText(count+"");
+
+            }
+        }
+    };
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.ACTION_NEW_NOTIFICATION);
+        registerReceiver(notificationReceiver, filter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(notificationReceiver);
     }
 }

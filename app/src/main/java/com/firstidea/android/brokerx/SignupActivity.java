@@ -179,7 +179,31 @@ public class SignupActivity extends AppCompatActivity {
             editName.setError("Please Enter Your Name");
             return;
         }
-        //TODO Tushar : validate all fields like above
+
+        if (editMobile.getText().toString().trim().length() != 10) {
+            editMobile.setError("Please Enter 10 Digit Mobile Number");
+            return;
+        }
+
+        if (!AppUtils.isValidEmail(editEmail.getText().toString().trim())) {
+            editEmail.setError("Please Enter Valid Email ID");
+            return;
+        }
+
+        if (editAddress.getText().toString().trim().length()  <= 0) {
+            editAddress.setError("Please Enter Your Address");
+            return;
+        }
+
+        if (editCity.getText().toString().trim().length() <= 0) {
+            editCity.setError("Please Enter City");
+            return;
+        }
+
+        if (mCheckIsBroker.isChecked() && editDealsIn.getText().toString().trim().replace(",","").length() <= 0) {
+            editDealsIn.setError("Enter the items that you are dealing in");
+            return;
+        }
 
         registerUser();
     }
@@ -328,7 +352,7 @@ public class SignupActivity extends AppCompatActivity {
                     }
 
                 } else {
-                    Toast.makeText(SignupActivity.this, "Some Error Occured, Please try again..", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignupActivity.this, messageDTO.getMessageText(), Toast.LENGTH_SHORT).show();
                 }
                 dialog.dismiss();
             }

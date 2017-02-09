@@ -2,7 +2,9 @@ package com.firstidea.android.brokerx;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,23 +14,40 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firstidea.android.brokerx.adapter.Analysis11HighestBrokerAdapter;
+import com.firstidea.android.brokerx.http.ObjectFactory;
+import com.firstidea.android.brokerx.http.model.Lead;
+import com.firstidea.android.brokerx.http.model.MessageDTO;
+import com.firstidea.android.brokerx.http.model.User;
 import com.firstidea.android.brokerx.model.AnalysisItem;
+import com.firstidea.android.brokerx.widget.AppProgressDialog;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class Top11HighestBrokerActivity extends AppCompatActivity implements Analysis11HighestBrokerAdapter.OnAnalysisHBCardListener {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
-    private ArrayList<AnalysisItem> mList;
-    private EditText mStartDate, mEndDate;
+    private ArrayList<Lead> mList;
+    private Context mContext;
 
-    private Calendar cal;
-    private int day;
-    private int month;
-    private int year;
+    private TextView mStartDateView,mEndDateView;
+    private int startDay, endDay;
+    private int startMonth, endMonth;
+    private int startYear, endYear;
+    private Date mStartDate,mEndDate;
+    SimpleDateFormat SDF = new SimpleDateFormat("dd MMM yyyy");
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,111 +58,93 @@ public class Top11HighestBrokerActivity extends AppCompatActivity implements Ana
         getSupportActionBar().setTitle("Top 11 highest Brokerage");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        mContext = this;
 
-        mStartDate = (EditText) findViewById(R.id.starDate);
-        mEndDate = (EditText) findViewById(R.id.endDate);
+        mStartDateView = (TextView) findViewById(R.id.starDate);
+        mEndDateView = (TextView) findViewById(R.id.endDate);
         mRecyclerView = (RecyclerView) findViewById(R.id.topHighestBroker_recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-
-        mList = new ArrayList<AnalysisItem>();
-        initList();
-
-        Analysis11HighestBrokerAdapter mAdapter = new Analysis11HighestBrokerAdapter(this, mList, this);
-        mRecyclerView.setAdapter(mAdapter);
-
-        cal = Calendar.getInstance();
-        day = cal.get(Calendar.DAY_OF_MONTH);
-        month = cal.get(Calendar.MONTH);
-        year = cal.get(Calendar.YEAR);
-
-        showDate(year, month + 1, day);
-
-
-    }
-    @SuppressWarnings("deprecation")
-    public void SetDate(View view) {
-        showDialog(0);
-//        Toast.makeText(getApplicationContext(), "ca", Toast.LENGTH_SHORT)
-//                .show();
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                R.color.colorPrimaryLight,
+                R.color.teal,
+                R.color.teal);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                getLeads();
+            }
+        });
+        getLeads();
     }
 
-    @Override
-    @SuppressWarnings("deprecation")
-    protected Dialog onCreateDialog(int id) {
-        // TODO Auto-generated method stub
-        if (id == 0) {
-            return new DatePickerDialog(this, myDateListener, year, month, day);
-        }
-        return null;
+    private void getLeads() {
+        final Dialog dialog = AppProgressDialog.show(this);
+        User me = User.getSavedUser(this);
+        ObjectFactory.getInstance().getAnalysisServiceInstance().getBrokerTopHighestPayingLeads(me.getUserID(), null, null, new Callback<MessageDTO>() {
+            @Override
+            public void success(MessageDTO messageDTO, Response response) {
+                if(messageDTO.isSuccess()) {
+                    mList = Lead.createListFromJson(messageDTO.getData());
+                    Analysis11HighestBrokerAdapter mAdapter = new Analysis11HighestBrokerAdapter(mContext, mList, Top11HighestBrokerActivity.this);
+                    mRecyclerView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                }else {
+                    Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(mContext, "Pleaaswe check internet connection", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
-    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-            // TODO Auto-generated method stub
-            // arg1 = year
-            // arg2 = month
-            // arg3 = day
-            showDate(arg1, arg2 + 1, arg3);
-        }
-    };
-
-    private void showDate(int year, int month, int day) {
-        mStartDate.setText(new StringBuilder().append(day).append("/")
-                .append(month).append("/").append(year));
-        mEndDate.setText(new StringBuilder().append(day).append("/")
-                .append(month).append("/").append(year));
+    public void setStartDate(View view) {
+        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                startYear = year;
+                startMonth = monthOfYear;
+                startDay = dayOfMonth;
+                mStartDate= calendar.getTime();
+                mStartDateView.setText(SDF.format(mStartDate));
+            }
+        }, startYear, startMonth, startDay).show();
     }
 
 
-    private void initList() {
-
-        AnalysisItem item1 = new AnalysisItem();
-        item1.setChemical_Name("Benzene Toluene Ethyl benzene,Xylenes");
-        item1.setTotal_BrokerCharage("5000Rs");
-        item1.setBokerR("3000Rs");
-        item1.setBrokerS("2000Rs");
-        mList.add(item1);
-
-        AnalysisItem item2 = new AnalysisItem();
-        item2.setChemical_Name("Benzene Toluene Ethyl benzene,Xylenes");
-        item2.setTotal_BrokerCharage("5000Rs");
-        item2.setBokerR("3000Rs");
-        item2.setBrokerS("2000Rs");
-        mList.add(item2);
-
-
-        AnalysisItem item3 = new AnalysisItem();
-        item3.setChemical_Name("Benzene Toluene Ethyl benzene,Xylenes");
-        item3.setTotal_BrokerCharage("5000Rs");
-        item3.setBokerR("3000Rs");
-        item3.setBrokerS("2000Rs");
-        mList.add(item3);
-
-
-        AnalysisItem item4 = new AnalysisItem();
-        item4.setChemical_Name("Benzene Toluene Ethyl benzene,Xylenes");
-        item4.setTotal_BrokerCharage("5000Rs");
-        item4.setBokerR("3000Rs");
-        item4.setBrokerS("2000Rs");
-        mList.add(item4);
-
-
-        AnalysisItem item5 = new AnalysisItem();
-        item5.setChemical_Name("Benzene Toluene Ethyl benzene,Xylenes");
-        item5.setTotal_BrokerCharage("5000Rs");
-        item5.setBokerR("3000sS");
-        item5.setBrokerS("2000Rs");
-        mList.add(item5);
-
-
-
+    public void setEndDate(View view) {
+        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                endYear = year;
+                endMonth = monthOfYear;
+                endDay = dayOfMonth;
+                mEndDate = calendar.getTime();
+                mEndDateView.setText(SDF.format(mEndDate));
+            }
+        }, endYear, endMonth, endDay).show();
     }
+
 
     @Override
     public void OnCardClick(AnalysisItem item) {

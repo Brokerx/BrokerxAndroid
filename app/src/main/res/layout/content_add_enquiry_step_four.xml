@@ -13,6 +13,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/btn_next"
         android:fillViewport="true"
         android:paddingTop="@dimen/activity_vertical_margin">
 
@@ -93,19 +94,19 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btn_next"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="bottom"
-                android:text="Next"
-                android:textColor="@color/white"
-                android:gravity="center"
-                android:layout_marginBottom="1dp"
-                android:textSize="20sp"
-                android:drawableRight="@drawable/ic_arrow_next_white"
-                android:background="@color/main_color"
-                android:foreground="?attr/selectableItemBackground"/>
         </FrameLayout>
     </ScrollView>
+    <Button
+        android:id="@+id/btn_next"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:text="Next"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:layout_marginBottom="1dp"
+        android:textSize="20sp"
+        android:drawableRight="@drawable/ic_arrow_next_white"
+        android:background="@color/main_color"
+        android:foreground="?attr/selectableItemBackground"/>
 </RelativeLayout>

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,6 +40,7 @@ public class PendingEntriesActivity extends AppCompatActivity {
     private Context mContext;
     private ArrayList<Lead> mLeads;
     private Spinner spinner_nav;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +61,18 @@ public class PendingEntriesActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                R.color.colorPrimaryLight,
+                R.color.teal,
+                R.color.teal);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                getLeads();
+            }
+        });
 
         initActionbarSpinner();
 
@@ -73,7 +86,6 @@ public class PendingEntriesActivity extends AppCompatActivity {
         spinner_nav.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(PendingEntriesActivity.this, "Showing "+spinnerItems[position]+" Enquiries", Toast.LENGTH_SHORT).show();
                 getLeads();
             }
 
@@ -90,7 +102,7 @@ public class PendingEntriesActivity extends AppCompatActivity {
         User me = User.getSavedUser(mContext);
         final Dialog dialog = AppProgressDialog.show(mContext);
         String type = spinner_nav.getSelectedItemPosition() == 0 ? LeadType.BUYER.getType() : LeadType.SELLER.getType();
-        ObjectFactory.getInstance().getLeadServiceInstance().getLeads(me.getUserID(), type, "P", null, null, new Callback<MessageDTO>() {
+        ObjectFactory.getInstance().getLeadServiceInstance().getLeads(me.getUserID(), type, "P",null,null, null, null, new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 if (messageDTO.isSuccess()) {
@@ -111,12 +123,14 @@ public class PendingEntriesActivity extends AppCompatActivity {
                     Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
                 }
                 dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Toast.makeText(mContext, "Please Check your Internet Connection", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
     }

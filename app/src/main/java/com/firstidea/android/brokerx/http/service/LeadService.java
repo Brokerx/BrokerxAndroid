@@ -21,11 +21,11 @@ public interface LeadService {
 
     @POST("/lead/saveLead")
     void saveLead(@Body Lead lead,
-                           Callback<MessageDTO> callback);
+                  Callback<MessageDTO> callback);
 
     @POST("/lead/saveLeadStatusHistory")
     void saveLeadStatusHistory(@Body LeadStatusHistory lead,
-                           Callback<MessageDTO> callback);
+                               Callback<MessageDTO> callback);
 
     @FormUrlEncoded
     @POST("/lead/getLeadStatusHistory")
@@ -35,54 +35,61 @@ public interface LeadService {
     @FormUrlEncoded
     @POST("/lead/getLeads")
     void getLeads(@Field("userID") Integer userID,
-                   @Field("type")String type,
-                   @Field("status")String status,
-                   @Field("startDate")String startDate,
-                   @Field("endDate")String endDate,
-                   Callback<MessageDTO> callback);
+                  @Field("type") String type,
+                  @Field("status") String status,
+                  @Field("item") String item,
+                  @Field("brokerID") Integer brokerID,
+                  @Field("startDate") String startDate,
+                  @Field("endDate") String endDate,
+                  Callback<MessageDTO> callback);
+
+    @FormUrlEncoded
+    @POST("/lead/getLeads")
+    void getLeadsByID(@Field("leadID") Integer leadID,
+                      Callback<MessageDTO> callback);
 
     @FormUrlEncoded
     @POST("/lead/getLeadDocuments")
     void getLeadDocuments(@Field("leadID") Integer leadID,
-                   Callback<MessageDTO> callback);
+                          Callback<MessageDTO> callback);
 
     @FormUrlEncoded
     @POST("/lead/getHistory")
     void getHistory(@Field("userID") Integer userID,
-                   @Field("startDate")String startDate,
-                   @Field("endDate")String endDate,
-                   Callback<MessageDTO> callback);
+                    @Field("startDate") String startDate,
+                    @Field("endDate") String endDate,
+                    Callback<MessageDTO> callback);
 
     @FormUrlEncoded
     @POST("/lead/getActiveLeads")
     void getActiveLeads(@Field("userID") Integer loginUserID,
-                   @Field("type")String leadType,
-                   Callback<MessageDTO> callback);
+                        @Field("type") String leadType,
+                        Callback<MessageDTO> callback);
 
     @FormUrlEncoded
     @POST("/lead/getLeadHistory")
     void getLeadHistory(@Field("leadID") Integer leadID,
-                   Callback<MessageDTO> callback);
+                        Callback<MessageDTO> callback);
 
     @FormUrlEncoded
     @POST("/lead/dealDone")
     void dealDone(@Field("leadID") Integer leadID,
-                   Callback<MessageDTO> callback);
+                  Callback<MessageDTO> callback);
 
     @FormUrlEncoded
     @POST("/lead/getBrokerLeads")
-    void getBrokerLeads(@Field("userID") Integer userID,
-                   @Field("type")String type,
-                   @Field("status")String status,
-                   @Field("startDate")String startDate,
-                   @Field("endDate")String endDate,
-                   Callback<MessageDTO> callback);
+    void getBrokerLeads(@Field("brokerID") Integer userID,
+                        @Field("type") String type,
+                        @Field("status") String status,
+                        @Field("startDate") String startDate,
+                        @Field("endDate") String endDate,
+                        Callback<MessageDTO> callback);
 
 
     @Multipart
     @POST("/lead/uploadDocument")
     void uploadDocument(@Part("file") TypedFile file,
-                  @Part("DataJSON") String advertisementJSON,
-                  Callback<MessageDTO> callback);
+                        @Part("DataJSON") String advertisementJSON,
+                        Callback<MessageDTO> callback);
 
 }

@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -42,7 +43,10 @@ public class AddEnquiryStepFourActivity extends AppCompatActivity {
     }
 
     private void validateAndNext() {
-        //TODO Tushar: validate all fields
+        if(TextUtils.isEmpty(editBrokerage.getText().toString())) {
+            editBrokerage.setError("Enter Brokerage");
+            return;
+        }
         float brokerage = Float.parseFloat(editBrokerage.getText().toString());
         mLead.setBrokerageAmt(brokerage);
         Intent intent = new Intent(AddEnquiryStepFourActivity.this,AddEnquiryStepFiveActivity.class);

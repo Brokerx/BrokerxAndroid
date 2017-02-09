@@ -31,13 +31,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.regex.Pattern;
 
 //import com.google.android.gcm.GCMRegistrar;
 //import com.firstidea.android.garnet.Constants;
 //import com.firstidea.android.garnet.R;
 
 public class AppUtils {
-    public static String getDeviceId(Context context) {
+	public final static boolean isValidEmail(CharSequence target) {
+		if (target == null) {
+			return false;
+		} else {
+			Pattern regex = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);;
+			return regex.matcher(target).matches();
+		}
+	}
+
+	public static String getDeviceId(Context context) {
         TelephonyManager mytelephonyManager = (TelephonyManager) context
                 .getSystemService(Context.TELEPHONY_SERVICE);
         Log.d("GK", "Device Id:" + mytelephonyManager.getDeviceId());

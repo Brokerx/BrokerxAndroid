@@ -25,7 +25,7 @@ public class DownLoadUtils {
 
     public static void startDownLoad(final Context context, final String fileNameString, final DownloadCallback downloadCallback) {
         final ProgressDialog progressDialog = new ProgressDialog(context);
-        String dialogTitle = "Initializing App...";//isUpdate ? "Updating App..." : "Initializing App...";
+        String dialogTitle = "Downloading File...";//isUpdate ? "Updating App..." : "Initializing App...";
         progressDialog.setMessage(dialogTitle);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setProgressNumberFormat(null);

@@ -40,8 +40,8 @@
         <item>Litre</item>
         <item>MT</item>
         <item>KL</item>
-        <item>ML</item>
-        <item>Gram</item>
+        <!--<item>ML</item>-->
+        <!--<item>Gram</item>-->
         <item>Piece</item>
     </string-array>
 
@@ -51,7 +51,7 @@
     <string-array name="packing">
         <item>Tanker</item>
         <item>HDPE Drum</item>
-        <item>HDPE Intact</item>
+        <item>Drum</item>
         <item>HDPE Intact</item>
         <item>HDPE Brand New Refil</item>
         <item>MS Drum Refil</item>
@@ -82,6 +82,7 @@
     <string name="start_date">Start Date</string>
     <string name="title_activity_analysis_broker">AnalysisBrokerActivity</string>
     <string name="top_11_highest_paying_sellers">Top 11 Highest Paying Sellers</string>
+    <string name="top_11_highest_paying_buyer">Top 11 Highest Paying Buyer</string>
     <string name="top_11_highest_paying_brokerage">Top 11 Highest Paying Brokerage</string>
     <string name="title_activity_top11_highest_broker">Top11HighestBrokerActivity</string>
     <string name="title_activity_top11_seller">Top11SellerActivity</string>
@@ -96,4 +97,5 @@
     <string name="contact_permission_dialog_contents">You can add the brokers from your contact book. Please &lt;b&gt;Allow&lt;\b&gt; the Read contact permission in &lt;b&gt;Next Step.&lt;\b&gt; </string>
     <string name="title_activity_lead_status_history_details">LeadStatusHistoryDetails</string>
     <string name="title_activity_upload_document">UploadDocumentActivity</string>
+    <string name="title_activity_chat">ChatActivity</string>
 </resources>

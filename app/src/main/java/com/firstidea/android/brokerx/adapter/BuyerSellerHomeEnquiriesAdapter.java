@@ -28,16 +28,24 @@ import java.util.List;
  * TODO: Replace the implementation with code for your data type.
  */
 public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<RecyclerView.ViewHolder, HomeHeader, Lead, BuyerSellerHomeEnquiriesAdapter.HomeFooter> {
-        //RecyclerView.Adapter<BuyerSellerHomeEnquiriesAdapter.ViewHolder> {
+    //RecyclerView.Adapter<BuyerSellerHomeEnquiriesAdapter.ViewHolder> {
 
     private final List<Lead> mValues;
-  private Context mContext;
+    private Context mContext;
     private String[] qtys;
-//    private BuyerSellerHomeEnquiriesAdapter.OnCardListener mListner;
+    String availableLabel;
+    //    private BuyerSellerHomeEnquiriesAdapter.OnCardListener mListner;
+    private OnCardClickListener mOnCardClickListener;
 
-    public BuyerSellerHomeEnquiriesAdapter(Context context,List<Lead> items) {
+    public interface OnCardClickListener {
+        void onCardClick(Lead lead);
+    }
+
+    public BuyerSellerHomeEnquiriesAdapter(Context context, List<Lead> items, String type, OnCardClickListener mOnCardClickListener) {
         mValues = items;
         qtys = context.getResources().getStringArray(R.array.qty_options);
+        this.mOnCardClickListener = mOnCardClickListener;
+        this.availableLabel = type.startsWith("B")?" to Buy":" to Sell";
     }
 
     private static final String LOG_TAG = BuyerSellerHomeEnquiriesAdapter.class.getSimpleName();
@@ -49,7 +57,6 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
 //    public interface OnCardListener {
 //        void OnCardClick(Lead item);
 //    }
-
     @Override
     protected RecyclerView.ViewHolder onCreateHeaderViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = getLayoutInflater(parent);
@@ -71,29 +78,29 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
         return new FooterViewHolder(footerView);
     }*/
 
-    @Override protected void onBindHeaderViewHolder(RecyclerView.ViewHolder holder, int position) {
+    @Override
+    protected void onBindHeaderViewHolder(RecyclerView.ViewHolder holder, int position) {
 //        HomeHeader header = getHeader();
         HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
         headerViewHolder.render();
     }
 
-    @Override protected void onBindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    @Override
+    protected void onBindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final ViewHolder holder = (ViewHolder) viewHolder;
         holder.mItem = mValues.get(position);
         holder.title.setText(mValues.get(position).getItemName());
-        String userName = "<b>Broker: </b>"+mValues.get(position).getBroker().getFullName();
+        String userName = "<b>Broker: </b>" + mValues.get(position).getBroker().getFullName();
         holder.userName.setText(Html.fromHtml(userName));
         holder.address.setText(mValues.get(position).getLocation());
-        String brokerage = "<b>Brokerage: </b>"+mValues.get(position).getBrokerageAmt();
+        String brokerage = "<b>Brokerage: </b>" + mValues.get(position).getBrokerageAmt();
         holder.brokerage.setText(Html.fromHtml(brokerage));
-        holder.qty.setText(mValues.get(position).getQty()+" "+qtys[mValues.get(position).getQtyUnit()]+" Available");
+        holder.qty.setText(mValues.get(position).getQty() + " " + qtys[mValues.get(position).getQtyUnit()] +availableLabel);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent enquiry=new Intent(v.getContext(),EnquiryDetailsActivity.class);
-                enquiry.putExtra(Lead.KEY_LEAD, holder.mItem);
-                v.getContext().startActivity(enquiry);
+                mOnCardClickListener.onCardClick(holder.mItem);
             }
         });
 
@@ -109,15 +116,18 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
         return LayoutInflater.from(parent.getContext());
     }
 
-    @Override protected void onHeaderViewRecycled(RecyclerView.ViewHolder holder) {
+    @Override
+    protected void onHeaderViewRecycled(RecyclerView.ViewHolder holder) {
         Log.v(LOG_TAG, "onHeaderViewRecycled(RecyclerView.ViewHolder holder)");
     }
 
-    @Override protected void onItemViewRecycled(RecyclerView.ViewHolder holder) {
+    @Override
+    protected void onItemViewRecycled(RecyclerView.ViewHolder holder) {
         Log.v(LOG_TAG, "onItemViewRecycled(RecyclerView.ViewHolder holder)");
     }
 
-    @Override protected void onFooterViewRecycled(RecyclerView.ViewHolder holder) {
+    @Override
+    protected void onFooterViewRecycled(RecyclerView.ViewHolder holder) {
         Log.v(LOG_TAG, "onFooterViewRecycled(RecyclerView.ViewHolder holder)");
     }
 
@@ -147,10 +157,10 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
             });
         }
 */
-        @Override
-        public int getItemCount() {
-            return mValues.size();
-        }
+    @Override
+    public int getItemCount() {
+        return mValues.size();
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
@@ -192,11 +202,12 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
             this.analysis = (TextView) itemView.findViewById(R.id.analysis);
             this.pendingEnq = (TextView) itemView.findViewById(R.id.pending_enquiries);
         }
+
         public void render() {
             this.history.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent(HeaderViewHolder.this.history.getContext(), MyHistoryActivity.class);
+                    Intent intent = new Intent(HeaderViewHolder.this.history.getContext(), MyHistoryActivity.class);
                     HeaderViewHolder.this.history.getContext().startActivity(intent);
                     Toast.makeText(HeaderViewHolder.this.history.getContext(), "Clicked on History", Toast.LENGTH_SHORT).show();
                 }
@@ -204,14 +215,14 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
             this.myCircle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent(HeaderViewHolder.this.myCircle.getContext(), MycircleActivity.class);
+                    Intent intent = new Intent(HeaderViewHolder.this.myCircle.getContext(), MycircleActivity.class);
                     HeaderViewHolder.this.myCircle.getContext().startActivity(intent);
                 }
             });
             this.analysis.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent(HeaderViewHolder.this.analysis.getContext(), AnalysisActivity.class);
+                    Intent intent = new Intent(HeaderViewHolder.this.analysis.getContext(), AnalysisActivity.class);
                     HeaderViewHolder.this.analysis.getContext().startActivity(intent);
                     Toast.makeText(HeaderViewHolder.this.analysis.getContext(), "Clicked on Analysis", Toast.LENGTH_SHORT).show();
                 }
@@ -219,7 +230,7 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
             this.pendingEnq.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent(HeaderViewHolder.this.pendingEnq.getContext(), PendingEntriesActivity.class);
+                    Intent intent = new Intent(HeaderViewHolder.this.pendingEnq.getContext(), PendingEntriesActivity.class);
                     HeaderViewHolder.this.pendingEnq.getContext().startActivity(intent);
                     Toast.makeText(HeaderViewHolder.this.pendingEnq.getContext(), "Clicked on Pending Enquiries", Toast.LENGTH_SHORT).show();
                 }

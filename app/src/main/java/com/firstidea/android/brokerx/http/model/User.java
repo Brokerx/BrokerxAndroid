@@ -35,6 +35,8 @@ public class User implements Parcelable {
     private String brokerDealsInItems;
     private Integer userConnectionID;
     private boolean isMyRequest;
+    private Integer leadCount;
+    private Float leadAmount;
 
     public User() {
     }
@@ -157,6 +159,22 @@ public class User implements Parcelable {
 
     public void setMyRequest(boolean myRequest) {
         isMyRequest = myRequest;
+    }
+
+    public Integer getLeadCount() {
+        return leadCount;
+    }
+
+    public void setLeadCount(Integer leadCount) {
+        this.leadCount = leadCount;
+    }
+
+    public Float getLeadAmount() {
+        return leadAmount;
+    }
+
+    public void setLeadAmount(Float leadAmount) {
+        this.leadAmount = leadAmount;
     }
 
     public void setStatus(String status) {

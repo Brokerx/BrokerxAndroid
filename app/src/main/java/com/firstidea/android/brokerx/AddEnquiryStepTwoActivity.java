@@ -45,7 +45,8 @@ public class AddEnquiryStepTwoActivity extends AppCompatActivity {
     }
 
     private void validateAndNext() {
-        //TODO Tushar: validate all fields
+        //No need of validation
+
         mLead.setLocation(editLocation.getText().toString());
         Intent intent = new Intent(AddEnquiryStepTwoActivity.this, AddEnquiryStepThreeActivity.class);
         intent.putExtra(Lead.KEY_LEAD,mLead);

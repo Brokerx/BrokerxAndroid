@@ -9,6 +9,8 @@ public enum LeadType {
 
     String leadType;
 
+    public static String KEY_LEAD_TYPE = "LeadType";
+
     LeadType(String leadType) {
         this.leadType = leadType;
     }

@@ -9,9 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firstidea.android.brokerx.R;
-import com.firstidea.android.brokerx.TopBrokersActivity;
-import com.firstidea.android.brokerx.model.MyHistroyItem;
-import com.firstidea.android.brokerx.model.TopBroketItem;
+import com.firstidea.android.brokerx.http.model.User;
 
 import java.util.ArrayList;
 
@@ -20,38 +18,24 @@ import java.util.ArrayList;
  */
 
 public class TopBrokerAdapter extends RecyclerView.Adapter<TopBrokerAdapter.BrokerViewHolder> {
-    private ArrayList<TopBroketItem> mList;
+    private ArrayList<User> mList;
     private Context mContext;
-    private OnCardListener mListner;
-
-
-
-    /**
-     * <b>public interface OnCardListener</b>
-     * <br>Interface to implement the OnClick on Card</br>
-     */
-    public interface OnCardListener {
-        void OnCardClick(TopBroketItem item);
-    }
-
-
     public class BrokerViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout mParentlayout;
-        private TextView mBasic_Charge;
+        private TextView no_of_deals;
         private TextView mTotal_Charge;
         private TextView mBroker_name;
         public BrokerViewHolder(View itemView) {
             super(itemView);
             mParentlayout = (LinearLayout) itemView.findViewById(R.id.TopBrokerlinear_parent);
-            mBasic_Charge = (TextView) itemView.findViewById(R.id.basicChargeT);
+            no_of_deals = (TextView) itemView.findViewById(R.id.no_of_deals);
             mTotal_Charge = (TextView) itemView.findViewById(R.id.totalChargeT);
             mBroker_name = (TextView) itemView.findViewById(R.id.brokerNameT);
         }
     }
-    public TopBrokerAdapter(Context mContext, ArrayList<TopBroketItem> mList, TopBrokerAdapter.OnCardListener mListner) {
+    public TopBrokerAdapter(Context mContext, ArrayList<User> mList) {
         this.mContext = mContext;
         this.mList = mList;
-        this.mListner = mListner;
     }
     @Override
     public TopBrokerAdapter.BrokerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -62,14 +46,14 @@ public class TopBrokerAdapter extends RecyclerView.Adapter<TopBrokerAdapter.Brok
 
     @Override
     public void onBindViewHolder(TopBrokerAdapter.BrokerViewHolder holder, int position) {
-        final TopBroketItem mItem = mList.get(position);
-        holder.mBasic_Charge.setText(mItem.getBasic_charge());
-        holder.mTotal_Charge.setText(mItem.getTotal_charge());
-        holder.mBroker_name.setText(mItem.getBroker_name());
+        final User mItem = mList.get(position);
+        holder.no_of_deals.setText(mItem.getLeadCount()+"");
+        holder.mTotal_Charge.setText(mItem.getLeadAmount()+" RS.");
+        holder.mBroker_name.setText(mItem.getFullName());
         holder.mParentlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListner.OnCardClick(mItem);
+
             }
         });
 

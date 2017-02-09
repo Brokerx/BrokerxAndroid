@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -55,7 +56,11 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
     private Lead mLead;
     private String[] mUnits, mPackings;
     private LeadStatusHistory mLeadStatusHistory;
-    private boolean isSeller = false;;
+    private boolean isSeller = false;
+    ;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    public static final String OPEN_DETAILS_SCREEN = "openDetailsScreen";
+    private boolean isOpenDetailsScreen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +74,53 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
 
         mContext = this;
         me = User.getSavedUser(this);
-        mLead = getIntent().getExtras().getParcelable(Lead.KEY_LEAD);
 
-        getLeadStatusHistory();
+        if (getIntent().hasExtra(OPEN_DETAILS_SCREEN)) {
+            isOpenDetailsScreen = true;
+        }
+        if (getIntent().hasExtra(Lead.KEY_LEAD)) {
+            mLead = getIntent().getExtras().getParcelable(Lead.KEY_LEAD);
+            getLeadStatusHistory();
+        } else {
+            Integer leadID = getIntent().getExtras().getInt(Lead.KEY_LEAD_ID);
+            getLeadByID(leadID);
+        }
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                R.color.colorPrimaryLight,
+                R.color.teal,
+                R.color.teal);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                getLeadStatusHistory();
+            }
+        });
 
+
+    }
+
+    private void getLeadByID(Integer leadID) {
+        final Dialog dialog = AppProgressDialog.show(this);
+        ObjectFactory.getInstance().getLeadServiceInstance().getLeadsByID(leadID, new Callback<MessageDTO>() {
+            @Override
+            public void success(MessageDTO messageDTO, Response response) {
+                if (messageDTO.isSuccess()) {
+                    List<Lead> leads = Lead.createListFromJson(messageDTO.getData());
+                    mLead = leads.get(0);
+                    getLeadStatusHistory();
+                }
+                dialog.dismiss();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(MyHistoryDetailsActivity.this, "Unable to get Lead Details...", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                finish();
+            }
+        });
     }
 
     private void getLeadStatusHistory() {
@@ -84,6 +132,14 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
                     mLeadStatusHistory = LeadStatusHistory.createFromJSON(messageDTO.getData());
                     initScreen();
                     dialog.dismiss();
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    if (isOpenDetailsScreen) {
+                        Intent intent = new Intent(MyHistoryDetailsActivity.this, LeadStatusHistoryDetailsActivity.class);
+                        intent.putExtra(LeadStatusHistory.KEY_STATUS_HISTORY, mLeadStatusHistory);
+                        intent.putExtra("IsSeller", isSeller);
+                        startActivity(intent);
+                        isOpenDetailsScreen = false;
+                    }
                 } else {
                     Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
@@ -131,8 +187,8 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
         String unitsAvailable = mLead.getQty() + " " + mUnits[mLead.getQtyUnit()] + " available";
         units_available.setText(unitsAvailable);
         Chemical_Name.setText(mLead.getItemName());
-        if(!TextUtils.isEmpty(mLeadStatusHistory.getInvoiceNumber())) {
-            InvoiceNo.setText(Html.fromHtml("<b> Invoice No: </b>"+mLeadStatusHistory.getInvoiceNumber()));
+        if (!TextUtils.isEmpty(mLeadStatusHistory.getInvoiceNumber())) {
+            InvoiceNo.setText(Html.fromHtml("<b> Invoice No: </b>" + mLeadStatusHistory.getInvoiceNumber()));
         } else {
             InvoiceNo.setVisibility(View.GONE);
         }
@@ -234,9 +290,9 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
 
         }
 
-        if(me.isBroker()) {
+        if (me.isBroker()) {
             isSeller = false;
-        }else if (mLead.getType().equals(LeadType.BUYER.getType())) {
+        } else if (mLead.getType().equals(LeadType.BUYER.getType())) {
             if (mLead.getAssignedToUserID().equals(me.getUserID())) {
                 isSeller = true;
             }
@@ -294,7 +350,7 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
     private void changeLeadStatus(final int currentStatus, String status) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Change Status ?");
-        builder.setMessage(Html.fromHtml("Are you sure, do you want to change status of this deal to <b>"+status+" ?</b> "));
+        builder.setMessage(Html.fromHtml("Are you sure, do you want to change status of this deal to <b>" + status + " ?</b> "));
         // Set up the buttons
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override

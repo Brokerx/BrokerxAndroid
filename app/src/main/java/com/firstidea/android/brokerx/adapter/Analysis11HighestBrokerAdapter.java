@@ -1,6 +1,7 @@
 package com.firstidea.android.brokerx.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +9,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.firstidea.android.brokerx.MyHistoryActivity;
+import com.firstidea.android.brokerx.MyHistoryDetailsActivity;
 import com.firstidea.android.brokerx.R;
+import com.firstidea.android.brokerx.enums.LeadType;
+import com.firstidea.android.brokerx.http.model.Lead;
 import com.firstidea.android.brokerx.model.AnalysisItem;
 
 import java.util.ArrayList;
@@ -18,7 +23,7 @@ import java.util.ArrayList;
  */
 
 public class Analysis11HighestBrokerAdapter extends RecyclerView.Adapter<Analysis11HighestBrokerAdapter.BrokerViewHolder> {
-    private ArrayList<AnalysisItem> mHList;
+    private ArrayList<Lead> mHList;
     private Context mContext;
     private Analysis11HighestBrokerAdapter.OnAnalysisHBCardListener mHListner;
 
@@ -35,20 +40,24 @@ public class Analysis11HighestBrokerAdapter extends RecyclerView.Adapter<Analysi
         public LinearLayout mParentlayout;
         private TextView mChemicalName;
         private TextView mTotalNrokerCharges;
-        private TextView mBrokerName1;
-        private TextView BrokerName2;
+        private TextView buyerBrokerage;
+        private TextView sellerBrokerage;
+        private TextView buyerName;
+        private TextView sellerName;
         public BrokerViewHolder(View itemView) {
             super(itemView);
 
             mParentlayout = (LinearLayout) itemView.findViewById(R.id.Top11HBrokerlinear_parent);
             mChemicalName = (TextView) itemView.findViewById(R.id.chemical_nameBH);
             mTotalNrokerCharges = (TextView) itemView.findViewById(R.id.totalChargeBH);
-            mBrokerName1 = (TextView) itemView.findViewById(R.id.broker1);
-            BrokerName2 = (TextView) itemView.findViewById(R.id.broker2);
+            buyerBrokerage = (TextView) itemView.findViewById(R.id.buyer_brokerage);
+            sellerBrokerage = (TextView) itemView.findViewById(R.id.seller_brokerage);
+            buyerName = (TextView) itemView.findViewById(R.id.buyer_name);
+            sellerName = (TextView) itemView.findViewById(R.id.seller_name);
         }
     }
 
-    public Analysis11HighestBrokerAdapter(Context mContext, ArrayList<AnalysisItem> mHList, OnAnalysisHBCardListener mHListner) {
+    public Analysis11HighestBrokerAdapter(Context mContext, ArrayList<Lead> mHList, OnAnalysisHBCardListener mHListner) {
         this.mContext = mContext;
         this.mHList = mHList;
         this.mHListner = mHListner;
@@ -62,16 +71,33 @@ public class Analysis11HighestBrokerAdapter extends RecyclerView.Adapter<Analysi
 
     @Override
     public void onBindViewHolder(Analysis11HighestBrokerAdapter.BrokerViewHolder holder, int position) {
-        final AnalysisItem Item = mHList.get(position);
-        holder.mChemicalName.setText(Item.getChemical_Name());
-        holder.mTotalNrokerCharges.setText(Item.getTotal_BrokerCharage());
-        holder.mBrokerName1.setText(Item.getBokerR());
-        holder.BrokerName2.setText(Item.getBrokerS());
+        final Lead lead = mHList.get(position);
+        holder.mChemicalName.setText(lead.getItemName());
+        float buyerBrokerage = lead.getBuyerBrokerage();
+        float sellerBrokerage = lead.getSellerBrokerage();
+        float totalBrokerage = buyerBrokerage+sellerBrokerage;
+        holder.mTotalNrokerCharges.setText(totalBrokerage+" Rs.");
+        String buyerName = "", sellerName = "";
+        if(lead.getType().equals(LeadType.BUYER.getType())) {
+            buyerName = lead.getCreatedUser().getFullName();
+            sellerName = lead.getAssignedToUser().getFullName();
+        } else {
+            sellerName = lead.getCreatedUser().getFullName();
+            buyerName = lead.getAssignedToUser().getFullName();
+        }
+        buyerName += "\n(Buyer)";
+        sellerName += "\n(Seller)";
+        holder.buyerName.setText(buyerName);
+        holder.sellerName.setText(sellerName);
+        holder.buyerBrokerage.setText(buyerBrokerage+" Rs.");
+        holder.sellerBrokerage.setText(sellerBrokerage+" Rs.");
 
         holder.mParentlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mHListner.OnCardClick(Item);
+                Intent intent = new Intent(mContext, MyHistoryDetailsActivity.class);
+                intent.putExtra(Lead.KEY_LEAD, lead);
+                mContext.startActivity(intent);
             }
         });
 

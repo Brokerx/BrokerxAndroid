@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,6 +39,7 @@ public class ViewHistoryActivity extends AppCompatActivity {
 //    @BindView(R.id.btn_view_all) Button btnViewAll;
     private ViewHistoryRecyclerViewAdapter mAdapter;
     private ArrayList<Lead> mLeads;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,18 @@ public class ViewHistoryActivity extends AppCompatActivity {
             }
         });
         mLeadID = getIntent().getIntExtra(Lead.KEY_LEAD_ID, 0);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                R.color.colorPrimaryLight,
+                R.color.teal,
+                R.color.teal);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                getLeadHistory();
+            }
+        });
         getLeadHistory();
     }
 
@@ -78,12 +92,14 @@ public class ViewHistoryActivity extends AppCompatActivity {
 
                 }
                 dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 dialog.dismiss();
                 Toast.makeText(ViewHistoryActivity.this, "Connection Error, please try again...", Toast.LENGTH_SHORT).show();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -94,6 +110,9 @@ public class ViewHistoryActivity extends AppCompatActivity {
             public void OnCardClick(Lead lead) {
                 Intent intent = new Intent(ViewHistoryActivity.this, EnquiryDetailsActivity.class);
                 intent.putExtra(Lead.KEY_LEAD, lead);
+                intent.putExtra(Constants.KEY_IS_READ_ONLY, true);
+                intent.putExtra(Constants.KEY_ALTERED_FIELDS, lead.getFieldsAltered());
+
                 startActivity(intent);
             }
         });

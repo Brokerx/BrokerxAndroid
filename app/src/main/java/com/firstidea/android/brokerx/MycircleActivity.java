@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -52,7 +53,9 @@ public class MycircleActivity extends AppCompatActivity implements MyCircleRecyc
     private User mUser;
     private List<User> mUsers;
     RecyclerView recyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private Context mContext;
+    private Integer excludeUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +69,24 @@ public class MycircleActivity extends AppCompatActivity implements MyCircleRecyc
         mContext = this;
         mUser = User.getSavedUser(this);
 
+        if(getIntent().hasExtra(Constants.KEY_EXCLUDE_USER_ID)) {
+            excludeUserID = getIntent().getExtras().getInt(Constants.KEY_EXCLUDE_USER_ID);
+        }
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                R.color.colorPrimaryLight,
+                R.color.teal,
+                R.color.teal);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                getMyCircle();
+            }
+        });
+
         getMyCircle();
     }
 
@@ -83,11 +102,13 @@ public class MycircleActivity extends AppCompatActivity implements MyCircleRecyc
                     Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
                 }
                 dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -99,7 +120,10 @@ public class MycircleActivity extends AppCompatActivity implements MyCircleRecyc
             if (user.getStatus().equals(ConnectionStatus.PENDING.getStatus())) {
                 pendingUsers.add(user);
             } else if (user.getStatus().equals(ConnectionStatus.ACCEPTED.getStatus())) {
-                acceptedUsers.add(user);
+                if(!(excludeUserID != null && excludeUserID.equals(user.getUserID()))) {
+                    acceptedUsers.add(user);
+                }
+
             }
         }
         List<List<User>> adapterUsers = new ArrayList<>();
@@ -247,6 +271,14 @@ public class MycircleActivity extends AppCompatActivity implements MyCircleRecyc
                     User user = messageDTO.getUser();
                     if(mUser.getUserID() == user.getUserID()) {
                         Toast.makeText(mContext, "You can not send request to yourself", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        return;
+                    } else if(!mUser.isBroker() && !user.isBroker()) {
+                        Toast.makeText(mContext, "This User Is not registered as broker", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        return;
+                    } else if(mUser.isBroker() && user.isBroker()) {
+                        Toast.makeText(mContext, "This User is not registered as Buyer/Seller", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         return;
                     }

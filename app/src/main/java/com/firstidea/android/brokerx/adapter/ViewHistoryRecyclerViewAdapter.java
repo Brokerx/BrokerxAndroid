@@ -81,10 +81,12 @@ public class ViewHistoryRecyclerViewAdapter extends RecyclerView.Adapter<ViewHis
             e.printStackTrace();
         }
         StringBuilder description = new StringBuilder();
-        if(mItem.getCreatedUserID() == loggedInUser.getUserID()) {
+        if(mItem.getFieldsAltered().contains("created")) {
+
+        }else if(mItem.getCreatedUserID() == loggedInUser.getUserID()) {
             description.append("You have changed the fields: ");
         } else if(mItem.getCreatedUserID() == mItem.getBroker().getUserID()){
-            description.append("Broker "+mItem.getBroker().getFullName()+" had requested to change the filelds");
+            description.append("Broker "+mItem.getBroker().getFullName()+" had requested to change the filelds: ");
         } else if(mItem.getAssignedToUser() != null &&  mItem.getCreatedUserID() == mItem.getAssignedToUser().getUserID()){
             if(mItem.getType().startsWith("S")) {
                 description.append("Buyer requested to change the filelds ");

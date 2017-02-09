@@ -6,6 +6,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -74,6 +77,7 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
 
             }
         });
+
         if(mLead.getLeadID() != null && mLead.getLeadID() > 0) {
             editBasicPrice.setText(mLead.getBasicPrice()+"");
             spinnerBasicUnit.setSelection(mLead.getBasicPriceUnit());
@@ -84,15 +88,47 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
             }
             editTransportCharges.setText(mLead.getTransportCharges()+"");
             editMiscCharges.setText(mLead.getMiscCharges()+"");
+            calculateTotal();
         }
+        TextWatcher priceWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                calculateTotal();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        };
+        editBasicPrice.addTextChangedListener(priceWatcher);
+        editExciseDuty.addTextChangedListener(priceWatcher);
+        editMiscCharges.addTextChangedListener(priceWatcher);
+        editTransportCharges.addTextChangedListener(priceWatcher);
     }
 
     private void validateAndNext() {
-        //TODO Tushar: validate all fields also add textchange listener to all price edittext and calculate and set total charges edittext
+        //TODO Tushar: validate all fields
+        if(TextUtils.isEmpty(editBasicPrice.getText().toString())) {
+            editBasicPrice.setError("Please Enter Basic Price");
+            return;
+        }
+
         float basicPrice = Float.parseFloat(editBasicPrice.getText().toString());
-        float exciseDuty = Float.parseFloat(editExciseDuty.getText().toString());
-        float transportChrg = Float.parseFloat(editTransportCharges.getText().toString());
-        float miscChrg = Float.parseFloat(editMiscCharges.getText().toString());
+        float exciseDuty = 0;
+        float transportChrg = 0;
+        float miscChrg = 0;
+
+        if(editExciseDuty.getText().toString().trim().length() > 0) {
+            exciseDuty = Float.parseFloat(editExciseDuty.getText().toString());
+        }
+        if(editTransportCharges.getText().toString().trim().length() > 0) {
+            transportChrg = Float.parseFloat(editTransportCharges.getText().toString());
+        }
+        if(editMiscCharges.getText().toString().trim().length() > 0) {
+            miscChrg = Float.parseFloat(editMiscCharges.getText().toString());
+        }
         mLead.setBasicPrice(basicPrice);
         mLead.setExciseDuty(exciseDuty);
         mLead.setTransportCharges(transportChrg);
@@ -103,6 +139,38 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
         intent.putExtra(Lead.KEY_LEAD,mLead);
         startActivityForResult(intent, NEXT_ACTIVITY_REQ_CODE);
     }
+
+    private void calculateTotal() {
+        float basicPrice = 0;
+        if(editBasicPrice.getText().toString().trim().length() > 0) {
+            basicPrice = getFloatValue(editBasicPrice.getText().toString().trim());
+        }
+        float exciseDuty = 0;
+        if(editExciseDuty.getText().toString().trim().length() > 0) {
+            exciseDuty =getFloatValue(editExciseDuty.getText().toString().trim());
+        }
+        float transportCharges = 0;
+        if (editTransportCharges.getText().toString().trim().length() > 0) {
+            transportCharges = getFloatValue(editTransportCharges.getText().toString().trim());
+        }
+        float miscCharges = 0;
+        if (editMiscCharges.getText().toString().trim().length() > 0) {
+            miscCharges = getFloatValue(editMiscCharges.getText().toString().trim());
+        }
+
+        float basicPriceAmt = basicPrice * mLead.getQty();
+        float excisePriceAmt = exciseDuty * mLead.getQty();
+        float totalAmt = basicPriceAmt + excisePriceAmt + transportCharges + miscCharges;
+        editTotalCharges.setText(totalAmt + " Rs");
+    }
+
+    private float getFloatValue(String stringVal) {
+        if(stringVal.startsWith(".")) {
+            stringVal = "0"+stringVal;
+        }
+        return Float.parseFloat(stringVal);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

@@ -284,6 +284,16 @@ public class ApptDateUtils {
         return "";
     }
 
+    public static Date getServerFormatedDateAndTime(String dateString) {
+        DateFormat dateFormat = new SimpleDateFormat(javascript_date_time_format_am_pm);
+        try {
+            return dateFormat.parse(dateString);
+        } catch (Exception ex) {
+            Logger.getLogger(ApptDateUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
     public static Date getAppointmentDates(int initialDate) {
 
         Calendar cal = Calendar.getInstance();

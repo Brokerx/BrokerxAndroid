@@ -2,11 +2,13 @@ package com.firstidea.android.brokerx;
 
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -43,6 +45,8 @@ public class LeadStatusHistoryDetailsActivity extends AppCompatActivity {
     View documentDivider;
     private final int Attach_DOCUMENT_REQ_CODE = 1001;
     private boolean isSeller = false;
+    private Context mContext;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +57,53 @@ public class LeadStatusHistoryDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Status Details");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        mContext = this;
+
         documentLayout = (LinearLayout) findViewById(R.id.layout_documents);
         documentDivider = findViewById(R.id.document_divider);
         mLeadStatusHistory = getIntent().getExtras().getParcelable(LeadStatusHistory.KEY_STATUS_HISTORY);
         isSeller = getIntent().getExtras().getBoolean("IsSeller", false);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                R.color.colorPrimaryLight,
+                R.color.teal,
+                R.color.teal);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                getLeadStatusHistory();
+            }
+        });
+
         initScreen();
+    }
+
+    private void getLeadStatusHistory() {
+        final Dialog dialog = AppProgressDialog.show(mContext);
+        ObjectFactory.getInstance().getLeadServiceInstance().getLeadStatusHistory(mLeadStatusHistory.getLeadID(), new Callback<MessageDTO>() {
+            @Override
+            public void success(MessageDTO messageDTO, Response response) {
+                if (messageDTO.isSuccess()) {
+                    mLeadStatusHistory = LeadStatusHistory.createFromJSON(messageDTO.getData());
+                    initScreen();
+                    dialog.dismiss();
+                    getLeadDocuments();
+                } else {
+                    Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    finish();
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(mContext, "Please Check your Internet Connection", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                finish();
+            }
+        });
     }
 
     private void initScreen() {
@@ -88,7 +134,7 @@ public class LeadStatusHistoryDetailsActivity extends AppCompatActivity {
             case 2:
                 ((ImageView) findViewById(R.id.status2_circle)).setImageResource(R.drawable.accept_circle);
                 ((TextView) findViewById(R.id.status2_lbl)).setTypeface(null, Typeface.BOLD);
-                String text = ((TextView) findViewById(R.id.status2_lbl)).getText().toString();
+                String text = "Goods Lifted";
                 text += "\n(Invoice No: " + mLeadStatusHistory.getInvoiceNumber() + ")";
                 ((TextView) findViewById(R.id.status2_lbl)).setText(text);
                 ((TextView) findViewById(R.id.status2_dttm)).setText(mLeadStatusHistory.getGoodsLiftedDateTime());
@@ -127,6 +173,7 @@ public class LeadStatusHistoryDetailsActivity extends AppCompatActivity {
                     populateDocumentList();
                     getDocumentsAndToggle();
                     dialog.dismiss();
+                    mSwipeRefreshLayout.setRefreshing(false);
                 } else {
                     Toast.makeText(LeadStatusHistoryDetailsActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();

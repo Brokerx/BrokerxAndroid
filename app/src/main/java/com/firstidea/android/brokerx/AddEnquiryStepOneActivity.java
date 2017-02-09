@@ -101,12 +101,34 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
         if (getIntent().hasExtra(Lead.KEY_LEAD)) {
             mLead = getIntent().getExtras().getParcelable(Lead.KEY_LEAD);
             editBroker.setEnabled(false);
-            String brokerName = "<b>Broker:</b> "+mLead.getBroker().getFullName();
+            String brokerName = "<b>Broker:</b> You";
+            if (mLead.getBroker() != null) {
+                brokerName = "<b>Broker:</b> "+mLead.getBroker().getFullName();
+            } else {
+                mLead.setBroker(User.getSavedUser(this));
+            }
             editBroker.setText(Html.fromHtml(brokerName));
             editMake.setText(mLead.getMake());
             editqty.setText(mLead.getQty()+"");
             spinnerQtyUnit.setSelection(mLead.getQtyUnit());
             spinnerPacking.setSelection(mLead.getPacking());
+            List<String> items = new ArrayList<>();
+            int selection = 0,i=0;
+            for (String item : mLead.getBroker().getBrokerDealsInItems().split(",")) {
+                items.add(item);
+                if(item.equals(mLead.getItemName())) {
+                    selection = i;
+                }
+                i++;
+            }
+            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(AddEnquiryStepOneActivity.this, android.R.layout.simple_list_item_1, items);
+            spinnerItem.setAdapter(spinnerAdapter);
+            findViewById(R.id.layout_item_spinner).setVisibility(View.VISIBLE);
+            spinnerItem.setSelection(selection);
+            User me = User.getSavedUser(this);
+            if(me.getUserID().equals(mLead.getBrokerID())) {
+                spinnerItem.setEnabled(false);
+            }
         } else {
             String type = getIntent().getExtras().getString("type");
             mLead = new Lead();
@@ -117,7 +139,20 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
     }
 
     private void validateAndNext() {
-        //TODO Tushar: validate all fields
+
+        if(TextUtils.isEmpty(editMake.getText().toString())) {
+            editMake.setError("Enter Make");
+            return;
+        }
+        if(TextUtils.isEmpty(editqty.getText().toString())) {
+            editqty.setError("Enter Quantity");
+        }
+        if(mLead.getLeadID() == null ) {
+            if(mLead.getBrokerID() == null) {
+                editBroker.setError("Select Broker");
+                return;
+            }
+        }
         mLead.setMake(editMake.getText().toString());
         mLead.setQty(Float.parseFloat(editqty.getText().toString()));
         Intent intent = new Intent(AddEnquiryStepOneActivity.this, AddEnquiryStepTwoActivity.class);
@@ -143,7 +178,7 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
                 return;
             }
             editBroker.setText(user.getFullName());
-            mLead.setBrokerID(1);
+            mLead.setBrokerID(user.getUserID());
             List<String> items = new ArrayList<>();
             for (String id : user.getBrokerDealsInItems().split(",")) {
                 items.add(id);

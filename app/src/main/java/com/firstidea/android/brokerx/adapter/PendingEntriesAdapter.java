@@ -27,8 +27,11 @@ public class PendingEntriesAdapter extends RecyclerView.Adapter<PendingEntriesAd
     private String[] qtys;
     private String[] mUnits;
     private boolean isBroker;
+    private OnCardClickListener mOnCardClickListener;
 
-
+    public interface OnCardClickListener {
+        void onCardClick(Lead lead);
+    }
     public PendingEntriesAdapter(Context context,List<Lead> items) {
         mValues = items;
         qtys = context.getResources().getStringArray(R.array.qty_options);

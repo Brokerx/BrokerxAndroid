@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -16,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firstidea.android.brokerx.Chat.ChatListActivity;
 import com.firstidea.android.brokerx.enums.LeadCurrentStatus;
 import com.firstidea.android.brokerx.enums.LeadType;
 import com.firstidea.android.brokerx.http.ObjectFactory;
@@ -26,6 +26,8 @@ import com.firstidea.android.brokerx.http.model.MessageDTO;
 import com.firstidea.android.brokerx.http.model.User;
 import com.firstidea.android.brokerx.widget.AppProgressDialog;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -115,8 +117,12 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
     private Lead mLead;
     private User me;
     private String[] mUnits, mPackings;
+    private boolean mIsReadOnly = false;
+    private String alteredFields;
+    private boolean isRefreshParent = false;
 
     private final int ASIGN_USER_REQ_CODE= 100;
+    private final int ACTION_ACTIVITY_REQ_CODE= 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,13 +137,25 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        mLead = getIntent().getExtras().getParcelable(Lead.KEY_LEAD);
+
         me = User.getSavedUser(this);
         mUnits = getResources().getStringArray(R.array.qty_options);
         mPackings = getResources().getStringArray(R.array.packing);
         CurStatusLayout.setVisibility(View.GONE);
 
-        initScreen();
+        if(getIntent().hasExtra(Constants.KEY_IS_READ_ONLY)) {
+            mIsReadOnly = getIntent().getBooleanExtra(Constants.KEY_IS_READ_ONLY, false);
+            alteredFields = getIntent().getStringExtra(Constants.KEY_ALTERED_FIELDS);
+        }
+
+        if(getIntent().hasExtra(Lead.KEY_LEAD)) {
+            mLead = getIntent().getExtras().getParcelable(Lead.KEY_LEAD);
+            initScreen();
+        } else {
+            Integer leadID = getIntent().getExtras().getInt(Lead.KEY_LEAD_ID);
+            getLeadByID(leadID);
+        }
+
         String viewHistoryLabel = "<u><i>View History</i></u>";
         btnViewHistory.setText(Html.fromHtml(viewHistoryLabel));
         btnViewHistory.setOnClickListener(new View.OnClickListener() {
@@ -168,7 +186,29 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(EnquiryDetailsActivity.this, AddEnquiryFirstActivity.class);
                 intent.putExtra(Lead.KEY_LEAD, mLead);
-                startActivity(intent);
+                startActivityForResult(intent, ACTION_ACTIVITY_REQ_CODE);
+            }
+        });
+    }
+
+    private void getLeadByID(Integer leadID) {
+        final Dialog dialog = AppProgressDialog.show(this);
+        ObjectFactory.getInstance().getLeadServiceInstance().getLeadsByID(leadID, new Callback<MessageDTO>() {
+            @Override
+            public void success(MessageDTO messageDTO, Response response) {
+                if(messageDTO.isSuccess()) {
+                    List<Lead> leads = Lead.createListFromJson(messageDTO.getData());
+                    mLead = leads.get(0);
+                    initScreen();
+                }
+                dialog.dismiss();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(EnquiryDetailsActivity.this, "Unable to get Lead Details...", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                finish();
             }
         });
     }
@@ -190,6 +230,10 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             mLead.setBrokerStatus(otherUserStatus);
         }
 
+        if(myStatus.equals(otherUserStatus) && myStatus.equals(LeadCurrentStatus.Pending.getStatus())) {
+            mLead.setMoveToPending(true);
+        }
+        mLead.setLastUpdUserID(me.getUserID());
         final Dialog dialog = AppProgressDialog.show(this);
        /* LeadService leadService = SingletonRestClient.createService(LeadService.class, this);
         leadService.saveLead(mLead, new Callback<MessageDTO>() {*/
@@ -197,6 +241,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 dialog.dismiss();
+                isRefreshParent = true;
                 initScreen();
             }
 
@@ -219,19 +264,25 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         String packingString = mPackings[mLead.getPacking()];
         packing.setText(packingString);
 
-        String userNameString = "", userImageUrl = "", userTypeString = "";
+        final StringBuilder userNameString = new StringBuilder("");
+        String userImageUrl = "";
+        final StringBuilder userOtherTypeString = new StringBuilder("");;
+        final StringBuilder userTypeString = new StringBuilder("");;
+
         if (me.getUserID().equals(mLead.getCreatedUserID())) {
-            userNameString = mLead.getBroker().getFullName();
+            userNameString.append(mLead.getBroker().getFullName());
             userImageUrl = mLead.getBroker().getImageURL();
-            userTypeString = "Broker";
+            userOtherTypeString.append("Broker");
+            userTypeString.append(mLead.getType().toLowerCase().startsWith("B") ? "Buyer" : "Seller");
         } else {
-            userNameString = mLead.getCreatedUser().getFullName();
+            userNameString.append(mLead.getCreatedUser().getFullName());
             userImageUrl = mLead.getCreatedUser().getImageURL();
-            userTypeString = mLead.getType().toLowerCase().startsWith("B") ? "Buyer" : "Seller";
+            userOtherTypeString.append(mLead.getType().toLowerCase().startsWith("B") ? "Buyer" : "Seller");
+            userTypeString.append("Broker");
         }
 
-        userName.setText(userNameString);
-        userType.setText(userTypeString);
+        userName.setText(userNameString.toString());
+        userType.setText(userOtherTypeString.toString());
         brokerageAmt.setText(mLead.getBrokerageAmt() + " Rs");
         if (!TextUtils.isEmpty(userImageUrl)) {
             String imgUrl = SingletonRestClient.BASE_PROFILE_IMAGE_URL + "thumb_" + userImageUrl;
@@ -346,6 +397,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 Intent intent = new Intent(EnquiryDetailsActivity.this, MycircleActivity.class);
                                 intent.putExtra(Constants.KEY_IS_FOR_SELECTION, true);
+                                intent.putExtra(Constants.KEY_EXCLUDE_USER_ID, mLead.getCreatedUserID());
                                 startActivityForResult(intent, ASIGN_USER_REQ_CODE);;;
                             }
                         });
@@ -358,8 +410,19 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                     btnReOpen.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(EnquiryDetailsActivity.this, ChatListActivity.class);
-                            intent.putExtra(Lead.KEY_LEAD_ID, mLead.getLeadID());
+                            Intent intent = new Intent(EnquiryDetailsActivity.this, ChatActivity.class);
+                            intent.putExtra(Constants.OTHER_USER_NAME, userNameString.toString());
+                            intent.putExtra(Constants.ITEM_NAME, itemName.getText().toString());
+                            intent.putExtra(Constants.KEY_USER_TYPE, userOtherTypeString.toString());
+                            intent.putExtra(Constants.KEY_USER_TYPE+"1", userTypeString.toString());
+                            Integer userID = 0;
+                            if (me.getUserID().equals(mLead.getCreatedUserID())) {
+                                userID = mLead.getBrokerID();
+                            } else {
+                                userID = mLead.getCreatedUserID();
+                            }
+                            intent.putExtra(Constants.OTHER_USER_ID, userID);
+                            intent.putExtra(Constants.LEAD_ID, mLead.getLeadID());
                             startActivity(intent);
                         }
                     });
@@ -372,12 +435,31 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                     });
                 }
             }
+            btnChat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(EnquiryDetailsActivity.this, ChatActivity.class);
+                    intent.putExtra(Constants.OTHER_USER_NAME, userNameString.toString());
+                    intent.putExtra(Constants.ITEM_NAME, itemName.getText().toString());
+                    intent.putExtra(Constants.KEY_USER_TYPE, userOtherTypeString.toString());
+                    intent.putExtra(Constants.KEY_USER_TYPE+"1", userTypeString.toString());
+                    Integer userID = 0;
+                    if (me.getUserID().equals(mLead.getCreatedUserID())) {
+                        userID = mLead.getBrokerID();
+                    } else {
+                        userID = mLead.getCreatedUserID();
+                    }
+                    intent.putExtra(Constants.OTHER_USER_ID, userID);
+                    intent.putExtra(Constants.LEAD_ID, mLead.getLeadID());
+                    startActivity(intent);
+                }
+            });
         }
         CurStatusLayout.setVisibility(View.VISIBLE);
 //        Revert_Chat_layout.setVisibility(View.VISIBLE);
 //        Rej_Acc_Layout.setVisibility(View.GONE);
 
-        if (myStatus.equals(LeadCurrentStatus.Accepted.getStatus()) || myStatus.equals(LeadCurrentStatus.Reverted.getStatus())) {
+        if (myStatus.equals(LeadCurrentStatus.Accepted.getStatus())) {
             currentStatus.setText("Accepted");
             curStatusIcon.setImageResource(R.drawable.accept_circle);
         } else if (myStatus.equals(LeadCurrentStatus.Rejected.getStatus())) {
@@ -386,7 +468,91 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         } else if (myStatus.equals(LeadCurrentStatus.Pending.getStatus())) {
             currentStatus.setText("Pending");
             curStatusIcon.setImageResource(R.drawable.pending_circle);
+        } else if (myStatus.equals(LeadCurrentStatus.Reverted.getStatus())) {
+            currentStatus.setText("Reverted");
+            curStatusIcon.setImageResource(R.drawable.accept_circle_gray);
+        } else if (myStatus.equals(LeadCurrentStatus.Waiting.getStatus())) {
+            currentStatus.setText("Waiting for your response");
+            curStatusIcon.setImageResource(R.drawable.waiting_circle);
         }
+
+        if(mIsReadOnly) {
+            Revert_Chat_layout.setVisibility(View.GONE);
+            Rej_Acc_Layout.setVisibility(View.GONE);
+            btnReOpen.setVisibility(View.GONE);
+            CurStatusLayout.setVisibility(View.GONE);
+            btnPending.setVisibility(View.GONE);
+        }
+        if(!TextUtils.isEmpty(alteredFields)) {
+            hiLightFields();
+        }
+    }
+
+    private void hiLightFields() {
+        alteredFields = alteredFields.toLowerCase();
+        int hilightColor = ContextCompat.getColor(this, R.color.altered_fields_color);
+        if(alteredFields.contains("itemname")) {
+            itemName.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("make")) {
+            make.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("qty") || alteredFields.contains("qtyunit")) {
+            qtyUnit.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("location")) {
+            location.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("basicprice")|| alteredFields.contains("basicpriceunit")) {
+            basicPriceWithUnit.setBackgroundColor(hilightColor);
+            basicPricePerUnit.setBackgroundColor(hilightColor);
+            totalCharges.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("brokerageamt")|| alteredFields.contains("buyerbrokerage") || alteredFields.contains("sellersrokerage")) {
+            brokerageAmt.setBackgroundColor(hilightColor);
+            totalCharges.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("exciseunit") || alteredFields.contains("exciseduty")) {
+            exciseDutyWithUnit.setBackgroundColor(hilightColor);
+            totalCharges.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("misccharges")) {
+            miscCharges.setBackgroundColor(hilightColor);
+            totalCharges.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("transportcharges")) {
+            transportCharges.setBackgroundColor(hilightColor);
+            totalCharges.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("againstform")) {
+            againstForm.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("creditperiod,")) {
+            creditPeriod.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("freeStorageperiod,")) {
+            freeStorage.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("preferredsellername,")) {
+            preferedSellerName.setBackgroundColor(hilightColor);
+        }
+
+        if(alteredFields.contains("comments,")) {
+            comments.setBackgroundColor(hilightColor);
+        }
+
 
     }
 
@@ -418,6 +584,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 dialog.dismiss();
+                isRefreshParent = true;
                 finish();
             }
 
@@ -440,6 +607,11 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
+        if(isRefreshParent) {
+            Intent intent = new Intent();
+            intent.putExtra(Constants.KEY_IS_REFRESH_PARENT, true);
+            setResult(RESULT_OK, intent);
+        }
         super.finish();
         overridePendingTransition(0, android.R.anim.slide_out_right);
     }
@@ -452,7 +624,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                     new AlertDialog.Builder(this);
             builder.setTitle("Please Confirm");
             String createdUserType = "Seller";
-            if(mLead.getType().equals(LeadType.BUYER.getType())) {
+            if(mLead.getType().equals(LeadType.SELLER.getType())) {
                 createdUserType = "Buyer";
             }
             String msg = "Are you sure, do you want to assign <b>"+selectedUser.getFullName()+"</b> as <b>"+createdUserType+"</b> "+ " to this deal ?" ;
@@ -470,6 +642,13 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             });
             builder.show();
 
+        } else if(resultCode == RESULT_OK && requestCode == ACTION_ACTIVITY_REQ_CODE) {
+            if(data.hasExtra(Lead.KEY_LEAD)) {
+                mLead = data.getExtras().getParcelable(Lead.KEY_LEAD);
+//                initScreen();
+                isRefreshParent = true;
+                finish();
+            }
         }
     }
 
@@ -487,6 +666,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         }
         mLead.setLeadID(null);
         mLead.setBrokerStatus(LeadCurrentStatus.Reverted.getStatus());
+        mLead.setLastUpdUserID(me.getUserID());
         final Dialog dialog = AppProgressDialog.show(this);
        /* LeadService leadService = SingletonRestClient.createService(LeadService.class, this);
         leadService.saveLead(mLead, new Callback<MessageDTO>() {*/
@@ -494,6 +674,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 dialog.dismiss();
+                isRefreshParent = true;
                 initScreen();
             }
 
@@ -504,4 +685,5 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             }
         });
     }
+
 }

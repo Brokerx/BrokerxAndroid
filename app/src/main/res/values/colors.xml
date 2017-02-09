@@ -12,6 +12,7 @@
     <color name="main_color">#da3442</color>
     <color name="main_color_lite">#d28087</color>
     <color name="pending_color">#B1CC03</color>
+    <color name="altered_fields_color">#e7de2d</color>
     <!--<color name="teal">#009688</color>-->
 
     <!-- Teal Color
@@ -47,4 +48,7 @@
     <color name="tag4">#66BCAC</color>
     <color name="tag5">#B3DB72</color>
     <color name="tag6">#BB74ED</color>
+
+    <color name="dark_gray">#B2B2B2</color>
+    <color name="lite_gray">#D3CFCE</color>
 </resources>

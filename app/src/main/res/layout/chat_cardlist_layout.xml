@@ -24,7 +24,7 @@
             android:paddingTop="@dimen/ptb10dp">
 
             <TextView
-                android:id="@+id/enquieryno"
+                android:id="@+id/itemName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -40,18 +40,21 @@
                 android:background="@color/divider"></View>
 
             <LinearLayout
+                android:id="@+id/user_layout1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="@dimen/img55dp"
-                    android:layout_height="@dimen/img55dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/user_profile" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/user_image1"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentLeft="true"
+                    android:contentDescription="icon"
+                    android:padding="5dp"
+                    android:src="@drawable/user_img" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -66,7 +69,7 @@
                         android:padding="2dp">
 
                         <TextView
-                            android:id="@+id/sellerName"
+                            android:id="@+id/userName1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textStyle="bold"
@@ -75,7 +78,7 @@
                             android:textSize="@dimen/x16sp" />
 
                         <TextView
-                            android:id="@+id/sellerTime"
+                            android:id="@+id/msgTime1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="10dp"
@@ -92,7 +95,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/sellerdealNotification"
+                            android:id="@+id/userMsg1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -111,7 +114,8 @@
                             android:text="4"
                             android:textColor="@color/white"
                             android:textSize="12sp"
-                            android:layout_marginRight="10dp" />
+                            android:layout_marginRight="10dp"
+                            android:visibility="invisible"/>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -120,24 +124,28 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/dividerColor"> </View>
 
             <LinearLayout
+                android:id="@+id/user_layout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="@dimen/img55dp"
-                    android:layout_height="@dimen/img55dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/user_profile" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/user_image2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentLeft="true"
+                    android:contentDescription="icon"
+                    android:padding="5dp"
+                    android:src="@drawable/user_img" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -152,7 +160,7 @@
                         android:padding="2dp">
 
                         <TextView
-                            android:id="@+id/buyername"
+                            android:id="@+id/userName2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -162,7 +170,7 @@
                             android:textSize="@dimen/x16sp" />
 
                         <TextView
-                            android:id="@+id/buyertime"
+                            android:id="@+id/msgTime2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="10dp"
@@ -179,7 +187,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/buyerNotification"
+                            android:id="@+id/userMsg2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"

@@ -9,156 +9,163 @@
     tools:context="com.firstidea.android.brokerx.NotificationActivity"
     tools:showIn="@layout/activity_notification">
 
-    <ScrollView
+    <!-- <ScrollView
+         android:layout_width="match_parent"
+         android:layout_height="match_parent">
+
+
+
+     <LinearLayout
+         android:id="@+id/linearLayout"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:background="#c2c0c0"
+         android:layout_marginTop="5dp"
+         android:orientation="vertical">
+
+
+
+ &lt;!&ndash;1st linear layout&ndash;&gt;
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:paddingTop="@dimen/ptb10dp"
+             android:paddingBottom="5dp">
+
+             <TextView
+                 android:id="@+id/circleText1"
+                 android:layout_width="45dp"
+                 android:layout_height="45dp"
+                 android:background="@drawable/circle_shape"
+                 android:gravity="center_horizontal|center_vertical"
+                 android:text="R"
+                 android:layout_marginLeft="10dp"
+                 android:textColor="@color/teal"
+                 android:textSize="20sp" />
+
+             <TextView
+                 android:id="@+id/notification1"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="center_vertical"
+                 android:layout_marginLeft="15dp"
+                 android:layout_weight="1"
+                 android:text="Ramesh has sent you a proposal of changing unit from 300 to 500"
+                 android:textColor="@color/black"
+                 android:textSize="@dimen/txt16sp">
+
+             </TextView>
+
+             <TextView android:id="@+id/time1"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="2.5"
+                 android:layout_gravity="top"
+                 android:text="3 hrs ago"
+                 android:textColor="@color/black"
+                 android:textSize="@dimen/txtt10sp" />
+
+         </LinearLayout>
+
+         &lt;!&ndash;secound linear layout&ndash;&gt;
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="60dp"
+             android:orientation="vertical">
+         <TextView
+             android:id="@+id/notification2"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_gravity="right"
+            android:layout_marginBottom="@dimen/mb5dp"
+             android:text="Ramesh has sent you a proposal of changing base prise from 300 to 75/Units"
+             android:textColor="@color/black"
+             android:textSize="@dimen/txt16sp"/>
+
+         <TextView
+             android:id="@+id/notification3"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_gravity="right"
+             android:layout_marginBottom="@dimen/mb5dp"
+             android:text="Ramesh has sent you a proposal of changing transportation charges from 2300 to 1500Rs"
+             android:textColor="@color/black"
+             android:textSize="@dimen/txt16sp"/>
+
+         <TextView
+             android:id="@+id/notification4"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_gravity="right"
+             android:layout_marginBottom="@dimen/mb5dp"
+             android:text="Ramesh has sent you a proposal of changing brokerage charge from 1000 to 800 rs"
+             android:textColor="@color/black"
+             android:textSize="@dimen/txt16sp"/>
+ &lt;!&ndash;accept & reject main layout&ndash;&gt;
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginLeft="@dimen/l10dp"
+                 android:layout_marginRight="20dp"
+                 android:layout_marginBottom="10dp"
+                 android:layout_marginTop="10dp">
+
+                 <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="35dp"
+                     android:layout_weight="1"
+                     android:background="@color/teal">
+
+                     <TextView
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="center_vertical"
+                         android:gravity="center_horizontal"
+                         android:text="Accept"
+                         android:textColor="@color/white"
+                         android:textSize="@dimen/txt14sp" />
+                 </LinearLayout>
+
+                 <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="35dp"
+                     android:layout_weight="1"
+                     android:background="@drawable/details_box_border">
+
+                     <TextView
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="center_vertical"
+                         android:gravity="center_horizontal"
+                         android:text="Reject"
+                         android:textColor="@color/black"
+                         android:textSize="@dimen/txt14sp" />
+                 </LinearLayout>
+
+
+             </LinearLayout>
+
+         </LinearLayout>
+
+
+
+
+
+     </LinearLayout>
+
+     </ScrollView>-->
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#c2c0c0"
-        android:layout_marginTop="5dp"
-        android:orientation="vertical">
-
-
-
-<!--1st linear layout-->
-        <LinearLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/notification_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/ptb10dp"
-            android:paddingBottom="5dp">
-
-            <TextView
-                android:id="@+id/circleText1"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:background="@drawable/circle_shape"
-                android:gravity="center_horizontal|center_vertical"
-                android:text="R"
-                android:layout_marginLeft="10dp"
-                android:textColor="@color/teal"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/notification1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="15dp"
-                android:layout_weight="1"
-                android:text="Ramesh has sent you a proposal of changing unit from 300 to 500"
-                android:textColor="@color/black"
-                android:textSize="@dimen/txt16sp">
-
-            </TextView>
-
-            <TextView android:id="@+id/time1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2.5"
-                android:layout_gravity="top"
-                android:text="3 hrs ago"
-                android:textColor="@color/black"
-                android:textSize="@dimen/txtt10sp" />
-
-        </LinearLayout>
-
-        <!--secound linear layout-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
-            android:orientation="vertical">
-        <TextView
-            android:id="@+id/notification2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-           android:layout_marginBottom="@dimen/mb5dp"
-            android:text="Ramesh has sent you a proposal of changing base prise from 300 to 75/Units"
-            android:textColor="@color/black"
-            android:textSize="@dimen/txt16sp"/>
-
-        <TextView
-            android:id="@+id/notification3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginBottom="@dimen/mb5dp"
-            android:text="Ramesh has sent you a proposal of changing transportation charges from 2300 to 1500Rs"
-            android:textColor="@color/black"
-            android:textSize="@dimen/txt16sp"/>
-
-        <TextView
-            android:id="@+id/notification4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginBottom="@dimen/mb5dp"
-            android:text="Ramesh has sent you a proposal of changing brokerage charge from 1000 to 800 rs"
-            android:textColor="@color/black"
-            android:textSize="@dimen/txt16sp"/>
-<!--accept & reject main layout-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/l10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:layout_weight="1"
-                    android:background="@color/teal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center_horizontal"
-                        android:text="Accept"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/txt14sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/details_box_border">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center_horizontal"
-                        android:text="Reject"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/txt14sp" />
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/notification_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:paddingBottom="5dp"
-                android:background="@color/activity_background_color" />
-
-
-
-    </LinearLayout>
-
-    </ScrollView>
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:background="@color/activity_background_color"
+            android:paddingBottom="5dp" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

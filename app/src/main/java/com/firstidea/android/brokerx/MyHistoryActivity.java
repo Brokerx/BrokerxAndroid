@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,26 +30,35 @@ import com.firstidea.android.brokerx.http.model.User;
 import com.firstidea.android.brokerx.model.MyHistroyItem;
 import com.firstidea.android.brokerx.widget.AppProgressDialog;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MyHistoryActivity extends AppCompatActivity implements MyHistoryAdapter.OnHostoryCardListener {
+public class MyHistoryActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
-    private ArrayList<MyHistroyItem>mList;
-    private EditText mStartDate,mEndDate;
 
-    private Calendar cal;
-    private int day;
-    private int month;
-    private int year;
     private Context mContext;
     private ArrayList<Lead> mLeads;
     private User me;
+    private boolean mIsFromAnalysis = false;
+    private Integer brokerID=null;
+    private String itemName = null;
+    private String leadType=null;
+
+    private TextView mStartDateView,mEndDateView;
+    private int startDay, endDay;
+    private int startMonth, endMonth;
+    private int startYear, endYear;
+    private Date mStartDate,mEndDate;
+    SimpleDateFormat SDF = new SimpleDateFormat("dd MMM yyyy");
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,33 +71,78 @@ public class MyHistoryActivity extends AppCompatActivity implements MyHistoryAda
         mContext = this;
         me = User.getSavedUser(this);
 
-        mStartDate = (EditText) findViewById(R.id.starDate);
-        mEndDate = (EditText) findViewById(R.id.endDate);
+        if(getIntent().hasExtra("IS_FROM_ANALYSYS")) {
+            mIsFromAnalysis = getIntent().getExtras().getBoolean("IS_FROM_ANALYSYS");
+            itemName = getIntent().getExtras().getString("ItemName");
+            getSupportActionBar().setTitle("Analysis: "+itemName);
+            if(getIntent().hasExtra("BrokerID")) {
+                brokerID = getIntent().getExtras().getInt("BrokerID");
+            }
+            if(getIntent().hasExtra(LeadType.KEY_LEAD_TYPE)) {
+                leadType = getIntent().getExtras().getString(LeadType.KEY_LEAD_TYPE);
+            }
 
+        }
 
-
+        mStartDateView = (TextView) findViewById(R.id.starDate);
+        mEndDateView = (TextView) findViewById(R.id.endDate);
         mRecyclerView = (RecyclerView)findViewById(R.id.history_recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                R.color.colorPrimaryLight,
+                R.color.teal,
+                R.color.teal);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                if(mIsFromAnalysis) {
+                    getLeads();
+                } else {
+                    getHistory();
+                }
+            }
+        });
+
+        if(mIsFromAnalysis) {
+            getLeads();
+        } else {
+            getHistory();
+        }
 
 
-        mList = new ArrayList<MyHistroyItem>();
-        initList();
+    }
 
-        getHistory();
+    private void getLeads() {
+        final Dialog dialog = AppProgressDialog.show(mContext);
+        ObjectFactory.getInstance().getLeadServiceInstance().getLeads(me.getUserID(), leadType, "D",itemName,brokerID, null, null, new Callback<MessageDTO>() {
+            @Override
+            public void success(MessageDTO messageDTO, Response response) {
+                if(messageDTO.isSuccess()) {
+                    ArrayList<Lead> leads= Lead.createListFromJson(messageDTO.getData());
+                    mLeads= new ArrayList<Lead>();
+                    mLeads.addAll(leads);
+                    MyHistoryAdapter mAdapter = new MyHistoryAdapter(mContext, mLeads,me.isBroker());
+                    mRecyclerView.setAdapter(mAdapter);
+                } else {
+                    Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
 
-
-
-        cal = Calendar.getInstance();
-        day = cal.get(Calendar.DAY_OF_MONTH);
-        month = cal.get(Calendar.MONTH);
-        year = cal.get(Calendar.YEAR);
-
-        showDate(year, month + 1, day);
-
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(mContext, "Please Check your Internet Connection", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     private void getHistory() {
@@ -99,113 +154,57 @@ public class MyHistoryActivity extends AppCompatActivity implements MyHistoryAda
                     ArrayList<Lead> leads= Lead.createListFromJson(messageDTO.getData());
                     mLeads= new ArrayList<Lead>();
                     mLeads.addAll(leads);
-                    MyHistoryAdapter mAdapter = new MyHistoryAdapter(mContext, mLeads,me.isBroker(), MyHistoryActivity.this);
+                    MyHistoryAdapter mAdapter = new MyHistoryAdapter(mContext, mLeads,me.isBroker());
                     mRecyclerView.setAdapter(mAdapter);
                 } else {
                     Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
                 }
                 dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Toast.makeText(mContext, "Please Check your Internet Connection", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
     }
 
-    @SuppressWarnings("deprecation")
-    public void SetDate(View view) {
-        showDialog(0);
-//        Toast.makeText(getApplicationContext(), "ca", Toast.LENGTH_SHORT)
-//                .show();
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    protected Dialog onCreateDialog(int id) {
-        // TODO Auto-generated method stub
-        if (id == 0) {
-            return new DatePickerDialog(this, myDateListener, year, month, day);
-        }
-        return null;
-    }
-
-    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-            // TODO Auto-generated method stub
-            // arg1 = year
-            // arg2 = month
-            // arg3 = day
-            showDate(arg1, arg2 + 1, arg3);
-        }
-    };
-
-    private void showDate(int year, int month, int day) {
-        mStartDate.setText(new StringBuilder().append(day).append("/")
-                .append(month).append("/").append(year));
-        mEndDate.setText(new StringBuilder().append(day).append("/")
-                .append(month).append("/").append(year));
+    public void setStartDate(View view) {
+        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                startYear = year;
+                startMonth = monthOfYear;
+                startDay = dayOfMonth;
+                mStartDate= calendar.getTime();
+                mStartDateView.setText(SDF.format(mStartDate));
+            }
+        }, startYear, startMonth, startDay).show();
     }
 
 
-
-
-    private void initList() {
-
-        MyHistroyItem item1 = new MyHistroyItem();
-        item1.setChemical_Name("Benzine ethyl alcohol with vinyle phosphate");
-        item1.setInvoiceNo("ECT4433TSD");
-        item1.setBrokerage("5000 Rs");
-        item1.setDate("29th July,2016");
-        item1.setBasic_charge("3000 Rs");
-        item1.setBuyer_brokerage("2000 Rs");
-        item1.setSeller_brokerage("3000 Rs");
-        item1.setTotal_brokerage("5000 Rs");
-        mList.add(item1);
-
-        MyHistroyItem item2 = new MyHistroyItem();
-        item2.setChemical_Name("Benzine ethyl alcohol with vinyle phosphate");
-        item2.setInvoiceNo("GCT4433TSD");
-        item2.setBrokerage("6000 Rs");
-        item2.setDate("25th June,2016");
-        item2.setBasic_charge("2000 Rs");
-        item2.setBuyer_brokerage("4000 Rs");
-        item2.setSeller_brokerage("2000 Rs");
-        item2.setTotal_brokerage("6000 Rs");
-        mList.add(item2);
-
-        MyHistroyItem item3 = new MyHistroyItem();
-        item3.setChemical_Name("Benzine ethyl alcohol with vinyle phosphate");
-        item3.setInvoiceNo("DCT4433TSD");
-        item3.setBrokerage("2000 Rs");
-        item3.setDate("12th July,2016");
-        item3.setBasic_charge("1000 Rs");
-        item3.setBuyer_brokerage("2000 Rs");
-        item3.setSeller_brokerage("2000 Rs");
-        item3.setTotal_brokerage("5000 Rs");
-        mList.add(item3);
-
-        MyHistroyItem item4 = new MyHistroyItem();
-        item4.setChemical_Name("Benzine ethyl alcohol with vinyle phosphate");
-        item4.setInvoiceNo("FCT4433TSD");
-        item4.setBrokerage("3000 Rs");
-        item4.setDate("29th Augest,2016");
-        item4.setBasic_charge("3500 Rs");
-        item4.setBuyer_brokerage("2000 Rs");
-        item4.setSeller_brokerage("3000 Rs");
-        item4.setTotal_brokerage("5500 Rs");
-        mList.add(item4);
-    }
-
-    @Override
-    public void OnCardClick(MyHistroyItem item) {
-        Intent callIntent1 = new Intent(MyHistoryActivity.this,MyHistoryDetailsActivity.class );
-        callIntent1.putExtra("mbrObject",item);
-        startActivity(callIntent1);
-
+    public void setEndDate(View view) {
+        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                endYear = year;
+                endMonth = monthOfYear;
+                endDay = dayOfMonth;
+                mEndDate = calendar.getTime();
+                mEndDateView.setText(SDF.format(mEndDate));
+            }
+        }, endYear, endMonth, endDay).show();
     }
 
     @Override

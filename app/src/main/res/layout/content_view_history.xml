@@ -9,7 +9,6 @@
     tools:context="com.firstidea.android.brokerx.ViewHistoryActivity"
     tools:showIn="@layout/activity_view_history">
 
-
     <TextView
         android:id="@+id/top_lable"
         android:layout_width="match_parent"
@@ -21,17 +20,20 @@
         android:text="Recent Changes"
         android:textColor="@color/white"
         android:textSize="20sp" />
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/top_lable">
+        android:layout_below="@+id/top_lable"
+        android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp">
 
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <!--<Button
         android:id="@+id/btn_view_all"

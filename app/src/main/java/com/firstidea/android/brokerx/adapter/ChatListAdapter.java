@@ -85,6 +85,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
     public void onBindViewHolder(ChatListAdapter.ChatViewHolder holder, int position) {
 
         final ChatListDTO Item = mChatList.get(position);
+        if(Item.getLeadID().equals(-1)) {
+
+        } else {
+
+        }
         holder.itemName.setText(Item.getItemName());
         final ChatSummary chatSummary1 = Item.getChatSummaryList().get(0);
         holder.userName1.setText(chatSummary1.getToUser().getFullName());

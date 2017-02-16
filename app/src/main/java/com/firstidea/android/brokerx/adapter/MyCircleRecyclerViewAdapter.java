@@ -72,7 +72,7 @@ public class MyCircleRecyclerViewAdapter extends SectionedRecyclerViewAdapter<My
     @Override
     public void onBindHeaderViewHolder(ViewHolder holder, int section) {
         if (isForSelection) {
-            holder.title.setText("Brokers in your circle");
+            holder.title.setText("Your circle");
         } else if (section == 0) {
             holder.title.setText("Pending Requests");
         } else {

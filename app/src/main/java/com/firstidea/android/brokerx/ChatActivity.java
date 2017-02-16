@@ -79,6 +79,7 @@ public class ChatActivity extends AppCompatActivity {
         }
         mUserID = getIntent().getExtras().getInt(Constants.OTHER_USER_ID);
         mLealID = getIntent().getExtras().getInt(Constants.LEAD_ID);
+        mLealID = mLealID < 0? -1:mLealID;
         if(mOtherUserType.length() > 0) {
             getSupportActionBar().setTitle(mOtherUserName + " (" + mOtherUserType + ")");
         } else {

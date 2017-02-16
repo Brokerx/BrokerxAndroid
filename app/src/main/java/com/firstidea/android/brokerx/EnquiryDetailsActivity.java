@@ -273,11 +273,11 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             userNameString.append(mLead.getBroker().getFullName());
             userImageUrl = mLead.getBroker().getImageURL();
             userOtherTypeString.append("Broker");
-            userTypeString.append(mLead.getType().toLowerCase().startsWith("B") ? "Buyer" : "Seller");
+            userTypeString.append(mLead.getType().toUpperCase().startsWith("B") ? "Buyer" : "Seller");
         } else {
             userNameString.append(mLead.getCreatedUser().getFullName());
             userImageUrl = mLead.getCreatedUser().getImageURL();
-            userOtherTypeString.append(mLead.getType().toLowerCase().startsWith("B") ? "Buyer" : "Seller");
+            userOtherTypeString.append(mLead.getType().toUpperCase().startsWith("B") ? "Buyer" : "Seller");
             userTypeString.append("Broker");
         }
 

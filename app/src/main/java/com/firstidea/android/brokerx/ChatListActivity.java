@@ -92,13 +92,14 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
                     Map<Integer, String> leadItemMap = new HashMap<Integer, String>();
                     Map<Integer, List<ChatSummary>> leadChatMap = new HashMap<Integer, List<ChatSummary>>();
                     for (ChatSummary chatSummary : chatSummaries) {
-                        leadItemMap.put(chatSummary.getLeadID(), chatSummary.getItemName());
+                        Integer leadID = chatSummary.getLeadID() < 0? chatSummary.getLeadID()*chatSummary.getToUser().getUserID():chatSummary.getLeadID();
+                        leadItemMap.put(leadID, chatSummary.getItemName());
                         List<ChatSummary> prevChatSummaryList = new ArrayList<ChatSummary>();
-                        if (leadChatMap.containsKey(chatSummary.getLeadID())) {
-                            prevChatSummaryList = leadChatMap.get(chatSummary.getLeadID());
+                        if (leadChatMap.containsKey(leadID)) {
+                            prevChatSummaryList = leadChatMap.get(leadID);
                         }
                         prevChatSummaryList.add(chatSummary);
-                        leadChatMap.put(chatSummary.getLeadID(), prevChatSummaryList);
+                        leadChatMap.put(leadID, prevChatSummaryList);
                     }
                     for (Integer leadID : leadChatMap.keySet()) {
                         ChatListDTO chatListDTO = new ChatListDTO();

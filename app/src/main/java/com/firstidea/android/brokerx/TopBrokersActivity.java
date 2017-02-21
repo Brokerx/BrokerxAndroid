@@ -86,7 +86,12 @@ public class TopBrokersActivity extends AppCompatActivity {
         findViewById(R.id.button_search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (mStartDateView.getText().toString().trim().length() > 0
+                        && mEndDateView.getText().toString().trim().length() > 0) {
+                    getTopBrokers();
+                } else {
+                    Toast.makeText(mContext, "Please Select Start and End Date", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -95,7 +100,13 @@ public class TopBrokersActivity extends AppCompatActivity {
 
     private void getTopBrokers() {
         final Dialog dialog = AppProgressDialog.show(mContext);
-        ObjectFactory.getInstance().getAnalysisServiceInstance().getTopBrokers(me.getUserID(), type, null, null, new Callback<MessageDTO>() {
+        String startDate = null, enadDate = null;
+        if (mStartDate != null && mEndDate != null) {
+            SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+            startDate = SDF.format(mStartDate);
+            enadDate = SDF.format(mEndDate);
+        }
+        ObjectFactory.getInstance().getAnalysisServiceInstance().getTopBrokers(me.getUserID(), type, startDate, enadDate, new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 if (messageDTO.getMessageID().equals(MsgConstants.SUCCESS_ID)) {
@@ -117,7 +128,7 @@ public class TopBrokersActivity extends AppCompatActivity {
 
 
     public void setStartDate(View view) {
-        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dpd = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar calendar = Calendar.getInstance();
@@ -130,12 +141,19 @@ public class TopBrokersActivity extends AppCompatActivity {
                 mStartDate = calendar.getTime();
                 mStartDateView.setText(SDF.format(mStartDate));
             }
-        }, startYear, startMonth, startDay).show();
+        }, startYear, startMonth, startDay);
+        Calendar c1 = Calendar.getInstance();
+        c1.set(Calendar.HOUR_OF_DAY,1);
+        c1.set(Calendar.MINUTE,0);
+        c1.set(Calendar.SECOND,0);
+        c1.set(Calendar.MILLISECOND,0);
+        dpd.getDatePicker().setMaxDate(c1.getTimeInMillis());
+        dpd.show();
     }
 
 
     public void setEndDate(View view) {
-        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dpd =  new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar calendar = Calendar.getInstance();
@@ -148,8 +166,16 @@ public class TopBrokersActivity extends AppCompatActivity {
                 mEndDate = calendar.getTime();
                 mEndDateView.setText(SDF.format(mEndDate));
             }
-        }, endYear, endMonth, endDay).show();
+        }, endYear, endMonth, endDay);
+        Calendar c1 = Calendar.getInstance();
+        c1.set(Calendar.HOUR_OF_DAY,1);
+        c1.set(Calendar.MINUTE,0);
+        c1.set(Calendar.SECOND,0);
+        c1.set(Calendar.MILLISECOND,0);
+        dpd.getDatePicker().setMaxDate(c1.getTimeInMillis());
+        dpd.show();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

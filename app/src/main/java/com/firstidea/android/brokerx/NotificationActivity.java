@@ -16,11 +16,15 @@ import com.firstidea.android.brokerx.adapter.NotificationADapter;
 import com.firstidea.android.brokerx.http.ObjectFactory;
 import com.firstidea.android.brokerx.http.model.MessageDTO;
 import com.firstidea.android.brokerx.http.model.Notification;
+import com.firstidea.android.brokerx.http.model.NotificationListDTO;
 import com.firstidea.android.brokerx.http.model.User;
 import com.firstidea.android.brokerx.model.NotificationItem;
 import com.firstidea.android.brokerx.widget.AppProgressDialog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -71,8 +75,29 @@ public class NotificationActivity extends AppCompatActivity {
         ObjectFactory.getInstance().getChatServiceInstance().getNotifications(me.getUserID(), new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
-                if(messageDTO.isSuccess()) {
+                if (messageDTO.isSuccess()) {
                     mList = Notification.createListFromJson(messageDTO.getData());
+                    Map<String, List<Notification>> notificationMap = new HashMap<String, List<Notification>>();
+                    for (Notification notification : mList) {
+                        String key = notification.getLeadID().toString() + ":" + notification.getFromUserID();
+                        List<Notification> notifications = new ArrayList<Notification>();
+                        if (notificationMap.containsKey(key)) {
+                            notifications = notificationMap.get(key);
+                        }
+                        notifications.add(notification);
+                        notificationMap.put(key, notifications);
+                    }
+                    List<NotificationListDTO> notificationListDTOs = new ArrayList<NotificationListDTO>();
+                    for (String key : notificationMap.keySet()) {
+                        String[] keySplit = key.split(":");
+                        Integer leadID = Integer.parseInt(keySplit[0]);
+                        Integer fromUserID = Integer.parseInt(keySplit[1]);
+                        List<Notification> notifications = notificationMap.get(key);
+                        NotificationListDTO notificationListDTO = new NotificationListDTO();
+                        notificationListDTO.setLeadID(leadID);
+                        notificationListDTO.setFromUserID(fromUserID);
+                        notificationListDTO.setNotifications(notifications);
+                    }
                     NotificationADapter mAdapter = new NotificationADapter(mContext, mList);
                     mRecyclerView.setAdapter(mAdapter);
                 }

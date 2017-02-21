@@ -26,6 +26,7 @@ import java.util.ArrayList;
  */
 public class BrokerHomeBuyerFragment extends Fragment {
     private ArrayList<Lead> mLeads;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -63,12 +64,12 @@ public class BrokerHomeBuyerFragment extends Fragment {
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            recyclerView.setAdapter(new BrokerHomeEnquiriesAdapter(context, mLeads, new BrokerHomeEnquiriesAdapter.OnCardClickListener(){
+            recyclerView.setAdapter(new BrokerHomeEnquiriesAdapter(context, mLeads, "B", new BrokerHomeEnquiriesAdapter.OnCardClickListener() {
 
                 @Override
                 public void onCardClick(Lead lead) {
                     Intent next = new Intent(context, EnquiryDetailsActivity.class);
-                    next.putExtra(Lead.KEY_LEAD,lead);
+                    next.putExtra(Lead.KEY_LEAD, lead);
                     getActivity().startActivityForResult(next, BrokerHomeActivity.ACTION_ACTIVITY);
                 }
             }));

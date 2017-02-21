@@ -96,7 +96,7 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
         String brokerage = "<b>Brokerage: </b>" + mValues.get(position).getBrokerageAmt();
         holder.brokerage.setText(Html.fromHtml(brokerage));
         holder.qty.setText(mValues.get(position).getQty() + " " + qtys[mValues.get(position).getQtyUnit()] +availableLabel);
-
+        holder.dttm.setText(mValues.get(position).getLastUpdDateTime());
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,6 +169,7 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
         public final TextView address;
         public final TextView brokerage;
         public final TextView qty;
+        public final TextView dttm;
         public Lead mItem;
 
         public ViewHolder(View view) {
@@ -179,6 +180,7 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
             address = (TextView) view.findViewById(R.id.address);
             brokerage = (TextView) view.findViewById(R.id.brokerage);
             qty = (TextView) view.findViewById(R.id.qty);
+            dttm = (TextView) view.findViewById(R.id.dttm);
         }
 
         @Override

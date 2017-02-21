@@ -21,15 +21,16 @@ public class BrokerHomeEnquiriesAdapter extends RecyclerView.Adapter<BrokerHomeE
     private final List<Lead> mValues;
     private String[] qtys;
     private OnCardClickListener mOnCardClickListener;
+    String availableLabel;
 
     public interface OnCardClickListener {
         void onCardClick(Lead lead);
     }
-    public BrokerHomeEnquiriesAdapter(Context context,List<Lead> items, OnCardClickListener mOnCardClickListener) {
+    public BrokerHomeEnquiriesAdapter(Context context,List<Lead> items, String type, OnCardClickListener mOnCardClickListener) {
         mValues = items;
         qtys = context.getResources().getStringArray(R.array.qty_options);
         this.mOnCardClickListener = mOnCardClickListener;
-
+        this.availableLabel = type.startsWith("B")?" to Buy":" to Sell";
     }
 
     @Override
@@ -46,7 +47,8 @@ public class BrokerHomeEnquiriesAdapter extends RecyclerView.Adapter<BrokerHomeE
         holder.userName.setText("Posted by "+mValues.get(position).getCreatedUser().getFullName());
         holder.address.setText(mValues.get(position).getLocation());
         holder.brokerage.setText("You get "+mValues.get(position).getBrokerageAmt());
-        holder.qty.setText(mValues.get(position).getQty()+" "+qtys[mValues.get(position).getQtyUnit()]+" Available");
+        holder.qty.setText(mValues.get(position).getQty()+" "+qtys[mValues.get(position).getQtyUnit()]+availableLabel);
+        holder.dttm.setText(mValues.get(position).getLastUpdDateTime());
         final Context context = holder.qty.getContext();
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +70,7 @@ public class BrokerHomeEnquiriesAdapter extends RecyclerView.Adapter<BrokerHomeE
         public final TextView address;
         public final TextView brokerage;
         public final TextView qty;
+        public final TextView dttm;
         public Lead mItem;
 
         public ViewHolder(View view) {
@@ -78,6 +81,7 @@ public class BrokerHomeEnquiriesAdapter extends RecyclerView.Adapter<BrokerHomeE
             address = (TextView) view.findViewById(R.id.address);
             brokerage = (TextView) view.findViewById(R.id.brokerage);
             qty = (TextView) view.findViewById(R.id.qty);
+            dttm = (TextView) view.findViewById(R.id.dttm);
         }
 
         @Override

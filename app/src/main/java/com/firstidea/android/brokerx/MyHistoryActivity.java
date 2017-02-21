@@ -47,15 +47,15 @@ public class MyHistoryActivity extends AppCompatActivity {
     private ArrayList<Lead> mLeads;
     private User me;
     private boolean mIsFromAnalysis = false;
-    private Integer brokerID=null;
+    private Integer brokerID = null;
     private String itemName = null;
-    private String leadType=null;
+    private String leadType = null;
 
-    private TextView mStartDateView,mEndDateView;
+    private TextView mStartDateView, mEndDateView;
     private int startDay, endDay;
     private int startMonth, endMonth;
     private int startYear, endYear;
-    private Date mStartDate,mEndDate;
+    private Date mStartDate, mEndDate;
     SimpleDateFormat SDF = new SimpleDateFormat("dd MMM yyyy");
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -71,22 +71,27 @@ public class MyHistoryActivity extends AppCompatActivity {
         mContext = this;
         me = User.getSavedUser(this);
 
-        if(getIntent().hasExtra("IS_FROM_ANALYSYS")) {
+        if (getIntent().hasExtra("IS_FROM_ANALYSYS")) {
             mIsFromAnalysis = getIntent().getExtras().getBoolean("IS_FROM_ANALYSYS");
             itemName = getIntent().getExtras().getString("ItemName");
-            getSupportActionBar().setTitle("Analysis: "+itemName);
-            if(getIntent().hasExtra("BrokerID")) {
+            getSupportActionBar().setTitle("Analysis: " + itemName);
+            if (getIntent().hasExtra("BrokerID")) {
                 brokerID = getIntent().getExtras().getInt("BrokerID");
             }
-            if(getIntent().hasExtra(LeadType.KEY_LEAD_TYPE)) {
+            if (getIntent().hasExtra(LeadType.KEY_LEAD_TYPE)) {
                 leadType = getIntent().getExtras().getString(LeadType.KEY_LEAD_TYPE);
             }
 
         }
 
+        Calendar cal = Calendar.getInstance();
+        startDay = endDay = cal.get(Calendar.DAY_OF_MONTH);
+        startMonth = endMonth = cal.get(Calendar.MONTH);
+        startYear = endYear = cal.get(Calendar.YEAR);
+
         mStartDateView = (TextView) findViewById(R.id.starDate);
         mEndDateView = (TextView) findViewById(R.id.endDate);
-        mRecyclerView = (RecyclerView)findViewById(R.id.history_recycler_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.history_recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
         mLayoutManager = new LinearLayoutManager(this);
@@ -101,7 +106,7 @@ public class MyHistoryActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 // Refresh items
-                if(mIsFromAnalysis) {
+                if (mIsFromAnalysis) {
                     getLeads();
                 } else {
                     getHistory();
@@ -109,25 +114,46 @@ public class MyHistoryActivity extends AppCompatActivity {
             }
         });
 
-        if(mIsFromAnalysis) {
+        if (mIsFromAnalysis) {
             getLeads();
         } else {
             getHistory();
         }
 
+        findViewById(R.id.button_search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mStartDateView.getText().toString().trim().length() > 0
+                        && mEndDateView.getText().toString().trim().length() > 0) {
+                    if (mIsFromAnalysis) {
+                        getLeads();
+                    } else {
+                        getHistory();
+                    }
+                } else {
+                    Toast.makeText(mContext, "Please Select Start and End Date", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     }
 
     private void getLeads() {
         final Dialog dialog = AppProgressDialog.show(mContext);
-        ObjectFactory.getInstance().getLeadServiceInstance().getLeads(me.getUserID(), leadType, "D",itemName,brokerID, null, null, new Callback<MessageDTO>() {
+        String startDate = null, enadDate = null;
+        if (mStartDate != null && mEndDate != null) {
+            SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+            startDate = SDF.format(mStartDate);
+            enadDate = SDF.format(mEndDate);
+        }
+        ObjectFactory.getInstance().getLeadServiceInstance().getLeads(me.getUserID(), leadType, "D", itemName, brokerID, startDate, enadDate, new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
-                if(messageDTO.isSuccess()) {
-                    ArrayList<Lead> leads= Lead.createListFromJson(messageDTO.getData());
-                    mLeads= new ArrayList<Lead>();
+                if (messageDTO.isSuccess()) {
+                    ArrayList<Lead> leads = Lead.createListFromJson(messageDTO.getData());
+                    mLeads = new ArrayList<Lead>();
                     mLeads.addAll(leads);
-                    MyHistoryAdapter mAdapter = new MyHistoryAdapter(mContext, mLeads,me.isBroker());
+                    MyHistoryAdapter mAdapter = new MyHistoryAdapter(mContext, mLeads, me.isBroker());
                     mRecyclerView.setAdapter(mAdapter);
                 } else {
                     Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
@@ -147,14 +173,20 @@ public class MyHistoryActivity extends AppCompatActivity {
 
     private void getHistory() {
         final Dialog dialog = AppProgressDialog.show(mContext);
-        ObjectFactory.getInstance().getLeadServiceInstance().getHistory(me.getUserID(), null,null, new Callback<MessageDTO>() {
+        String startDate = null, enadDate = null;
+        if (mStartDate != null && mEndDate != null) {
+            SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+            startDate = SDF.format(mStartDate);
+            enadDate = SDF.format(mEndDate);
+        }
+        ObjectFactory.getInstance().getLeadServiceInstance().getHistory(me.getUserID(), startDate, enadDate, new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
-                if(messageDTO.isSuccess()) {
-                    ArrayList<Lead> leads= Lead.createListFromJson(messageDTO.getData());
-                    mLeads= new ArrayList<Lead>();
+                if (messageDTO.isSuccess()) {
+                    ArrayList<Lead> leads = Lead.createListFromJson(messageDTO.getData());
+                    mLeads = new ArrayList<Lead>();
                     mLeads.addAll(leads);
-                    MyHistoryAdapter mAdapter = new MyHistoryAdapter(mContext, mLeads,me.isBroker());
+                    MyHistoryAdapter mAdapter = new MyHistoryAdapter(mContext, mLeads, me.isBroker());
                     mRecyclerView.setAdapter(mAdapter);
                 } else {
                     Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
@@ -173,7 +205,7 @@ public class MyHistoryActivity extends AppCompatActivity {
     }
 
     public void setStartDate(View view) {
-        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dpd = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar calendar = Calendar.getInstance();
@@ -183,15 +215,21 @@ public class MyHistoryActivity extends AppCompatActivity {
                 startYear = year;
                 startMonth = monthOfYear;
                 startDay = dayOfMonth;
-                mStartDate= calendar.getTime();
+                mStartDate = calendar.getTime();
                 mStartDateView.setText(SDF.format(mStartDate));
             }
-        }, startYear, startMonth, startDay).show();
+        }, startYear, startMonth, startDay);
+        Calendar c1 = Calendar.getInstance();
+        c1.set(Calendar.HOUR_OF_DAY, 1);
+        c1.set(Calendar.MINUTE, 0);
+        c1.set(Calendar.SECOND, 0);
+        c1.set(Calendar.MILLISECOND, 0);
+        dpd.getDatePicker().setMaxDate(c1.getTimeInMillis());
+        dpd.show();
     }
 
-
     public void setEndDate(View view) {
-        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dpd = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar calendar = Calendar.getInstance();
@@ -204,7 +242,14 @@ public class MyHistoryActivity extends AppCompatActivity {
                 mEndDate = calendar.getTime();
                 mEndDateView.setText(SDF.format(mEndDate));
             }
-        }, endYear, endMonth, endDay).show();
+        }, endYear, endMonth, endDay);
+        Calendar c1 = Calendar.getInstance();
+        c1.set(Calendar.HOUR_OF_DAY, 1);
+        c1.set(Calendar.MINUTE, 0);
+        c1.set(Calendar.SECOND, 0);
+        c1.set(Calendar.MILLISECOND, 0);
+        dpd.getDatePicker().setMaxDate(c1.getTimeInMillis());
+        dpd.show();
     }
 
     @Override

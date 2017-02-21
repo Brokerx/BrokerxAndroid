@@ -60,6 +60,11 @@ public class Top11HighestBrokerActivity extends AppCompatActivity implements Ana
         getSupportActionBar().setHomeButtonEnabled(true);
         mContext = this;
 
+        Calendar cal = Calendar.getInstance();
+        startDay = endDay = cal.get(Calendar.DAY_OF_MONTH);
+        startMonth = endMonth = cal.get(Calendar.MONTH);
+        startYear = endYear = cal.get(Calendar.YEAR);
+
         mStartDateView = (TextView) findViewById(R.id.starDate);
         mEndDateView = (TextView) findViewById(R.id.endDate);
         mRecyclerView = (RecyclerView) findViewById(R.id.topHighestBroker_recycler_view);
@@ -81,12 +86,29 @@ public class Top11HighestBrokerActivity extends AppCompatActivity implements Ana
             }
         });
         getLeads();
+        findViewById(R.id.button_refresh).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mStartDateView.getText().toString().trim().length() > 0
+                        && mEndDateView.getText().toString().trim().length() > 0) {
+                        getLeads();
+                } else {
+                    Toast.makeText(mContext, "Please Select Start and End Date", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void getLeads() {
         final Dialog dialog = AppProgressDialog.show(this);
         User me = User.getSavedUser(this);
-        ObjectFactory.getInstance().getAnalysisServiceInstance().getBrokerTopHighestPayingLeads(me.getUserID(), null, null, new Callback<MessageDTO>() {
+        String startDate = null, enadDate = null;
+        if (mStartDate != null && mEndDate != null) {
+            SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+            startDate = SDF.format(mStartDate);
+            enadDate = SDF.format(mEndDate);
+        }
+        ObjectFactory.getInstance().getAnalysisServiceInstance().getBrokerTopHighestPayingLeads(me.getUserID(), startDate, enadDate, new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 if(messageDTO.isSuccess()) {
@@ -111,7 +133,7 @@ public class Top11HighestBrokerActivity extends AppCompatActivity implements Ana
     }
 
     public void setStartDate(View view) {
-        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dpd = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar calendar = Calendar.getInstance();
@@ -121,15 +143,22 @@ public class Top11HighestBrokerActivity extends AppCompatActivity implements Ana
                 startYear = year;
                 startMonth = monthOfYear;
                 startDay = dayOfMonth;
-                mStartDate= calendar.getTime();
+                mStartDate = calendar.getTime();
                 mStartDateView.setText(SDF.format(mStartDate));
             }
-        }, startYear, startMonth, startDay).show();
+        }, startYear, startMonth, startDay);
+        Calendar c1 = Calendar.getInstance();
+        c1.set(Calendar.HOUR_OF_DAY,1);
+        c1.set(Calendar.MINUTE,0);
+        c1.set(Calendar.SECOND,0);
+        c1.set(Calendar.MILLISECOND,0);
+        dpd.getDatePicker().setMaxDate(c1.getTimeInMillis());
+        dpd.show();
     }
 
 
     public void setEndDate(View view) {
-        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dpd =  new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar calendar = Calendar.getInstance();
@@ -142,7 +171,14 @@ public class Top11HighestBrokerActivity extends AppCompatActivity implements Ana
                 mEndDate = calendar.getTime();
                 mEndDateView.setText(SDF.format(mEndDate));
             }
-        }, endYear, endMonth, endDay).show();
+        }, endYear, endMonth, endDay);
+        Calendar c1 = Calendar.getInstance();
+        c1.set(Calendar.HOUR_OF_DAY,1);
+        c1.set(Calendar.MINUTE,0);
+        c1.set(Calendar.SECOND,0);
+        c1.set(Calendar.MILLISECOND,0);
+        dpd.getDatePicker().setMaxDate(c1.getTimeInMillis());
+        dpd.show();
     }
 
 

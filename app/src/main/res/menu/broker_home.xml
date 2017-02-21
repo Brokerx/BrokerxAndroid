@@ -16,6 +16,7 @@
         android:icon="@drawable/ic_notifications"/>
     <item
         android:id="@+id/action_chat"
+        app:actionLayout="@layout/chat_badge"
         android:icon="@drawable/ic_menu_chat"
         android:orderInCategory="100"
         android:title="Chats"

@@ -43,11 +43,11 @@ public class Top11BuyerSellerActivity extends AppCompatActivity {
     private Context mContext;
 
 
-    private TextView mStartDateView,mEndDateView;
+    private TextView mStartDateView, mEndDateView;
     private int startDay, endDay;
     private int startMonth, endMonth;
     private int startYear, endYear;
-    private Date mStartDate,mEndDate;
+    private Date mStartDate, mEndDate;
     SimpleDateFormat SDF = new SimpleDateFormat("dd MMM yyyy");
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -72,6 +72,11 @@ public class Top11BuyerSellerActivity extends AppCompatActivity {
         mStartDateView = (TextView) findViewById(R.id.starDate);
         mEndDateView = (TextView) findViewById(R.id.endDate);
 
+        Calendar cal = Calendar.getInstance();
+        startDay = endDay = cal.get(Calendar.DAY_OF_MONTH);
+        startMonth = endMonth = cal.get(Calendar.MONTH);
+        startYear = endYear = cal.get(Calendar.YEAR);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.top11seller_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
@@ -89,13 +94,31 @@ public class Top11BuyerSellerActivity extends AppCompatActivity {
                 getLeads();
             }
         });
+        findViewById(R.id.button_refresh).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mStartDateView.getText().toString().trim().length() > 0
+                        && mEndDateView.getText().toString().trim().length() > 0) {
+                    getLeads();
+                } else {
+                    Toast.makeText(mContext, "Please Select Start and End Date", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         getLeads();
     }
 
     private void getLeads() {
         final Dialog dialog = AppProgressDialog.show(this);
         User me = User.getSavedUser(this);
-        ObjectFactory.getInstance().getAnalysisServiceInstance().getBrokerTopHighestPayingUsers(me.getUserID(),mLeadType, null, null, new Callback<MessageDTO>() {
+        String startDate = null, enadDate = null;
+        if (mStartDate != null && mEndDate != null) {
+            SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+            startDate = SDF.format(mStartDate);
+            enadDate = SDF.format(mEndDate);
+        }
+        ObjectFactory.getInstance().getAnalysisServiceInstance().getBrokerTopHighestPayingUsers(me.getUserID(), mLeadType, startDate, enadDate, new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 if (messageDTO.isSuccess()) {
@@ -103,7 +126,7 @@ public class Top11BuyerSellerActivity extends AppCompatActivity {
                     Top11BuyerSellerAdapter mAdapter = new Top11BuyerSellerAdapter(mContext, mList, mLeadType);
                     mRecyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
-                }else {
+                } else {
                     Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
                 }
                 dialog.dismiss();
@@ -120,7 +143,7 @@ public class Top11BuyerSellerActivity extends AppCompatActivity {
     }
 
     public void setStartDate(View view) {
-        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dpd = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar calendar = Calendar.getInstance();
@@ -130,15 +153,21 @@ public class Top11BuyerSellerActivity extends AppCompatActivity {
                 startYear = year;
                 startMonth = monthOfYear;
                 startDay = dayOfMonth;
-                mStartDate= calendar.getTime();
+                mStartDate = calendar.getTime();
                 mStartDateView.setText(SDF.format(mStartDate));
             }
-        }, startYear, startMonth, startDay).show();
+        }, startYear, startMonth, startDay);
+        Calendar c1 = Calendar.getInstance();
+        c1.set(Calendar.HOUR_OF_DAY, 1);
+        c1.set(Calendar.MINUTE, 0);
+        c1.set(Calendar.SECOND, 0);
+        c1.set(Calendar.MILLISECOND, 0);
+        dpd.getDatePicker().setMaxDate(c1.getTimeInMillis());
+        dpd.show();
     }
 
-
     public void setEndDate(View view) {
-        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dpd = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar calendar = Calendar.getInstance();
@@ -151,9 +180,15 @@ public class Top11BuyerSellerActivity extends AppCompatActivity {
                 mEndDate = calendar.getTime();
                 mEndDateView.setText(SDF.format(mEndDate));
             }
-        }, endYear, endMonth, endDay).show();
+        }, endYear, endMonth, endDay);
+        Calendar c1 = Calendar.getInstance();
+        c1.set(Calendar.HOUR_OF_DAY, 1);
+        c1.set(Calendar.MINUTE, 0);
+        c1.set(Calendar.SECOND, 0);
+        c1.set(Calendar.MILLISECOND, 0);
+        dpd.getDatePicker().setMaxDate(c1.getTimeInMillis());
+        dpd.show();
     }
-
 
 
     @Override

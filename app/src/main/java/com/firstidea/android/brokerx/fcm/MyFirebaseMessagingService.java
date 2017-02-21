@@ -76,6 +76,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 generateNotification("Broker-X", "New Notification", type, null);
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Constants.ACTION_NEW_NOTIFICATION);
+                broadcastIntent.putExtra("type","notification");
                 this.sendBroadcast(broadcastIntent);
             }else if(type != null && type.equals(TYPE_CONNECTION_REQUEST_ACCEPTED)) {
                 String dataContent =  dataMap.get("data");
@@ -99,6 +100,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 } else {
                     String msg = chat.getType().equals(ChatType.TEXT.getType()) ? chat.getMessage(): "Image";
                     generateNotification(chat.getFromUserName(), msg, type, chat);
+
+                    Intent broadcastIntent = new Intent();
+                    broadcastIntent.setAction(Constants.ACTION_NEW_NOTIFICATION);
+                    broadcastIntent.putExtra("type","chat");
+                    this.sendBroadcast(broadcastIntent);
                 }
 
             }

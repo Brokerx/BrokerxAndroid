@@ -58,6 +58,7 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
     private final int ACTION_ACTIVITY = 700;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     public TextView unreadNotifCount;
+    public TextView unreadChatCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +177,19 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
                 startActivity(intent);
             }
         });
+
+
+        View chatCount = menu.findItem(R.id.action_chat).getActionView();
+        unreadChatCount = (TextView) chatCount.findViewById(R.id.counter);
+        chatCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                unreadChatCount.setVisibility(View.GONE);
+                Intent intent = new Intent(BuyerSellerHomeActivity.this, ChatListActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -271,15 +285,26 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.ACTION_NEW_NOTIFICATION)) {
-                Integer count = 1;
-                if(unreadNotifCount.getVisibility() == View.VISIBLE) {
-                    String countString = unreadNotifCount.getText().toString();
-                    count = Integer.parseInt(countString)+1;
+                String type = intent.getStringExtra("type");
+                if(type.equals("notification")) {
+                    Integer count = 1;
+                    if (unreadNotifCount.getVisibility() == View.VISIBLE) {
+                        String countString = unreadNotifCount.getText().toString();
+                        count = Integer.parseInt(countString) + 1;
+                    } else {
+                        unreadNotifCount.setVisibility(View.VISIBLE);
+                    }
+                    unreadNotifCount.setText(count + "");
                 } else {
-                    unreadNotifCount.setVisibility(View.VISIBLE);
+                    Integer count = 1;
+                    if (unreadChatCount.getVisibility() == View.VISIBLE) {
+                        String countString = unreadChatCount.getText().toString();
+                        count = Integer.parseInt(countString) + 1;
+                    } else {
+                        unreadChatCount.setVisibility(View.VISIBLE);
+                    }
+                    unreadChatCount.setText(count + "");
                 }
-                unreadNotifCount.setText(count+"");
-
             }
         }
     };

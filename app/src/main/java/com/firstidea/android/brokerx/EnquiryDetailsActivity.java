@@ -156,7 +156,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             getLeadByID(leadID);
         }
 
-        String viewHistoryLabel = "<u><i>View History</i></u>";
+        String viewHistoryLabel = "<u><i>Show Changes</i></u>";
         btnViewHistory.setText(Html.fromHtml(viewHistoryLabel));
         btnViewHistory.setOnClickListener(new View.OnClickListener() {
             @Override

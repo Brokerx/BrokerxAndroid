@@ -6,10 +6,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.firstidea.android.brokerx.http.model.Lead;
 
@@ -17,6 +21,8 @@ public class AddEnquiryStepFourActivity extends AppCompatActivity {
     Lead mLead;
     private EditText editBrokerage;
     private final int NEXT_ACTIVITY_REQ_CODE = 500;
+    private TextView basicAmounttext, BrokerageAmountText;
+    private float brokerageAmount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +36,8 @@ public class AddEnquiryStepFourActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         editBrokerage = (EditText) findViewById(R.id.edit_brokerage_amt);
+        basicAmounttext = (TextView) findViewById(R.id.total_amount);
+        BrokerageAmountText = (TextView) findViewById(R.id.brokerage_amount);
 
         findViewById(R.id.btn_next).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,18 +45,50 @@ public class AddEnquiryStepFourActivity extends AppCompatActivity {
                 validateAndNext();
             }
         });
+        final float basicPriceAmt = mLead.getBasicPrice() * mLead.getQty();
         if(mLead.getLeadID() != null && mLead.getLeadID() > 0) {
-            editBrokerage.setText(mLead.getBrokerageAmt()+"");
+            float brokeragePerc = mLead.getBrokerageAmt() * 100/basicPriceAmt;
+            editBrokerage.setText(brokeragePerc+"");
         }
+
+        basicAmounttext.setText(Html.fromHtml("<b>Basic Price:</b> "+basicPriceAmt+" Rs."));
+        editBrokerage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                brokerageAmount = getFloatValue(editBrokerage.getText().toString().trim()) * basicPriceAmt/100;
+                BrokerageAmountText.setText(Html.fromHtml("<b>Total Brokerage:</b> "+brokerageAmount+" Rs."));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    private float getFloatValue(String stringVal) {
+        if(stringVal.startsWith(".")) {
+            stringVal = "0"+stringVal;
+        }
+        if(stringVal.trim().length() <= 0) {
+            stringVal = "0";
+        }
+        return Float.parseFloat(stringVal);
     }
 
     private void validateAndNext() {
         if(TextUtils.isEmpty(editBrokerage.getText().toString())) {
-            editBrokerage.setError("Enter Brokerage");
-            return;
+//            editBrokerage.setError("Enter Brokerage");
+//            return;
+            editBrokerage.setText("0");
         }
-        float brokerage = Float.parseFloat(editBrokerage.getText().toString());
-        mLead.setBrokerageAmt(brokerage);
+//        float brokerage = Float.parseFloat(editBrokerage.getText().toString());
+        mLead.setBrokerageAmt(brokerageAmount);
         Intent intent = new Intent(AddEnquiryStepFourActivity.this,AddEnquiryStepFiveActivity.class);
         intent.putExtra(Lead.KEY_LEAD,mLead);
         startActivityForResult(intent, NEXT_ACTIVITY_REQ_CODE);

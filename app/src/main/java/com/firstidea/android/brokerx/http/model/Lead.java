@@ -32,6 +32,7 @@ public class Lead implements Parcelable {
     private float qty;
     private Integer qtyUnit;
     private Integer packing;
+    private String packingType;
     private String location;
     private float basicPrice;
     private Integer basicPriceUnit;
@@ -175,6 +176,14 @@ public class Lead implements Parcelable {
 
     public void setPacking(Integer packing) {
         this.packing = packing;
+    }
+
+    public String getPackingType() {
+        return packingType;
+    }
+
+    public void setPackingType(String packingType) {
+        this.packingType = packingType;
     }
 
     public String getLocation() {
@@ -412,6 +421,7 @@ public class Lead implements Parcelable {
         dest.writeFloat(this.qty);
         dest.writeValue(this.qtyUnit);
         dest.writeValue(this.packing);
+        dest.writeString(this.packingType);
         dest.writeString(this.location);
         dest.writeFloat(this.basicPrice);
         dest.writeValue(this.basicPriceUnit);
@@ -435,6 +445,7 @@ public class Lead implements Parcelable {
         dest.writeParcelable(this.broker, flags);
         dest.writeParcelable(this.assignedToUser, flags);
         dest.writeString(this.fieldsAltered);
+        dest.writeValue(this.isMoveToPending);
     }
 
     protected Lead(Parcel in) {
@@ -453,6 +464,7 @@ public class Lead implements Parcelable {
         this.qty = in.readFloat();
         this.qtyUnit = (Integer) in.readValue(Integer.class.getClassLoader());
         this.packing = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.packingType = in.readString();
         this.location = in.readString();
         this.basicPrice = in.readFloat();
         this.basicPriceUnit = (Integer) in.readValue(Integer.class.getClassLoader());
@@ -476,6 +488,7 @@ public class Lead implements Parcelable {
         this.broker = in.readParcelable(User.class.getClassLoader());
         this.assignedToUser = in.readParcelable(User.class.getClassLoader());
         this.fieldsAltered = in.readString();
+        this.isMoveToPending = (Boolean) in.readValue(Boolean.class.getClassLoader());
     }
 
     public static final Creator<Lead> CREATOR = new Creator<Lead>() {

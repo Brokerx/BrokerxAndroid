@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.firstidea.android.brokerx.adapter.NewNotificationADapter;
 import com.firstidea.android.brokerx.adapter.NotificationADapter;
 import com.firstidea.android.brokerx.http.ObjectFactory;
 import com.firstidea.android.brokerx.http.model.MessageDTO;
@@ -78,27 +79,38 @@ public class NotificationActivity extends AppCompatActivity {
                 if (messageDTO.isSuccess()) {
                     mList = Notification.createListFromJson(messageDTO.getData());
                     Map<String, List<Notification>> notificationMap = new HashMap<String, List<Notification>>();
+                    Map<String, Integer> unReadCountMap = new HashMap<String, Integer>();
                     for (Notification notification : mList) {
                         String key = notification.getLeadID().toString() + ":" + notification.getFromUserID();
                         List<Notification> notifications = new ArrayList<Notification>();
+                        int unreadCount = 0;
                         if (notificationMap.containsKey(key)) {
                             notifications = notificationMap.get(key);
+                            unreadCount = unReadCountMap.get(key);
+                        }
+                        if(!notification.getRead()) {
+                            unreadCount++;
                         }
                         notifications.add(notification);
                         notificationMap.put(key, notifications);
+                        unReadCountMap.put(key, unreadCount);
                     }
-                    List<NotificationListDTO> notificationListDTOs = new ArrayList<NotificationListDTO>();
+                    ArrayList<NotificationListDTO> notificationListDTOs = new ArrayList<NotificationListDTO>();
                     for (String key : notificationMap.keySet()) {
                         String[] keySplit = key.split(":");
                         Integer leadID = Integer.parseInt(keySplit[0]);
                         Integer fromUserID = Integer.parseInt(keySplit[1]);
                         List<Notification> notifications = notificationMap.get(key);
+                        int unreadCount = unReadCountMap.get(key);
                         NotificationListDTO notificationListDTO = new NotificationListDTO();
                         notificationListDTO.setLeadID(leadID);
+                        notificationListDTO.setUnReadCount(unreadCount);
                         notificationListDTO.setFromUserID(fromUserID);
                         notificationListDTO.setNotifications(notifications);
+                        notificationListDTOs.add(notificationListDTO);
                     }
-                    NotificationADapter mAdapter = new NotificationADapter(mContext, mList);
+//                    NotificationADapter mAdapter = new NotificationADapter(mContext, mList);
+                    NewNotificationADapter mAdapter = new NewNotificationADapter(mContext, notificationListDTOs);
                     mRecyclerView.setAdapter(mAdapter);
                 }
                 dialog.dismiss();

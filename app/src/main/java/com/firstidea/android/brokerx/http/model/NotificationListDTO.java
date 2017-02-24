@@ -9,6 +9,7 @@ import java.util.List;
 public class NotificationListDTO {
     private Integer leadID;
     private Integer fromUserID;
+    private int unReadCount;
     private List<Notification> notifications;
 
     public Integer getLeadID() {
@@ -25,6 +26,14 @@ public class NotificationListDTO {
 
     public void setFromUserID(Integer fromUserID) {
         this.fromUserID = fromUserID;
+    }
+
+    public int getUnReadCount() {
+        return unReadCount;
+    }
+
+    public void setUnReadCount(int unReadCount) {
+        this.unReadCount = unReadCount;
     }
 
     public List<Notification> getNotifications() {

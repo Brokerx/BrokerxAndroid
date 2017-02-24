@@ -260,8 +260,12 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         location.setText(mLead.getLocation());
         String basicPriceString = mLead.getBasicPrice() + " Rs/" + mUnits[mLead.getBasicPriceUnit()];
         basicPricePerUnit.setText(basicPriceString);
-        qtyUnit.setText(mLead.getQty() + " " + mUnits[mLead.getQtyUnit()] + " available");
+        String availableLabel = mLead.getType().startsWith("B")?" to Buy":" to Sell";
+        qtyUnit.setText(mLead.getQty() + " " + mUnits[mLead.getQtyUnit()] + availableLabel);
         String packingString = mPackings[mLead.getPacking()];
+        if(mLead.getPacking() == mPackings.length-1) {
+            packingString = mLead.getPackingType()+"";
+        }
         packing.setText(packingString);
 
         final StringBuilder userNameString = new StringBuilder("");

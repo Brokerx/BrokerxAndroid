@@ -24,7 +24,7 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
 
     private final int BROKER_SELECTION_REQUEST = 100;
     private final int NEXT_ACTIVITY_REQ_CODE = 500;
-    private EditText editBroker, editMake, editqty;
+    private EditText editBroker, editMake, editqty, editPackingType;
     private Spinner spinnerItem, spinnerQtyUnit, spinnerPacking;
     Lead mLead;
 
@@ -48,6 +48,7 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
         });
 
         editBroker = (EditText) findViewById(R.id.broker_name);
+        editPackingType = (EditText) findViewById(R.id.packing_type);
         editMake = (EditText) findViewById(R.id.make);
         editqty = (EditText) findViewById(R.id.qty);
         spinnerItem = (Spinner) findViewById(R.id.spinner_items);
@@ -91,6 +92,17 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mLead.setPacking(position);
+                if(spinnerPacking.getAdapter().getCount()-1 == position) {
+                    editPackingType.setText("");
+                    findViewById(R.id.layout_packing_type).setVisibility(View.VISIBLE);
+                    if(mLead.getLeadID() != null && !TextUtils.isEmpty(mLead.getPackingType())) {
+                        editPackingType.setText(mLead.getPackingType());
+                    }
+                } else {
+                    editPackingType.setText(spinnerPacking.getAdapter().getItem(position).toString());
+                    findViewById(R.id.layout_packing_type).setVisibility(View.GONE);
+                }
+
             }
 
             @Override
@@ -129,6 +141,12 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
             if(me.getUserID().equals(mLead.getBrokerID())) {
                 spinnerItem.setEnabled(false);
             }
+            /*if(spinnerPacking.getAdapter().getCount()-1 == mLead.getPacking().intValue()) {
+                findViewById(R.id.layout_packing_type).setVisibility(View.VISIBLE);
+                if(mLead.getLeadID() != null && !TextUtils.isEmpty(mLead.getPackingType())) {
+                    editPackingType.setText(mLead.getPackingType());
+                }
+            }*/
         } else {
             String type = getIntent().getExtras().getString("type");
             mLead = new Lead();
@@ -140,12 +158,13 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
 
     private void validateAndNext() {
 
-        if(TextUtils.isEmpty(editMake.getText().toString())) {
+        /*if(TextUtils.isEmpty(editMake.getText().toString())) {
             editMake.setError("Enter Make");
             return;
-        }
+        }*/
         if(TextUtils.isEmpty(editqty.getText().toString())) {
             editqty.setError("Enter Quantity");
+            return;
         }
         if(mLead.getLeadID() == null ) {
             if(mLead.getBrokerID() == null) {
@@ -153,8 +172,14 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
                 return;
             }
         }
+        if(spinnerPacking.getAdapter().getCount()-1 == mLead.getPacking()
+                && editPackingType.getText().toString().trim().length() <= 0) {
+            editPackingType.setError("Enter Packing Type");
+            return;
+        }
         mLead.setMake(editMake.getText().toString());
         mLead.setQty(Float.parseFloat(editqty.getText().toString()));
+        mLead.setPackingType(editPackingType.getText().toString());
         Intent intent = new Intent(AddEnquiryStepOneActivity.this, AddEnquiryStepTwoActivity.class);
         intent.putExtra(Lead.KEY_LEAD, mLead);
         startActivityForResult(intent, NEXT_ACTIVITY_REQ_CODE);

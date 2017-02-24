@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:background="@drawable/white_rectangle_drawable"
@@ -50,15 +50,25 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="numberDecimal"
-                            android:hint="Brokerage Amount"
+                            android:hint="Brokerage (in %)"
                             android:lines="1"
                             android:maxLines="1"
                             android:paddingLeft="5dp" />
 
                     </android.support.design.widget.TextInputLayout>
-
                 </LinearLayout>
-
+                <TextView
+                    android:id="@+id/total_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Basic Amount: "/>
+                <TextView
+                    android:id="@+id/brokerage_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Brokerage Amount: "/>
 
             </LinearLayout>
 

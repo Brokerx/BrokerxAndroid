@@ -38,6 +38,8 @@ public class Lead implements Parcelable {
     private Integer basicPriceUnit;
     private float exciseDuty;
     private Integer exciseUnit;
+    private Integer excisetype;
+    private float tax;
     private boolean asPerAvailablity;
     private float transportCharges;
     private float miscCharges;
@@ -224,6 +226,22 @@ public class Lead implements Parcelable {
 
     public void setExciseUnit(Integer exciseUnit) {
         this.exciseUnit = exciseUnit;
+    }
+
+    public Integer getExcisetype() {
+        return excisetype;
+    }
+
+    public void setExcisetype(Integer excisetype) {
+        this.excisetype = excisetype;
+    }
+
+    public float getTax() {
+        return tax;
+    }
+
+    public void setTax(float tax) {
+        this.tax = tax;
     }
 
     public boolean isAsPerAvailablity() {
@@ -427,6 +445,8 @@ public class Lead implements Parcelable {
         dest.writeValue(this.basicPriceUnit);
         dest.writeFloat(this.exciseDuty);
         dest.writeValue(this.exciseUnit);
+        dest.writeValue(this.excisetype);
+        dest.writeFloat(this.tax);
         dest.writeByte(this.asPerAvailablity ? (byte) 1 : (byte) 0);
         dest.writeFloat(this.transportCharges);
         dest.writeFloat(this.miscCharges);
@@ -470,6 +490,8 @@ public class Lead implements Parcelable {
         this.basicPriceUnit = (Integer) in.readValue(Integer.class.getClassLoader());
         this.exciseDuty = in.readFloat();
         this.exciseUnit = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.excisetype = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.tax = in.readFloat();
         this.asPerAvailablity = in.readByte() != 0;
         this.transportCharges = in.readFloat();
         this.miscCharges = in.readFloat();

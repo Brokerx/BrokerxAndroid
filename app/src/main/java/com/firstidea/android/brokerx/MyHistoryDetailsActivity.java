@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firstidea.android.brokerx.adapter.MyHistoryAdapter;
+import com.firstidea.android.brokerx.enums.ExciseType;
 import com.firstidea.android.brokerx.enums.LeadType;
 import com.firstidea.android.brokerx.http.ObjectFactory;
 import com.firstidea.android.brokerx.http.SingletonRestClient;
@@ -184,7 +185,8 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
         layout_created_user_brokerage = (LinearLayout) findViewById(R.id.layout_created_user_brokerage);
         layout_assigned_user_brokerage = (LinearLayout) findViewById(R.id.layout_assigned_user_brokerage);
 
-        String unitsAvailable = mLead.getQty() + " " + mUnits[mLead.getQtyUnit()] + " available";
+        String availableLabel = mLead.getType().startsWith("B")?" to Buy":" to Sell";
+        String unitsAvailable = mLead.getQty() + " " + mUnits[mLead.getQtyUnit()] + availableLabel;
         units_available.setText(unitsAvailable);
         Chemical_Name.setText(mLead.getItemName());
         if (!TextUtils.isEmpty(mLeadStatusHistory.getInvoiceNumber())) {
@@ -198,7 +200,14 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
         basic_charge.setText(basicPriceString);
         float basicPriceAmt = mLead.getBasicPrice() * mLead.getQty();
         float excisePriceAmt = mLead.getExciseDuty() * mLead.getQty();
-        float totalAmt = basicPriceAmt + excisePriceAmt + mLead.getTransportCharges() + mLead.getMiscCharges();
+        float taxperc = mLead.getTax();
+        float taxAmountrs = basicPriceAmt * (taxperc / 100);
+        float totalAmt = basicPriceAmt + taxAmountrs +  mLead.getTransportCharges() + mLead.getMiscCharges();
+        Integer exciseType = mLead.getExcisetype() != null ? mLead.getExcisetype(): ExciseType.INCLUSIVE.getType();
+        if(exciseType.equals(ExciseType.INCLUSIVE)) {
+        } else {
+            totalAmt += excisePriceAmt;
+        }
         Total_charges.setText(totalAmt + " Rs");
 
         User createdUser = mLead.getCreatedUser();

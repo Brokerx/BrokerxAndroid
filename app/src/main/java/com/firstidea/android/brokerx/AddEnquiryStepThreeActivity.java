@@ -13,16 +13,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 
+import com.firstidea.android.brokerx.enums.ExciseType;
 import com.firstidea.android.brokerx.http.model.Lead;
 
 public class AddEnquiryStepThreeActivity extends AppCompatActivity {
 
-    private EditText editBasicPrice, editExciseDuty, editTransportCharges, editMiscCharges, editTotalCharges;
+    private EditText editBasicPrice, editExciseDuty, editTransportCharges, editMiscCharges, editTotalCharges, edit_tax_perc;
     private Spinner spinnerBasicUnit, spinnerExciseUnit;
     private CheckBox checkAsPerAvailability;
+    private RadioButton radio_excise_inclusive, radio_excise_exclusive;
     private Lead mLead;
     private final int NEXT_ACTIVITY_REQ_CODE = 500;
 
@@ -44,8 +48,23 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
         editTransportCharges = (EditText) findViewById(R.id.transport_charges);
         editMiscCharges = (EditText) findViewById(R.id.misc_charges);
         editTotalCharges = (EditText) findViewById(R.id.total_charges);
+        edit_tax_perc = (EditText) findViewById(R.id.edit_tax_perc);
         checkAsPerAvailability = (CheckBox) findViewById(R.id.check_as_per_availability);
+        radio_excise_inclusive = (RadioButton) findViewById(R.id.radio_excise_inclusive);
+        radio_excise_exclusive = (RadioButton) findViewById(R.id.radio_excise_exclusive);
 
+        radio_excise_inclusive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                calculateTotal();
+            }
+        });
+        radio_excise_exclusive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                calculateTotal();
+            }
+        });
         findViewById(R.id.btn_next).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +107,12 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
             }
             editTransportCharges.setText(mLead.getTransportCharges()+"");
             editMiscCharges.setText(mLead.getMiscCharges()+"");
+            edit_tax_perc.setText(mLead.getTax()+"");
+            if(mLead.getExcisetype()!= null && mLead.getExcisetype().equals(ExciseType.EXCLUSIVE.getType())) {
+                radio_excise_exclusive.setChecked(true);
+            } else {
+                radio_excise_inclusive.setChecked(true);
+            }
             calculateTotal();
         }
         TextWatcher priceWatcher = new TextWatcher() {
@@ -105,6 +130,7 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
         editBasicPrice.addTextChangedListener(priceWatcher);
         editExciseDuty.addTextChangedListener(priceWatcher);
         editMiscCharges.addTextChangedListener(priceWatcher);
+        edit_tax_perc.addTextChangedListener(priceWatcher);
         editTransportCharges.addTextChangedListener(priceWatcher);
     }
 
@@ -119,6 +145,7 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
         float exciseDuty = 0;
         float transportChrg = 0;
         float miscChrg = 0;
+        float taxPerc = 0;
 
         if(editExciseDuty.getText().toString().trim().length() > 0) {
             exciseDuty = Float.parseFloat(editExciseDuty.getText().toString());
@@ -129,10 +156,17 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
         if(editMiscCharges.getText().toString().trim().length() > 0) {
             miscChrg = Float.parseFloat(editMiscCharges.getText().toString());
         }
+        if(edit_tax_perc.getText().toString().trim().length() > 0) {
+            taxPerc = Float.parseFloat(edit_tax_perc.getText().toString());
+        }
         mLead.setBasicPrice(basicPrice);
+        mLead.setBasicPriceUnit(spinnerBasicUnit.getSelectedItemPosition());
         mLead.setExciseDuty(exciseDuty);
+        mLead.setExciseUnit(spinnerExciseUnit.getSelectedItemPosition());
+        mLead.setExcisetype(radio_excise_inclusive.isChecked() ? ExciseType.INCLUSIVE.getType(): ExciseType.EXCLUSIVE.getType());
         mLead.setTransportCharges(transportChrg);
         mLead.setMiscCharges(miscChrg);
+        mLead.setTax(taxPerc);
         mLead.setAsPerAvailablity(checkAsPerAvailability.isChecked());
 
         Intent intent = new Intent(AddEnquiryStepThreeActivity.this,AddEnquiryStepFourActivity.class);
@@ -146,8 +180,14 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
             basicPrice = getFloatValue(editBasicPrice.getText().toString().trim());
         }
         float exciseDuty = 0;
-        if(editExciseDuty.getText().toString().trim().length() > 0) {
-            exciseDuty =getFloatValue(editExciseDuty.getText().toString().trim());
+        if(radio_excise_exclusive.isChecked()) {
+            if (editExciseDuty.getText().toString().trim().length() > 0) {
+                exciseDuty = getFloatValue(editExciseDuty.getText().toString().trim());
+            }
+        }
+        float taxPerc = 0;
+        if(edit_tax_perc.getText().toString().trim().length() > 0) {
+            taxPerc = getFloatValue(edit_tax_perc.getText().toString().trim());
         }
         float transportCharges = 0;
         if (editTransportCharges.getText().toString().trim().length() > 0) {
@@ -160,7 +200,8 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
 
         float basicPriceAmt = basicPrice * mLead.getQty();
         float excisePriceAmt = exciseDuty * mLead.getQty();
-        float totalAmt = basicPriceAmt + excisePriceAmt + transportCharges + miscCharges;
+        float taxAmount = basicPriceAmt * (taxPerc / 100);
+        float totalAmt = basicPriceAmt + excisePriceAmt + transportCharges + miscCharges+ taxAmount;
         editTotalCharges.setText(totalAmt + " Rs");
     }
 

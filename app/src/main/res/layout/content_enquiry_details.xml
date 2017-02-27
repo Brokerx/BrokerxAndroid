@@ -457,7 +457,7 @@
                     android:background="@color/white">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/l10dp"
                         android:layout_weight="1"
@@ -490,7 +490,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/di10dp"
                         android:layout_weight="1"
@@ -515,7 +515,7 @@
                             android:background="@color/light_gray"
                             android:gravity="center"
                             android:padding="5dp"
-                            android:text="Excise Duty/Tax"
+                            android:text="Excise Duty"
                             android:textColor="@color/black"
                             android:textSize="@dimen/tex12sp" />
 
@@ -523,7 +523,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/di10dp"
                         android:layout_marginRight="10dp"
@@ -559,16 +559,27 @@
 
                 </LinearLayout>
 
+                    <TextView
+                        android:id="@+id/lbl_excise_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="Rate inclisive of excise"
+                        android:layout_weight="1"/>
+
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp">
+                    android:layout_marginTop="15dp"
+                    android:weightSum="3"
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/l10dp"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/black_bordered_white_rectangle_drawable"
                         android:orientation="vertical">
@@ -599,11 +610,45 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/black_bordered_white_rectangle_drawable"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tax_amount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:text="400Rs"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/tex12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/light_gray"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:text="Tax Amount"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/tex12sp" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
 
                         android:layout_marginRight="10dp"
-                        android:layout_weight="5"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
                         android:background="@drawable/black_bordered_white_rectangle_drawable"
                         android:orientation="vertical">
 

@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firstidea.android.brokerx.enums.ExciseType;
 import com.firstidea.android.brokerx.enums.LeadCurrentStatus;
 import com.firstidea.android.brokerx.enums.LeadType;
 import com.firstidea.android.brokerx.http.ObjectFactory;
@@ -63,6 +64,10 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
     TextView transportCharges;
     @BindView(R.id.misc_charges)
     TextView miscCharges;
+    @BindView(R.id.tax_amount)
+    TextView taxAmount;
+    @BindView(R.id.lbl_excise_type)
+    TextView lblExciseType;
     @BindView(R.id.total_charges)
     TextView totalCharges;
     @BindView(R.id.against_form)
@@ -301,7 +306,17 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         miscCharges.setText(mLead.getMiscCharges() + " Rs");
         float basicPriceAmt = mLead.getBasicPrice() * mLead.getQty();
         float excisePriceAmt = mLead.getExciseDuty() * mLead.getQty();
-        float totalAmt = basicPriceAmt + excisePriceAmt + mLead.getTransportCharges() + mLead.getMiscCharges();
+        float taxperc = mLead.getTax();
+        float taxAmountrs = basicPriceAmt * (taxperc / 100);
+        taxAmount.setText(taxAmountrs + " Rs ("+taxperc+"%)");
+        float totalAmt = basicPriceAmt + taxAmountrs + mLead.getTransportCharges() + mLead.getMiscCharges();
+        Integer exciseType = mLead.getExcisetype() != null ? mLead.getExcisetype(): ExciseType.INCLUSIVE.getType();
+        if(exciseType.equals(ExciseType.INCLUSIVE)) {
+            lblExciseType.setText("Rate is inclisive of excise");
+        } else {
+            lblExciseType.setText("Rate is exclusive of excise");
+            totalAmt += excisePriceAmt;
+        }
         totalCharges.setText(totalAmt + " Rs");
         againstForm.setText(mLead.getAgainstForm());
         creditPeriod.setText(mLead.getCreditPeriod() + " days");

@@ -48,7 +48,7 @@
     <string-array name="select_broker">
         <item>Select Broker First</item>
     </string-array>
-    <string-array name="packing">
+    <!--<string-array name="packing">
         <item>Tanker</item>
         <item>HDPE Drum</item>
         <item>Drum</item>
@@ -60,6 +60,18 @@
         <item>Naked</item>
         <item>Carbuoy</item>
         <item>Bags</item>
+        <item>Custom Made Entry</item>
+    </string-array>
+-->
+    <string-array name="packing">
+        <item>MS regular drum</item>
+        <item>MS Brand new drum</item>
+        <item>HDPE regular drum</item>
+        <item>HDPE Brand new drum</item>
+        <item>Naked</item>
+        <item>Carbuoy</item>
+        <item>Bags</item>
+        <item>Tanker Load</item>
         <item>Custom Made Entry</item>
     </string-array>
 

@@ -20,9 +20,12 @@ import com.firstidea.android.brokerx.http.model.Notification;
 import com.firstidea.android.brokerx.http.model.NotificationListDTO;
 import com.firstidea.android.brokerx.http.model.User;
 import com.firstidea.android.brokerx.model.NotificationItem;
+import com.firstidea.android.brokerx.utils.ApptDateUtils;
 import com.firstidea.android.brokerx.widget.AppProgressDialog;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +82,7 @@ public class NotificationActivity extends AppCompatActivity {
                 if (messageDTO.isSuccess()) {
                     mList = Notification.createListFromJson(messageDTO.getData());
                     Map<String, List<Notification>> notificationMap = new HashMap<String, List<Notification>>();
+                    Map<String, Long> lastNotificationTimeStampMap = new HashMap<String, Long>();
                     Map<String, Integer> unReadCountMap = new HashMap<String, Integer>();
                     for (Notification notification : mList) {
                         String key = notification.getLeadID().toString() + ":" + notification.getFromUserID();
@@ -91,6 +95,14 @@ public class NotificationActivity extends AppCompatActivity {
                         if(!notification.getRead()) {
                             unreadCount++;
                         }
+                        long timestamp = ApptDateUtils.getServerFormatedDateAndTime(notification.getCreatedDttm()).getTime();
+                        if(lastNotificationTimeStampMap.containsKey(key)) {
+                            long prevTimeStamp = lastNotificationTimeStampMap.get(key);
+                            if(prevTimeStamp > timestamp) {
+                                timestamp = prevTimeStamp;
+                            }
+                        }
+                        lastNotificationTimeStampMap.put(key, timestamp);
                         notifications.add(notification);
                         notificationMap.put(key, notifications);
                         unReadCountMap.put(key, unreadCount);
@@ -106,10 +118,17 @@ public class NotificationActivity extends AppCompatActivity {
                         notificationListDTO.setLeadID(leadID);
                         notificationListDTO.setUnReadCount(unreadCount);
                         notificationListDTO.setFromUserID(fromUserID);
+                        notificationListDTO.setLastNotificationTimeStamp(lastNotificationTimeStampMap.get(key));
                         notificationListDTO.setNotifications(notifications);
                         notificationListDTOs.add(notificationListDTO);
                     }
 //                    NotificationADapter mAdapter = new NotificationADapter(mContext, mList);
+                    Collections.sort(notificationListDTOs, new Comparator<NotificationListDTO>() {
+                        @Override
+                        public int compare(NotificationListDTO lhs, NotificationListDTO rhs) {
+                            return rhs.getLastNotificationTimeStamp().compareTo(lhs.getLastNotificationTimeStamp());
+                        }
+                    });
                     NewNotificationADapter mAdapter = new NewNotificationADapter(mContext, notificationListDTOs);
                     mRecyclerView.setAdapter(mAdapter);
                 }

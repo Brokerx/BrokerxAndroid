@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,8 @@ import com.firstidea.android.brokerx.MyHistoryActivity;
 import com.firstidea.android.brokerx.MycircleActivity;
 import com.firstidea.android.brokerx.PendingEntriesActivity;
 import com.firstidea.android.brokerx.R;
+import com.firstidea.android.brokerx.enums.LeadCurrentStatus;
+import com.firstidea.android.brokerx.enums.LeadType;
 import com.firstidea.android.brokerx.http.model.Lead;
 import com.firstidea.android.brokerx.model.HomeHeader;
 import com.firstidea.android.brokerx.widget.HeaderRecyclerViewAdapter;
@@ -103,7 +106,18 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
                 mOnCardClickListener.onCardClick(holder.mItem);
             }
         });
-
+        String myStatus = holder.mItem.getBrokerStatus();
+        if (myStatus.equals(LeadCurrentStatus.Accepted.getStatus())) {
+            holder.currentStatus.setImageResource(R.drawable.accept_circle);
+        } else if (myStatus.equals(LeadCurrentStatus.Rejected.getStatus())) {
+            holder.currentStatus.setImageResource(R.drawable.reject_circle);
+        } else if (myStatus.equals(LeadCurrentStatus.Pending.getStatus())) {
+            holder.currentStatus.setImageResource(R.drawable.pending_circle);
+        } else if (myStatus.equals(LeadCurrentStatus.Reverted.getStatus())) {
+            holder.currentStatus.setImageResource(R.drawable.accept_circle_gray);
+        } else if (myStatus.equals(LeadCurrentStatus.Waiting.getStatus())) {
+            holder.currentStatus.setImageResource(R.drawable.waiting_circle);
+        }
     }
 
    /* @Override protected void onBindFooterViewHolder(RecyclerView.ViewHolder holder, int position) {
@@ -170,6 +184,7 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
         public final TextView brokerage;
         public final TextView qty;
         public final TextView dttm;
+        public final ImageView currentStatus;
         public Lead mItem;
 
         public ViewHolder(View view) {
@@ -181,6 +196,7 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
             brokerage = (TextView) view.findViewById(R.id.brokerage);
             qty = (TextView) view.findViewById(R.id.qty);
             dttm = (TextView) view.findViewById(R.id.dttm);
+            currentStatus = (ImageView) view.findViewById(R.id.cur_statusIcon);
         }
 
         @Override

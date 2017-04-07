@@ -115,7 +115,7 @@ public class BrokerHomeFragment extends Fragment {
         return rootView;
     }
 
-    private void getBrokerLeads() {
+    public void getBrokerLeads() {
         final Dialog dialog = AppProgressDialog.show(mContext);
         User user = User.getSavedUser(mContext);
         ObjectFactory.getInstance().getLeadServiceInstance().getBrokerLeads(user.getUserID(), null, null, null, null, new Callback<MessageDTO>() {

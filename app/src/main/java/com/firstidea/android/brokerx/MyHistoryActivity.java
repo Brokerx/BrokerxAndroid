@@ -70,6 +70,8 @@ public class MyHistoryActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         mContext = this;
         me = User.getSavedUser(this);
+        mStartDateView = (TextView) findViewById(R.id.starDate);
+        mEndDateView = (TextView) findViewById(R.id.endDate);
 
         if (getIntent().hasExtra("IS_FROM_ANALYSYS")) {
             mIsFromAnalysis = getIntent().getExtras().getBoolean("IS_FROM_ANALYSYS");
@@ -81,6 +83,25 @@ public class MyHistoryActivity extends AppCompatActivity {
             if (getIntent().hasExtra(LeadType.KEY_LEAD_TYPE)) {
                 leadType = getIntent().getExtras().getString(LeadType.KEY_LEAD_TYPE);
             }
+            if (getIntent().hasExtra("StartDate") && getIntent().hasExtra("EnndDate")) {
+                long startDate = getIntent().getExtras().getLong("StartDate");
+                long endDate = getIntent().getExtras().getLong("EnndDate");
+                mStartDate = new Date(startDate);
+                mEndDate = new Date(endDate);
+                mStartDateView.setText(SDF.format(mStartDate));
+                mEndDateView.setText(SDF.format(mEndDate));
+                Calendar endCalendar = Calendar.getInstance();
+                endCalendar.setTime(mEndDate);
+                endYear = endCalendar.get(Calendar.YEAR);
+                endMonth =endCalendar.get(Calendar.MONTH);
+                endDay = endCalendar.get(Calendar.DAY_OF_MONTH);
+
+                Calendar startCalendar = Calendar.getInstance();
+                startCalendar.setTime(mEndDate);
+                startYear = startCalendar.get(Calendar.YEAR);
+                startMonth =startCalendar.get(Calendar.MONTH);
+                startDay = startCalendar.get(Calendar.DAY_OF_MONTH);
+            }
 
         }
 
@@ -89,8 +110,7 @@ public class MyHistoryActivity extends AppCompatActivity {
         startMonth = endMonth = cal.get(Calendar.MONTH);
         startYear = endYear = cal.get(Calendar.YEAR);
 
-        mStartDateView = (TextView) findViewById(R.id.starDate);
-        mEndDateView = (TextView) findViewById(R.id.endDate);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.history_recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
@@ -144,7 +164,11 @@ public class MyHistoryActivity extends AppCompatActivity {
         if (mStartDate != null && mEndDate != null) {
             SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
             startDate = SDF.format(mStartDate);
-            enadDate = SDF.format(mEndDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(mEndDate);
+            calendar.add(Calendar.DAY_OF_MONTH,1);
+            Date newEndDate = calendar.getTime();
+            enadDate = SDF.format(newEndDate);
         }
         ObjectFactory.getInstance().getLeadServiceInstance().getLeads(me.getUserID(), leadType, "D", itemName, brokerID, startDate, enadDate, new Callback<MessageDTO>() {
             @Override
@@ -177,7 +201,11 @@ public class MyHistoryActivity extends AppCompatActivity {
         if (mStartDate != null && mEndDate != null) {
             SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
             startDate = SDF.format(mStartDate);
-            enadDate = SDF.format(mEndDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(mEndDate);
+            calendar.add(Calendar.DAY_OF_MONTH,1);
+            Date newEndDate = calendar.getTime();
+            enadDate = SDF.format(newEndDate);
         }
         ObjectFactory.getInstance().getLeadServiceInstance().getHistory(me.getUserID(), startDate, enadDate, new Callback<MessageDTO>() {
             @Override

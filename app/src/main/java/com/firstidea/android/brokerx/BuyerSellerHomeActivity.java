@@ -25,9 +25,12 @@ import com.firstidea.android.brokerx.adapter.BuyerSellerHomeEnquiriesAdapter;
 import com.firstidea.android.brokerx.constants.AppConstants;
 import com.firstidea.android.brokerx.enums.LeadCurrentStatus;
 import com.firstidea.android.brokerx.enums.LeadType;
+import com.firstidea.android.brokerx.enums.NotificationType;
+import com.firstidea.android.brokerx.fragment.broker.BrokerHomeFragment;
 import com.firstidea.android.brokerx.http.ObjectFactory;
 import com.firstidea.android.brokerx.http.model.Lead;
 import com.firstidea.android.brokerx.http.model.MessageDTO;
+import com.firstidea.android.brokerx.http.model.Notification;
 import com.firstidea.android.brokerx.http.model.User;
 import com.firstidea.android.brokerx.model.HomeHeader;
 import com.firstidea.android.brokerx.utils.AppUtils;
@@ -295,6 +298,15 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
                         unreadNotifCount.setVisibility(View.VISIBLE);
                     }
                     unreadNotifCount.setText(count + "");
+                    unreadNotifCount.setText(count + "");
+                    Notification notification = intent.getParcelableExtra("notification");
+                    if(notification != null && (notification.getType().equals(NotificationType.LEAD_CREATED)
+                            || notification.getType().equals(NotificationType.LEAD_REVERTED)
+                            || notification.getType().equals(NotificationType.DEAL_DONE)
+                            || notification.getType().equals(NotificationType.LEAD_STATUS_CHANGED)
+                            || notification.getType().equals(NotificationType.MOVED_TO_PENDING_LEAD))) {
+                        getLeads();
+                    }
                 } else {
                     Integer count = 1;
                     if (unreadChatCount.getVisibility() == View.VISIBLE) {

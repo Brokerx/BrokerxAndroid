@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -153,6 +154,10 @@ public class SignupActivity extends AppCompatActivity {
                 if (isChecked) {
                     mBrokerTip.setVisibility(View.VISIBLE);
                     editDealsIn.setVisibility(View.VISIBLE);
+                    for (int i=0; i <3; i++) {
+                        Toast.makeText(mContext, "Place Comma After Each Chemical Name To Add Multiple Items", Toast.LENGTH_LONG).show();
+
+                    }
                 } else {
                     mBrokerTip.setVisibility(View.GONE);
                     editDealsIn.setVisibility(View.GONE);
@@ -207,6 +212,8 @@ public class SignupActivity extends AppCompatActivity {
 
         registerUser();
     }
+
+
 
 
     private void showSelectDialog() {

@@ -244,4 +244,6 @@ public class ChatActivity extends AppCompatActivity {
         AudioPlayer audioPlayer = new AudioPlayer(this);
         audioPlayer.play(typeID);
     }
+
+
 }

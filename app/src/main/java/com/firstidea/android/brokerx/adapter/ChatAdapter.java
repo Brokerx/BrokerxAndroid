@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firstidea.android.brokerx.R;
@@ -30,6 +31,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     private final int VIEW_TYPE_ME = 0;
     private final int VIEW_TYPE_OTHER = 1;
 
+    public interface OnItemLongClickListener {
+        public boolean onItemLongClicked(int position);
+    }
+
     /**
      * <b>public interface OnCardListener</b>
      * <br>Interface to implement the OnClick on Card</br>
@@ -42,6 +47,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         private TextView msg;
         private TextView dttm;
         private ImageView img;
+        private RelativeLayout chatlauout;
+
 
         public ChatViewHolder(View itemView) {
             super(itemView);
@@ -49,6 +56,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             msg = (TextView) itemView.findViewById(R.id.msg);
             dttm = (TextView) itemView.findViewById(R.id.date_time);
             img = (ImageView) itemView.findViewById(R.id.img);
+            chatlauout = (RelativeLayout) itemView.findViewById(R.id.chat1_layout);
 
         }
     }
@@ -62,17 +70,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     @Override
     public int getItemViewType(int position) {
         Chat chat = mHList.get(position);
-        if(chat.getFromUserID().equals(me.getUserID())) {
+        if (chat.getFromUserID().equals(me.getUserID())) {
             return VIEW_TYPE_ME;
         } else {
-            return  VIEW_TYPE_OTHER;
+            return VIEW_TYPE_OTHER;
         }
     }
 
     @Override
     public ChatAdapter.ChatViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
-        if(viewType == VIEW_TYPE_ME) {
+        if (viewType == VIEW_TYPE_ME) {
             v = LayoutInflater.from(mContext).inflate(R.layout.row_conversation_user, parent, false);
         } else {
             v = LayoutInflater.from(mContext).inflate(R.layout.row_conversation_other, parent, false);
@@ -81,15 +89,40 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         return ChatViewHolder;
     }
 
+
     @Override
     public void onBindViewHolder(ChatAdapter.ChatViewHolder holder, int position) {
 
         final Chat chat = mHList.get(position);
         holder.dttm.setText(chat.getCreatedDttm());
-        if(chat.getType().equals(ChatType.IMAGE.getType())) {
+        if (chat.getType().equals(ChatType.IMAGE.getType())) {
             holder.img.setVisibility(View.VISIBLE);
             holder.msg.setVisibility(View.GONE);
-            String imgUrl = SingletonRestClient.BASE_IMAGE_URL +  chat.getMessage(); //"thumb_" +
+            holder.chatlauout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    TextView tv = null;
+
+                    String stringYouExtracted = tv.getText().toString();
+                    int startIndex = tv.getSelectionStart();
+                    int endIndex = tv.getSelectionEnd();
+                    //stringYouExtracted = stringYouExtracted.subString(startIndex, endIndex);
+                    if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+                        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                        clipboard.setText(stringYouExtracted);
+                    } else {
+                        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                        android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", stringYouExtracted);
+                        clipboard.setPrimaryClip(clip);
+                    }
+//                    ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(CLIPBOARD_SERVICE);
+//                    clipboard.setText(stringYouExtracted);
+//                   // tv.setMovementMethod(LinkMovementMethod.getInstance());
+//                    Toast.makeText(mContext, "Copied to Clipboard", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
+            String imgUrl = SingletonRestClient.BASE_IMAGE_URL + chat.getMessage(); //"thumb_" +
             Picasso.with(mContext).load(chat.getMessage())
                     .placeholder(R.drawable.ic_img_stub)
                     .error(R.drawable.ic_img_stub)
@@ -106,7 +139,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             holder.msg.setVisibility(View.VISIBLE);
             holder.msg.setText(chat.getMessage());
         }
-
 
 
     }

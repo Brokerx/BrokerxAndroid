@@ -3,22 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/splash"
     tools:context="com.firstidea.android.brokerx.SplashActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
-    <ayar.oktay.advancedtextview.AdvancedTextView
-        android:id="@+id/fullscreen_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        app:font="droid_sans_bold"
-        android:text="Broker-X"
-        android:textColor="@android:color/white"
-        android:textSize="50sp"
-        android:textStyle="bold" />
+    <!--<ayar.oktay.advancedtextview.AdvancedTextView-->
+        <!--android:id="@+id/fullscreen_content"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--app:font="droid_sans_bold"-->
+        <!--android:text="Broker-X"-->
+        <!--android:textColor="@android:color/white"-->
+        <!--android:textSize="50sp"-->
+        <!--android:textStyle="bold" />-->
+
 
 
     <LinearLayout
@@ -26,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
+
         android:orientation="horizontal"
         android:padding="5dp"
         tools:ignore="UselessParent"

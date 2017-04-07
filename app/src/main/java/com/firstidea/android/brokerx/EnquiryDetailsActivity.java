@@ -301,7 +301,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                     .into(userImage);
         }
         basicPriceWithUnit.setText(basicPriceString);
-        exciseDutyWithUnit.setText(mLead.getExciseUnit() + " Rs/" + mUnits[mLead.getExciseUnit()]);
+        exciseDutyWithUnit.setText(mLead.getExciseDuty() + " Rs/" + mUnits[mLead.getExciseUnit()]);
         transportCharges.setText(mLead.getTransportCharges() + " Rs/" + mUnits[mLead.getBasicPriceUnit()]);
         miscCharges.setText(mLead.getMiscCharges() + " Rs");
         float basicPriceAmt = mLead.getBasicPrice() * mLead.getQty();

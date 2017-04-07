@@ -11,6 +11,7 @@ public interface Constants {
     String KEY_USER_TYPE_SELLER = "Seller";
     String KEY_USER_TYPE_BUYER = "Buyer";
     String KEY_USER_TYPE_BROKER = "Broker";
+    String KEY_LEAD_LIST_UPDATED = "LeadListUpdated";
     String KEY_USER_TYPE = "UserType";
     String KEY_IS_FOR_SELECTION = "IsForSelection";
     String IS_FROM_NOTIFICATION = "isFromNotification";
@@ -29,4 +30,5 @@ public interface Constants {
     //Constants for Intent Actions
     String ACTION_NEW_MESSAGE = "NewMessageReceived";
     String ACTION_NEW_NOTIFICATION = "NewNotificationReceived";
+    String ACTION_NEW_LEAD = "NewLeadReceived";
 }

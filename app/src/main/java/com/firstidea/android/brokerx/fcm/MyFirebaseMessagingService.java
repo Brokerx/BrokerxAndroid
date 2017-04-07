@@ -71,6 +71,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             } else if(type != null && type.equals(TYPE_NEW_LEAD_ADDED)) {
                 String dataContent =  dataMap.get("data");
                 generateNotification("Broker-X", dataContent+" has created a lead for you", type, null);
+                SharedPreferencesUtil.putSharedPreferencesBoolean(this, Constants.KEY_LEAD_LIST_UPDATED, true);
+                //also send broadcast
             }else if(type != null && type.equals(TYPE_NEW_NOTIFICATION)) {
                 String dataContent =  dataMap.get("data");
                 generateNotification("Broker-X", "New Notification", type, null);

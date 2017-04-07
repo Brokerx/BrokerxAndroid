@@ -257,7 +257,7 @@ public class BrokerHomeActivity extends AppCompatActivity
                         unreadNotifCount.setVisibility(View.VISIBLE);
                     }
                     unreadNotifCount.setText(count + "");
-                } else {
+                } else { //chat
                     Integer count = 1;
                     if (unreadChatCount.getVisibility() == View.VISIBLE) {
                         String countString = unreadChatCount.getText().toString();
@@ -270,6 +270,21 @@ public class BrokerHomeActivity extends AppCompatActivity
             }
         }
     };
+
+     BroadcastReceiver newLeadReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Constants.ACTION_NEW_LEAD)) {
+
+                String type = intent.getStringExtra("type");
+                if(currentFragment instanceof BrokerHomeFragment) {
+
+                }
+            }
+        }
+    };
+
     @Override
     protected void onResume() {
         super.onResume();

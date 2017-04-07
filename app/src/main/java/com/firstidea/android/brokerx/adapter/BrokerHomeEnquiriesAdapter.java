@@ -5,9 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firstidea.android.brokerx.R;
+import com.firstidea.android.brokerx.enums.LeadCurrentStatus;
+import com.firstidea.android.brokerx.enums.LeadType;
 import com.firstidea.android.brokerx.http.model.Lead;
 
 import java.util.List;
@@ -22,6 +25,7 @@ public class BrokerHomeEnquiriesAdapter extends RecyclerView.Adapter<BrokerHomeE
     private String[] qtys;
     private OnCardClickListener mOnCardClickListener;
     String availableLabel;
+    String leadType;
 
     public interface OnCardClickListener {
         void onCardClick(Lead lead);
@@ -30,6 +34,7 @@ public class BrokerHomeEnquiriesAdapter extends RecyclerView.Adapter<BrokerHomeE
         mValues = items;
         qtys = context.getResources().getStringArray(R.array.qty_options);
         this.mOnCardClickListener = mOnCardClickListener;
+        this.leadType= type;
         this.availableLabel = type.startsWith("B")?" to Buy":" to Sell";
     }
 
@@ -56,6 +61,23 @@ public class BrokerHomeEnquiriesAdapter extends RecyclerView.Adapter<BrokerHomeE
                 mOnCardClickListener.onCardClick(holder.mItem);
             }
         });
+        String myStatus ="";
+        if (holder.mItem.getType().equals(LeadType.BUYER.getType())) {
+            myStatus = holder.mItem.getBuyerStatus();
+        } else {
+            myStatus = holder.mItem.getSellerStatus();
+        }
+        if (myStatus.equals(LeadCurrentStatus.Accepted.getStatus())) {
+            holder.currentStatus.setImageResource(R.drawable.accept_circle);
+        } else if (myStatus.equals(LeadCurrentStatus.Rejected.getStatus())) {
+            holder.currentStatus.setImageResource(R.drawable.reject_circle);
+        } else if (myStatus.equals(LeadCurrentStatus.Pending.getStatus())) {
+            holder.currentStatus.setImageResource(R.drawable.pending_circle);
+        } else if (myStatus.equals(LeadCurrentStatus.Reverted.getStatus())) {
+            holder.currentStatus.setImageResource(R.drawable.accept_circle_gray);
+        } else if (myStatus.equals(LeadCurrentStatus.Waiting.getStatus())) {
+            holder.currentStatus.setImageResource(R.drawable.waiting_circle);
+        }
     }
 
     @Override
@@ -71,6 +93,7 @@ public class BrokerHomeEnquiriesAdapter extends RecyclerView.Adapter<BrokerHomeE
         public final TextView brokerage;
         public final TextView qty;
         public final TextView dttm;
+        public final ImageView currentStatus;
         public Lead mItem;
 
         public ViewHolder(View view) {
@@ -82,6 +105,8 @@ public class BrokerHomeEnquiriesAdapter extends RecyclerView.Adapter<BrokerHomeE
             brokerage = (TextView) view.findViewById(R.id.brokerage);
             qty = (TextView) view.findViewById(R.id.qty);
             dttm = (TextView) view.findViewById(R.id.dttm);
+            currentStatus = (ImageView) view.findViewById(R.id.cur_statusIcon);
+
         }
 
         @Override

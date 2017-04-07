@@ -43,6 +43,7 @@ public class BrokerHomeFragment extends Fragment {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private int mLastSelection= 0;
     private BrokerHomeViewPagerAdapter viewPagerAdapter;
     private Activity mContext;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -155,8 +156,25 @@ public class BrokerHomeFragment extends Fragment {
         final TabLayout.Tab sellerTab = tabLayout.newTab();
         tabLayout.addTab(buyerTab, 0);
         tabLayout.addTab(sellerTab, 1);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+//        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mLastSelection = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         tabLayout.setupWithViewPager(viewPager);
+        viewPager.setCurrentItem(mLastSelection);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

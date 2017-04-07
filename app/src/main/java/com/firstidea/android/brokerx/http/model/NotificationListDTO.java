@@ -10,6 +10,7 @@ public class NotificationListDTO {
     private Integer leadID;
     private Integer fromUserID;
     private int unReadCount;
+    private Long lastNotificationTimeStamp;
     private List<Notification> notifications;
 
     public Integer getLeadID() {
@@ -42,5 +43,13 @@ public class NotificationListDTO {
 
     public void setNotifications(List<Notification> notifications) {
         this.notifications = notifications;
+    }
+
+    public Long getLastNotificationTimeStamp() {
+        return lastNotificationTimeStamp;
+    }
+
+    public void setLastNotificationTimeStamp(Long lastNotificationTimeStamp) {
+        this.lastNotificationTimeStamp = lastNotificationTimeStamp;
     }
 }

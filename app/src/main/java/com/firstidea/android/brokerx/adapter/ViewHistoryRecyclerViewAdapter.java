@@ -81,18 +81,32 @@ public class ViewHistoryRecyclerViewAdapter extends RecyclerView.Adapter<ViewHis
             e.printStackTrace();
         }
         StringBuilder description = new StringBuilder();
-        if(mItem.getFieldsAltered().contains("created")) {
-
+        if(mItem.getFieldsAltered().contains("Created")) {
+            description.append(mItem.getCreatedUserType()+" ");
+        }else if(mItem.getFieldsAltered().contains("Status")) {
+            if(mItem.getCreatedUserID() == loggedInUser.getUserID()) {
+                description.append("You Had ");
+            } else if(mItem.getCreatedUserID() == mItem.getBroker().getUserID()){
+                description.append("Broker Had ");
+            } else if(mItem.getAssignedToUser() != null &&  mItem.getCreatedUserID() == mItem.getAssignedToUser().getUserID()){
+                if(mItem.getType().startsWith("S")) {
+                    description.append("Buyer had changed the status ");
+                } else {
+                    description.append("Seller had changed the status ");
+                }
+            }
         }else if(mItem.getCreatedUserID() == loggedInUser.getUserID()) {
             description.append("You have changed the fields: ");
         } else if(mItem.getCreatedUserID() == mItem.getBroker().getUserID()){
-            description.append("Broker "+mItem.getBroker().getFullName()+" had requested to change the filelds: ");
+            description.append("Broker "+mItem.getBroker().getFullName()+" requested to change the filelds: ");
         } else if(mItem.getAssignedToUser() != null &&  mItem.getCreatedUserID() == mItem.getAssignedToUser().getUserID()){
             if(mItem.getType().startsWith("S")) {
-                description.append("Buyer requested to change the filelds ");
+                description.append("Buyer requested to change the filelds: ");
             } else {
-                description.append("Seller requested to change the filelds ");
+                description.append("Seller requested to change the filelds: ");
             }
+        } else {
+            description.append(mItem.getCreatedUserType()+" requested to change the filelds: ");
         }
         description.append(mItem.getFieldsAltered());
 

@@ -46,10 +46,7 @@ public class AddEnquiryStepFourActivity extends AppCompatActivity {
             }
         });
         final float basicPriceAmt = mLead.getBasicPrice() * mLead.getQty();
-        if(mLead.getLeadID() != null && mLead.getLeadID() > 0) {
-            float brokeragePerc = mLead.getBrokerageAmt() * 100/basicPriceAmt;
-            editBrokerage.setText(brokeragePerc+"");
-        }
+
 
         basicAmounttext.setText(Html.fromHtml("<b>Basic Price:</b> "+basicPriceAmt+" Rs."));
         editBrokerage.addTextChangedListener(new TextWatcher() {
@@ -69,6 +66,10 @@ public class AddEnquiryStepFourActivity extends AppCompatActivity {
 
             }
         });
+        if(mLead.getLeadID() != null && mLead.getLeadID() > 0) {
+            float brokeragePerc = mLead.getBrokerageAmt() * 100/basicPriceAmt;
+            editBrokerage.setText(brokeragePerc+"");
+        }
     }
 
     private float getFloatValue(String stringVal) {

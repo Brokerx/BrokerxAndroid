@@ -54,6 +54,7 @@ public class Lead implements Parcelable {
     private String createdDttm;
     private Integer LastUpdUserID;
     private String lastUpdDateTime;
+    private String createdUserType;
     User createdUser;
     User broker;
     User assignedToUser;
@@ -396,6 +397,14 @@ public class Lead implements Parcelable {
         isMoveToPending = moveToPending;
     }
 
+    public String getCreatedUserType() {
+        return createdUserType;
+    }
+
+    public void setCreatedUserType(String createdUserType) {
+        this.createdUserType = createdUserType;
+    }
+
     public Lead() {
     }
 
@@ -458,6 +467,7 @@ public class Lead implements Parcelable {
         dest.writeString(this.freeStoragePeriod);
         dest.writeString(this.preferredSellerName);
         dest.writeString(this.comments);
+        dest.writeString(this.createdUserType);
         dest.writeString(this.createdDttm);
         dest.writeValue(this.LastUpdUserID);
         dest.writeString(this.lastUpdDateTime);
@@ -503,6 +513,7 @@ public class Lead implements Parcelable {
         this.freeStoragePeriod = in.readString();
         this.preferredSellerName = in.readString();
         this.comments = in.readString();
+        this.createdUserType = in.readString();
         this.createdDttm = in.readString();
         this.LastUpdUserID = (Integer) in.readValue(Integer.class.getClassLoader());
         this.lastUpdDateTime = in.readString();
@@ -524,4 +535,5 @@ public class Lead implements Parcelable {
             return new Lead[size];
         }
     };
+
 }

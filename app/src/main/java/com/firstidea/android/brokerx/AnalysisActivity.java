@@ -119,6 +119,8 @@ public class AnalysisActivity extends AppCompatActivity {
                 Intent intent = new Intent(mContext, MyHistoryActivity.class);
                 intent.putExtra("IS_FROM_ANALYSYS", true);
                 intent.putExtra("ItemName", item);
+                intent.putExtra("StartDate", mStartDate.getTime());
+                intent.putExtra("EnndDate", mEndDate.getTime());
                 intent.putExtra(LeadType.KEY_LEAD_TYPE, type);
                 intent.putExtra("BrokerID", mSelectedBrokerID);
                 startActivity(intent);

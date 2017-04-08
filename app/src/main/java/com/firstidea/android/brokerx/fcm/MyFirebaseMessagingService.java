@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.firstidea.android.brokerx.BrokerHomeActivity;
@@ -22,6 +23,7 @@ import com.firstidea.android.brokerx.R;
 import com.firstidea.android.brokerx.SplashActivity;
 import com.firstidea.android.brokerx.enums.ChatType;
 import com.firstidea.android.brokerx.http.model.Chat;
+import com.firstidea.android.brokerx.http.model.Notification;
 import com.firstidea.android.brokerx.utils.SharedPreferencesUtil;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -75,10 +77,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 //also send broadcast
             }else if(type != null && type.equals(TYPE_NEW_NOTIFICATION)) {
                 String dataContent =  dataMap.get("data");
+                String payload =  dataMap.get("payload");
+                Notification notification = null;
+                if(!TextUtils.isEmpty(payload)) {
+                    Gson gson = new Gson();
+                    notification = gson.fromJson(payload, Notification.class);
+                }
                 generateNotification("Broker-X", "New Notification", type, null);
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Constants.ACTION_NEW_NOTIFICATION);
                 broadcastIntent.putExtra("type","notification");
+                broadcastIntent.putExtra("notification", notification);
                 this.sendBroadcast(broadcastIntent);
             }else if(type != null && type.equals(TYPE_CONNECTION_REQUEST_ACCEPTED)) {
                 String dataContent =  dataMap.get("data");

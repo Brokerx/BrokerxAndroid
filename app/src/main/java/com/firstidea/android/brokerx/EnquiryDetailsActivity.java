@@ -396,30 +396,64 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        Revert_Chat_layout.setVisibility(View.VISIBLE);
-                        Rej_Acc_Layout.setVisibility(View.VISIBLE);
-                        lblAccept.setText("Move To Pending");
-                        btnAccept.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                changeStatus(LeadCurrentStatus.Pending.getStatus(), LeadCurrentStatus.Pending.getStatus());
+                        // this if else may be removed as if deal is going on with assigned seller and seller want some changes in price that buyer has giveg
+                        // then broker must be albe to revert it or reject the deal
+                        // if such requirement came then just remove else and if condition
+                        if(mLead.getAssignedToUserID() == null) {
+                            Revert_Chat_layout.setVisibility(View.VISIBLE);
+                            Rej_Acc_Layout.setVisibility(View.VISIBLE);
+                            lblAccept.setText("Move To Pending");
+                            btnAccept.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    changeStatus(LeadCurrentStatus.Pending.getStatus(), LeadCurrentStatus.Pending.getStatus());
+                                }
+                            });
+                            btnReOpen.setVisibility(View.VISIBLE);
+                            if (mLead.getType().equals(LeadType.BUYER.getType())) {
+                                lblReOpen.setText("Assign Seller");
+                            } else {
+                                lblReOpen.setText("Assign Buyer");
                             }
-                        });
-                        btnReOpen.setVisibility(View.VISIBLE);
-                        if (mLead.getType().equals(LeadType.BUYER.getType())) {
-                            lblReOpen.setText("Assign Seller");
+                            btnReOpen.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(EnquiryDetailsActivity.this, MycircleActivity.class);
+                                    intent.putExtra(Constants.KEY_IS_FOR_SELECTION, true);
+                                    intent.putExtra(Constants.KEY_EXCLUDE_USER_ID, mLead.getCreatedUserID());
+                                    startActivityForResult(intent, ASIGN_USER_REQ_CODE);
+                                    ;
+                                    ;
+                                }
+                            });
                         } else {
-                            lblReOpen.setText("Assign Buyer");
+                            /* TODO also add view to xml for showwing assigned user name and
+                             also add onclick listner on name to open Assigned user lead */
+                            Revert_Chat_layout.setVisibility(View.GONE);
+                            Rej_Acc_Layout.setVisibility(View.GONE);
+                            btnReOpen.setVisibility(View.VISIBLE);
+                            lblReOpen.setText("Chat");
+                            btnReOpen.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(EnquiryDetailsActivity.this, ChatActivity.class);
+                                    intent.putExtra(Constants.OTHER_USER_NAME, userNameString.toString());
+                                    intent.putExtra(Constants.ITEM_NAME, itemName.getText().toString());
+                                    intent.putExtra(Constants.KEY_USER_TYPE, userOtherTypeString.toString());
+                                    intent.putExtra(Constants.KEY_USER_TYPE+"1", userTypeString.toString());
+                                    Integer userID = 0;
+                                    if (me.getUserID().equals(mLead.getCreatedUserID())) {
+                                        userID = mLead.getBrokerID();
+                                    } else {
+                                        userID = mLead.getCreatedUserID();
+                                    }
+                                    intent.putExtra(Constants.OTHER_USER_ID, userID);
+                                    intent.putExtra(Constants.LEAD_ID, mLead.getLeadID());
+                                    startActivity(intent);
+                                }
+                            });
+                            btnPending.setVisibility(View.GONE);
                         }
-                        btnReOpen.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(EnquiryDetailsActivity.this, MycircleActivity.class);
-                                intent.putExtra(Constants.KEY_IS_FOR_SELECTION, true);
-                                intent.putExtra(Constants.KEY_EXCLUDE_USER_ID, mLead.getCreatedUserID());
-                                startActivityForResult(intent, ASIGN_USER_REQ_CODE);;;
-                            }
-                        });
                     }
                 } else {
                     Revert_Chat_layout.setVisibility(View.GONE);

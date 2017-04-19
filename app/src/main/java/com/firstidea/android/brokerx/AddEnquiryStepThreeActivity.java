@@ -97,7 +97,8 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
             }
         });
 
-        if(mLead.getLeadID() != null && mLead.getLeadID() > 0) {
+        if((mLead.getLeadID() != null && mLead.getLeadID() > 0)
+            || (mLead.getBasicPrice() > 0)) {
             editBasicPrice.setText(mLead.getBasicPrice()+"");
             spinnerBasicUnit.setSelection(mLead.getBasicPriceUnit());
             editExciseDuty.setText(mLead.getExciseDuty()+"");

@@ -216,18 +216,26 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
         if (mLead.getType().equals(LeadType.BUYER.getType())) {
             created_user_type.setText("(Buyer)");
             assigned_user_type.setText("(Seller)");
-            Total_Brokerage.setText(mLead.getBuyerBrokerage() + " RS");
+            if (me.getUserID().equals(mLead.getCreatedUserID())) {
+                Total_Brokerage.setText(mLead.getBuyerBrokerage() + " RS");
+            } else {
+                Total_Brokerage.setText(mLead.getSellerBrokerage() + " RS");
+            }
         } else {
             created_user_type.setText("(Seller)");
             assigned_user_type.setText("(Buyer)");
-            Total_Brokerage.setText(mLead.getSellerBrokerage() + " RS");
+            if (me.getUserID().equals(mLead.getCreatedUserID())) {
+                Total_Brokerage.setText(mLead.getSellerBrokerage() + " RS");
+            } else {
+                Total_Brokerage.setText(mLead.getBuyerBrokerage() + " RS");
+            }
         }
         created_user_name.setText(createdUser.getFullName());
         assigned_user_name.setText(assignedUser.getFullName());
         broker_name.setText(brokerUser.getFullName());
         if (me.getUserID().equals(mLead.getCreatedUserID())) {
             created_user_name.setText("You");
-        } else {
+        } else if (assignedUser.getUserID().equals(mLead.getCreatedUserID())) {
             assigned_user_name.setText("You");
         }
 

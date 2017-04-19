@@ -61,13 +61,13 @@ public class AddEnquiryStepFiveActivity extends AppCompatActivity {
             }
         });
 
-        if (mLead.getLeadID() != null && mLead.getLeadID() > 0) {
+//        if (mLead.getLeadID() != null && mLead.getLeadID() > 0) {
             editAgainstForm.setText(mLead.getAgainstForm());
             editCreditPeriod.setText(mLead.getCreditPeriod());
             editFreeStorage.setText(mLead.getFreeStoragePeriod());
             editPrefSeller.setText(mLead.getPreferredSellerName());
             editComments.setText(mLead.getComments());
-        }
+//        }
     }
 
     private void validateAndCallService() {

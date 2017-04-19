@@ -186,14 +186,16 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                 changeStatus(LeadCurrentStatus.Rejected.getStatus(), LeadCurrentStatus.Rejected.getStatus());
             }
         });
-        btnRevert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EnquiryDetailsActivity.this, AddEnquiryFirstActivity.class);
-                intent.putExtra(Lead.KEY_LEAD, mLead);
-                startActivityForResult(intent, ACTION_ACTIVITY_REQ_CODE);
-            }
-        });
+        if(!lblRevert.getText().toString().contains("Assign")) {
+            btnRevert.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(EnquiryDetailsActivity.this, AddEnquiryFirstActivity.class);
+                    intent.putExtra(Lead.KEY_LEAD, mLead);
+                    startActivityForResult(intent, ACTION_ACTIVITY_REQ_CODE);
+                }
+            });
+        }
     }
 
     private void getLeadByID(Integer leadID) {
@@ -400,8 +402,25 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                         // then broker must be albe to revert it or reject the deal
                         // if such requirement came then just remove else and if condition
                         if(mLead.getAssignedToUserID() == null) {
+                            Rej_Acc_Layout.setVisibility(View.GONE);
                             Revert_Chat_layout.setVisibility(View.VISIBLE);
-                            Rej_Acc_Layout.setVisibility(View.VISIBLE);
+                            btnReOpen.setVisibility(View.GONE);
+                            if (mLead.getType().equals(LeadType.BUYER.getType())) {
+                                lblRevert.setText("Assign Seller");
+                            } else {
+                                lblRevert.setText("Assign Buyer");
+                            }
+                            btnRevert.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(EnquiryDetailsActivity.this, MycircleActivity.class);
+                                    intent.putExtra(Constants.KEY_IS_FOR_SELECTION, true);
+                                    intent.putExtra(Constants.KEY_EXCLUDE_USER_ID, mLead.getCreatedUserID());
+                                    startActivityForResult(intent, ASIGN_USER_REQ_CODE);
+                                }
+                            });
+
+                            /*Rej_Acc_Layout.setVisibility(View.VISIBLE);
                             lblAccept.setText("Move To Pending");
                             btnAccept.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -425,7 +444,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                                     ;
                                     ;
                                 }
-                            });
+                            });*/
                         } else {
                             /* TODO also add view to xml for showwing assigned user name and
                              also add onclick listner on name to open Assigned user lead */
@@ -720,9 +739,12 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         mLead.setLeadID(null);
         mLead.setBrokerStatus(LeadCurrentStatus.Reverted.getStatus());
         mLead.setLastUpdUserID(me.getUserID());
-        final Dialog dialog = AppProgressDialog.show(this);
-       /* LeadService leadService = SingletonRestClient.createService(LeadService.class, this);
-        leadService.saveLead(mLead, new Callback<MessageDTO>() {*/
+
+        Intent intent = new Intent(EnquiryDetailsActivity.this, AddEnquiryFirstActivity.class);
+        intent.putExtra(Lead.KEY_LEAD, mLead);
+        startActivityForResult(intent, ACTION_ACTIVITY_REQ_CODE);
+
+        /*final Dialog dialog = AppProgressDialog.show(this);
         ObjectFactory.getInstance().getLeadServiceInstance().saveLead(mLead, new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
@@ -736,7 +758,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                 Toast.makeText(EnquiryDetailsActivity.this, "Some Error Occurred, Please Try again", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
-        });
+        });*/
     }
 
 }

@@ -300,11 +300,11 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
                     unreadNotifCount.setText(count + "");
                     unreadNotifCount.setText(count + "");
                     Notification notification = intent.getParcelableExtra("notification");
-                    if(notification != null && (notification.getType().equals(NotificationType.LEAD_CREATED)
-                            || notification.getType().equals(NotificationType.LEAD_REVERTED)
-                            || notification.getType().equals(NotificationType.DEAL_DONE)
-                            || notification.getType().equals(NotificationType.LEAD_STATUS_CHANGED)
-                            || notification.getType().equals(NotificationType.MOVED_TO_PENDING_LEAD))) {
+                    if(notification != null && (notification.getType().equals(NotificationType.LEAD_CREATED.getNotificationType())
+                            || notification.getType().equals(NotificationType.LEAD_REVERTED.getNotificationType())
+                            || notification.getType().equals(NotificationType.DEAL_DONE.getNotificationType())
+                            || notification.getType().equals(NotificationType.LEAD_STATUS_CHANGED.getNotificationType())
+                            || notification.getType().equals(NotificationType.MOVED_TO_PENDING_LEAD.getNotificationType()))) {
                         getLeads();
                     }
                 } else {

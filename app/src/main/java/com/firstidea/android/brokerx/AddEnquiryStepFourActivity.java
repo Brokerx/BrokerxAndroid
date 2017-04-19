@@ -66,7 +66,8 @@ public class AddEnquiryStepFourActivity extends AppCompatActivity {
 
             }
         });
-        if(mLead.getLeadID() != null && mLead.getLeadID() > 0) {
+        if((mLead.getLeadID() != null && mLead.getLeadID() > 0)
+                || mLead.getBrokerageAmt() > 0) {
             float brokeragePerc = mLead.getBrokerageAmt() * 100/basicPriceAmt;
             editBrokerage.setText(brokeragePerc+"");
         }

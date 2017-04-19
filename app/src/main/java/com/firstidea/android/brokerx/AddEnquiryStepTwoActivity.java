@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.transition.Transition;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,7 +40,7 @@ public class AddEnquiryStepTwoActivity extends AppCompatActivity {
                 validateAndNext();
             }
         });
-        if(mLead.getLeadID() != null && mLead.getLeadID() > 0) {
+        if(!TextUtils.isEmpty(mLead.getLocation())) {
             editLocation.setText(mLead.getLocation());
         }
     }

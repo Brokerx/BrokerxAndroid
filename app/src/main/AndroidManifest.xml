@@ -209,6 +209,14 @@
         <activity
             android:name=".ChatActivity"
             android:label="@string/title_activity_chat"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NewBrokerAnalysisActivity"
+            android:label="@string/title_activity_new_broker_analysis"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NewBuyerAnalysisActivity"
+            android:label="@string/title_activity_new_buyer_analysis"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

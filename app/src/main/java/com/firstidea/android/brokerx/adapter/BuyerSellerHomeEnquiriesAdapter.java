@@ -16,6 +16,7 @@ import com.firstidea.android.brokerx.AnalysisActivity;
 import com.firstidea.android.brokerx.EnquiryDetailsActivity;
 import com.firstidea.android.brokerx.MyHistoryActivity;
 import com.firstidea.android.brokerx.MycircleActivity;
+import com.firstidea.android.brokerx.NewBuyerAnalysisActivity;
 import com.firstidea.android.brokerx.PendingEntriesActivity;
 import com.firstidea.android.brokerx.R;
 import com.firstidea.android.brokerx.enums.LeadCurrentStatus;
@@ -240,7 +241,8 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
             this.analysis.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(HeaderViewHolder.this.analysis.getContext(), AnalysisActivity.class);
+//                    Intent intent = new Intent(HeaderViewHolder.this.analysis.getContext(), AnalysisActivity.class);
+                    Intent intent = new Intent(HeaderViewHolder.this.analysis.getContext(), NewBuyerAnalysisActivity.class);
                     HeaderViewHolder.this.analysis.getContext().startActivity(intent);
                     Toast.makeText(HeaderViewHolder.this.analysis.getContext(), "Clicked on Analysis", Toast.LENGTH_SHORT).show();
                 }

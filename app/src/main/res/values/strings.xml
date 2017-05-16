@@ -110,4 +110,6 @@
     <string name="title_activity_lead_status_history_details">LeadStatusHistoryDetails</string>
     <string name="title_activity_upload_document">UploadDocumentActivity</string>
     <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_new_broker_analysis">NewBrokerAnalysisActivity</string>
+    <string name="title_activity_new_buyer_analysis">NewBuyerAnalysisActivity</string>
 </resources>

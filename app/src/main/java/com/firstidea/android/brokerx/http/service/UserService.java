@@ -28,7 +28,7 @@ public interface UserService {
     @POST("/user/appLogin")
     void appLogin(@Field("userName") String userName,
                   @Field("password") String password,
-                   Callback<MessageDTO> callback);
+                  Callback<MessageDTO> callback);
 
     @Multipart
     @POST("/user/registerUser")
@@ -45,8 +45,8 @@ public interface UserService {
     @FormUrlEncoded
     @POST("/user/sendConnectionRequest")
     void sendConnectionRequest(@Field("fromUserID") Integer fromUserID,
-                      @Field("toUserID") Integer toUserID,
-                      Callback<MessageDTO> callback);
+                               @Field("toUserID") Integer toUserID,
+                               Callback<MessageDTO> callback);
 
     @FormUrlEncoded
     @POST("/user/updateBrokerDealsInItems")
@@ -69,6 +69,11 @@ public interface UserService {
     @POST("/user/getUserByMobile")
     void getUserByMobile(@Field("mobile") String mobile,
                          Callback<MessageDTO> callback);
+
+    @FormUrlEncoded
+    @POST("/user/getAnalysisDropDownValues")
+    void getAnalysisDropDownValues(@Field("userID") String mobile,
+                                   Callback<MessageDTO> callback);
 
 
 }

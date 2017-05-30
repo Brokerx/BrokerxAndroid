@@ -210,6 +210,7 @@ public class BrokerHomeActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_analysis) {
             Intent intent=new Intent(BrokerHomeActivity.this, AnalysisBrokerActivity.class);
+//            Intent intent=new Intent(BrokerHomeActivity.this, NewBrokerAnalysisActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_logout) {

@@ -40,7 +40,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class NewBuyerAnalysisActivity extends AppCompatActivity {
-    private Spinner mSpinner1, mSpinner2, mSpinner3, buyerSpinner, sellerSpinner,statusSpinner;
+    private Spinner mSpinner1, mSpinner2, mSpinner3, buyerSpinner, sellerSpinner, statusSpinner;
     private LinearLayout mTop11Broker, mTop11Broker1;
     private Context mContext = this;
 
@@ -53,14 +53,14 @@ public class NewBuyerAnalysisActivity extends AppCompatActivity {
     private Date mStartDate, mEndDate;
     private List<User> mUsers;
     SimpleDateFormat SDF = new SimpleDateFormat("dd MMM yyyy");
-    private int mSelectedBrokerID, mSelectedBuyerID, mSelectedSellerID;
-    private String mSelectedBrokerName="";
+    private int mSelectedBrokerID, mOtherUserID;// mSelectedBuyerID, mSelectedSellerID;
+    private String mSelectedBrokerName = "";
     private DropDownValuesDTO dropDownValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_broker_analysis);
+        setContentView(R.layout.activity_new_buyer_analysis);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Analysis");
@@ -73,6 +73,7 @@ public class NewBuyerAnalysisActivity extends AppCompatActivity {
         buyerSpinner = (Spinner) findViewById(R.id.buyer_spinner);
         sellerSpinner = (Spinner) findViewById(R.id.seller_spinner);
         statusSpinner = (Spinner) findViewById(R.id.status_spinner);
+/*
 
         mTop11Broker = (LinearLayout) findViewById(R.id.top11BrokerLinear);
         mTop11Broker.setOnClickListener(new View.OnClickListener() {
@@ -92,6 +93,7 @@ public class NewBuyerAnalysisActivity extends AppCompatActivity {
                 startActivity(topBroker);
             }
         });
+*/
 
         mStartDateView = (TextView) findViewById(R.id.starDate);
         mEndDateView = (TextView) findViewById(R.id.endDate);
@@ -105,14 +107,26 @@ public class NewBuyerAnalysisActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String item = mSpinner2.getSelectedItem().toString();
-                String type = mSpinner3.getSelectedItemPosition() == 0 ? "B" : "S";
+                String type = "";
+                if (mSpinner3.getSelectedItemPosition() != 0) {
+                    type = mSpinner3.getSelectedItemPosition() == 1 ? "B" : "S";
+                }
                 Intent intent = new Intent(mContext, MyHistoryActivity.class);
                 intent.putExtra("IS_FROM_ANALYSYS", true);
+                if (item.equals("Any")) {
+                    item = "";
+                }
                 intent.putExtra("ItemName", item);
-                intent.putExtra("StartDate", mStartDate.getTime());
-                intent.putExtra("EnndDate", mEndDate.getTime());
+                if (mStartDate != null) {
+                    intent.putExtra("StartDate", mStartDate.getTime());
+                }
+                if (mEndDate != null) {
+                    intent.putExtra("EnndDate", mEndDate.getTime());
+                }
                 intent.putExtra(LeadType.KEY_LEAD_TYPE, type);
                 intent.putExtra("BrokerID", mSelectedBrokerID);
+                intent.putExtra("UserID", me.getUserID());
+                intent.putExtra("OtherUsrerID", mOtherUserID);
                 startActivity(intent);
             }
         });
@@ -122,7 +136,7 @@ public class NewBuyerAnalysisActivity extends AppCompatActivity {
 
     private void getAnalysisDropDownValues() {
         final Dialog dialog = AppProgressDialog.show(mContext);
-        ObjectFactory.getInstance().getUserServiceInstance().getUserConnections(me.getUserID(), new Callback<MessageDTO>() {
+        ObjectFactory.getInstance().getUserServiceInstance().getAnalysisDropDownValues(me.getUserID(), new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 if (messageDTO.getMessageID().equals(MsgConstants.SUCCESS_ID)) {
@@ -150,6 +164,7 @@ public class NewBuyerAnalysisActivity extends AppCompatActivity {
                     mUsers = User.createListFromJson(messageDTO.getData());
 //                    initialiseSpinnerAdapter();
                 } else {
+
                     Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
                 }
                 dialog.dismiss();
@@ -181,19 +196,27 @@ public class NewBuyerAnalysisActivity extends AppCompatActivity {
         mSpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position != 0) {
-                    List<String> brokerItems = StringUtils.getListOfComaValues(brokers.get(position).getBrokerDealsInItems());
+                if (position != 0) {
+                    position--;
+                    List brokerItems = new ArrayList();
                     brokerItems.add("Any");
-                    mSelectedBrokerID = brokers.get(position+1).getUserID();
+                    if (brokers.get(position).getBrokerDealsInItems() != null) {
+                        brokerItems.addAll(StringUtils.getListOfComaValues(brokers.get(position).getBrokerDealsInItems()));
+                    }
+                    mSelectedBrokerID = brokers.get(position).getUserID();
                     //Secound Spinner ItemClick Event
                     ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, brokerItems);
                     adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mSpinner2.setAdapter(adapter2);
                 } else {
-                    List<String> brokerItems = dropDownValues.getItemsDealWith();
-                    brokerItems.add("Any");
+                    mSpinner2.setAdapter(null);
+                    List<String> brokerDealsItems = new ArrayList<>();
+                    brokerDealsItems.add("Any");
+                    if (dropDownValues.getItemsDealWith() != null) {
+                        brokerDealsItems.addAll(dropDownValues.getItemsDealWith());
+                    }
                     mSelectedBrokerID = 0;
-                    ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, brokerItems);
+                    ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, brokerDealsItems);
                     adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mSpinner2.setAdapter(adapter2);
                 }
@@ -204,24 +227,57 @@ public class NewBuyerAnalysisActivity extends AppCompatActivity {
 
             }
         });
-        List<String> brokerItems = dropDownValues.getItemsDealWith();
+        /*List<String> brokerItems = new ArrayList<>();
+        if(dropDownValues.getItemsDealWith() != null) {
+            brokerItems = dropDownValues.getItemsDealWith();
+        }
         brokerItems.add("Any");
         //Secound Spinner ItemClick Event
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, brokerItems);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner2.setAdapter(adapter2);
+        mSpinner2.setAdapter(adapter2);*/
 
-        final String[] spinnerItems = {"As Buyer", "As Seller"};
+        final String[] spinnerItems = {"Any", "Purchase", "Sales"};
         ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, spinnerItems);
         adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner3.setAdapter(adapter3);
 
+        mSpinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                buyerSpinner.setSelection(0);
+                sellerSpinner.setSelection(0);
+                if (position == 0) {
+                    buyerSpinner.setEnabled(true);
+                    sellerSpinner.setEnabled(true);
+                } else if (position == 1) {
+                    buyerSpinner.setEnabled(false);
+                    sellerSpinner.setEnabled(true);
+                } else {
+                    buyerSpinner.setEnabled(true);
+                    sellerSpinner.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        final String[] statusSpinnerItems = {"Any", "In Progress", "Completed"};
+        ArrayAdapter<String> statusSpinnerAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, statusSpinnerItems);
+        statusSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        statusSpinner.setAdapter(statusSpinnerAdapter);
+
         final List<User> buyers = new ArrayList<>();
         List<String> buyerNames = new ArrayList<>();
         buyerNames.add("Any");
-        for (User user : dropDownValues.getBuyers()) {
-            buyerNames.add(user.getFullName());
-            buyers.add(user);
+        if (dropDownValues.getBuyers() != null) {
+            for (User user : dropDownValues.getBuyers()) {
+                buyerNames.add(user.getFullName());
+                buyers.add(user);
+            }
         }
         ArrayAdapter<String> adapterBuyer = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, buyerNames);
         adapterBuyer.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -230,10 +286,10 @@ public class NewBuyerAnalysisActivity extends AppCompatActivity {
         buyerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position != 0) {
-                    mSelectedBuyerID = buyers.get(position+1).getUserID();
+                if (position != 0) {
+                    mOtherUserID = buyers.get(position - 1).getUserID();
                 } else {
-                    mSelectedBuyerID = 0;
+                    mOtherUserID = 0;
                 }
             }
 
@@ -246,9 +302,11 @@ public class NewBuyerAnalysisActivity extends AppCompatActivity {
         final List<User> sellers = new ArrayList<>();
         List<String> sellerNames = new ArrayList<>();
         sellerNames.add("Any");
-        for (User user : dropDownValues.getSellers()) {
-            sellerNames.add(user.getFullName());
-            sellers.add(user);
+        if (dropDownValues.getSellers() != null) {
+            for (User user : dropDownValues.getSellers()) {
+                sellerNames.add(user.getFullName());
+                sellers.add(user);
+            }
         }
         ArrayAdapter<String> adapterSeller = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, sellerNames);
         adapterSeller.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -257,10 +315,10 @@ public class NewBuyerAnalysisActivity extends AppCompatActivity {
         sellerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position != 0) {
-                    mSelectedSellerID = sellers.get(position+1).getUserID();
+                if (position != 0) {
+                    mOtherUserID = sellers.get(position - 1).getUserID();
                 } else {
-                    mSelectedSellerID = 0;
+                    mOtherUserID = 0;
                 }
             }
 
@@ -288,17 +346,17 @@ public class NewBuyerAnalysisActivity extends AppCompatActivity {
             }
         }, startYear, startMonth, startDay);
         Calendar c1 = Calendar.getInstance();
-        c1.set(Calendar.HOUR_OF_DAY,1);
-        c1.set(Calendar.MINUTE,0);
-        c1.set(Calendar.SECOND,0);
-        c1.set(Calendar.MILLISECOND,0);
+        c1.set(Calendar.HOUR_OF_DAY, 1);
+        c1.set(Calendar.MINUTE, 0);
+        c1.set(Calendar.SECOND, 0);
+        c1.set(Calendar.MILLISECOND, 0);
         dpd.getDatePicker().setMaxDate(c1.getTimeInMillis());
         dpd.show();
     }
 
 
     public void setEndDate(View view) {
-        DatePickerDialog dpd =  new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dpd = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar calendar = Calendar.getInstance();
@@ -313,10 +371,10 @@ public class NewBuyerAnalysisActivity extends AppCompatActivity {
             }
         }, endYear, endMonth, endDay);
         Calendar c1 = Calendar.getInstance();
-        c1.set(Calendar.HOUR_OF_DAY,1);
-        c1.set(Calendar.MINUTE,0);
-        c1.set(Calendar.SECOND,0);
-        c1.set(Calendar.MILLISECOND,0);
+        c1.set(Calendar.HOUR_OF_DAY, 1);
+        c1.set(Calendar.MINUTE, 0);
+        c1.set(Calendar.SECOND, 0);
+        c1.set(Calendar.MILLISECOND, 0);
         dpd.getDatePicker().setMaxDate(c1.getTimeInMillis());
         dpd.show();
     }

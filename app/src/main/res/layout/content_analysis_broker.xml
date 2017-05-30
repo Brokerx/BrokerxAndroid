@@ -131,6 +131,33 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/more_filters_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/left10"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:text="More Filters"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_right_black_24dp" />
+
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -138,7 +165,8 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:weightSum="1">
+                android:weightSum="1"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"

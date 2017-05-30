@@ -3,10 +3,7 @@ package com.firstidea.android.brokerx;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -16,18 +13,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firstidea.android.brokerx.adapter.MyHistoryAdapter;
-import com.firstidea.android.brokerx.enums.LeadCurrentStatus;
+import com.firstidea.android.brokerx.enums.ExciseType;
 import com.firstidea.android.brokerx.enums.LeadType;
 import com.firstidea.android.brokerx.http.ObjectFactory;
 import com.firstidea.android.brokerx.http.model.Lead;
 import com.firstidea.android.brokerx.http.model.MessageDTO;
 import com.firstidea.android.brokerx.http.model.User;
-import com.firstidea.android.brokerx.model.MyHistroyItem;
 import com.firstidea.android.brokerx.widget.AppProgressDialog;
 
 import java.text.SimpleDateFormat;
@@ -46,9 +42,9 @@ public class MyHistoryActivity extends AppCompatActivity {
     private Context mContext;
     private ArrayList<Lead> mLeads;
     private User me;
-    private boolean mIsFromAnalysis = false;
+    private boolean mIsFromAnalysis = false, isBrokerAnalysis;
     private Integer brokerID = null;
-    private String itemName = null;
+    private String itemName = null, brokerageStatus = "";
     private String leadType = null;
 
     private TextView mStartDateView, mEndDateView;
@@ -58,6 +54,10 @@ public class MyHistoryActivity extends AppCompatActivity {
     private Date mStartDate, mEndDate;
     SimpleDateFormat SDF = new SimpleDateFormat("dd MMM yyyy");
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private int userID, otherUserID;
+    private LinearLayout totalAmountLayout;
+    private TextView lblTotalAmount;
+    private TextView totalAmountValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +72,22 @@ public class MyHistoryActivity extends AppCompatActivity {
         me = User.getSavedUser(this);
         mStartDateView = (TextView) findViewById(R.id.starDate);
         mEndDateView = (TextView) findViewById(R.id.endDate);
+        lblTotalAmount = (TextView) findViewById(R.id.lbl_total_amount);
+        totalAmountValue = (TextView) findViewById(R.id.total_amount_value);
+        totalAmountLayout = (LinearLayout) findViewById(R.id.total_amount_layout);
 
         if (getIntent().hasExtra("IS_FROM_ANALYSYS")) {
             mIsFromAnalysis = getIntent().getExtras().getBoolean("IS_FROM_ANALYSYS");
+            if (getIntent().hasExtra("BrokerageStatus")) {
+                brokerageStatus = getIntent().getExtras().getString("BrokerageStatus");
+            }
+            if (getIntent().hasExtra("IS_BROKER_ANALYSYS")) {
+                isBrokerAnalysis = getIntent().getExtras().getBoolean("IS_BROKER_ANALYSYS");
+            }
             itemName = getIntent().getExtras().getString("ItemName");
+            userID = getIntent().getExtras().getInt("UserID");
+            otherUserID = getIntent().getExtras().getInt("OtherUsrerID");
+            findViewById(R.id.date_range_layout).setVisibility(View.GONE);
             getSupportActionBar().setTitle("Analysis: " + itemName);
             if (getIntent().hasExtra("BrokerID")) {
                 brokerID = getIntent().getExtras().getInt("BrokerID");
@@ -93,13 +105,13 @@ public class MyHistoryActivity extends AppCompatActivity {
                 Calendar endCalendar = Calendar.getInstance();
                 endCalendar.setTime(mEndDate);
                 endYear = endCalendar.get(Calendar.YEAR);
-                endMonth =endCalendar.get(Calendar.MONTH);
+                endMonth = endCalendar.get(Calendar.MONTH);
                 endDay = endCalendar.get(Calendar.DAY_OF_MONTH);
 
                 Calendar startCalendar = Calendar.getInstance();
                 startCalendar.setTime(mEndDate);
                 startYear = startCalendar.get(Calendar.YEAR);
-                startMonth =startCalendar.get(Calendar.MONTH);
+                startMonth = startCalendar.get(Calendar.MONTH);
                 startDay = startCalendar.get(Calendar.DAY_OF_MONTH);
             }
 
@@ -166,17 +178,44 @@ public class MyHistoryActivity extends AppCompatActivity {
             startDate = SDF.format(mStartDate);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(mEndDate);
-            calendar.add(Calendar.DAY_OF_MONTH,1);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
             Date newEndDate = calendar.getTime();
             enadDate = SDF.format(newEndDate);
         }
-        ObjectFactory.getInstance().getLeadServiceInstance().getLeads(me.getUserID(), leadType, "D", itemName, brokerID, startDate, enadDate, new Callback<MessageDTO>() {
+        ObjectFactory.getInstance().getLeadServiceInstance().getAnalysisLeads(me.getUserID(), otherUserID, leadType, brokerageStatus, itemName, brokerID, startDate, enadDate, new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 if (messageDTO.isSuccess()) {
                     ArrayList<Lead> leads = Lead.createListFromJson(messageDTO.getData());
                     mLeads = new ArrayList<Lead>();
                     mLeads.addAll(leads);
+                    float totalLeadAmount = 0;
+
+                    if (isBrokerAnalysis) {
+                        for (Lead mLead : mLeads) {
+                            totalLeadAmount += mLead.getBuyerBrokerage() + mLead.getSellerBrokerage();
+                        }
+                    } else {
+                        for (Lead mLead : mLeads) {
+                            float basicPriceAmt = mLead.getBasicPrice() * mLead.getQty();
+                            float excisePriceAmt = mLead.getExciseDuty() * mLead.getQty();
+                            float taxperc = mLead.getTax();
+                            float taxAmountrs = basicPriceAmt * (taxperc / 100);
+                            float totalAmt = basicPriceAmt + taxAmountrs + mLead.getTransportCharges() + mLead.getMiscCharges();
+                            Integer exciseType = mLead.getExcisetype() != null ? mLead.getExcisetype() : ExciseType.INCLUSIVE.getType();
+                            if (exciseType.equals(ExciseType.INCLUSIVE)) {
+                            } else {
+                                totalAmt += excisePriceAmt;
+                            }
+                            totalLeadAmount += totalAmt;
+                        }
+                    }
+                    totalAmountLayout.setVisibility(View.VISIBLE);
+                    if (isBrokerAnalysis) {
+                        lblTotalAmount.setText("Total Brokerage");
+                    }
+                    totalAmountValue.setText("Rs. " + totalLeadAmount + "/-");
+                    //TODO Show total amount label
                     MyHistoryAdapter mAdapter = new MyHistoryAdapter(mContext, mLeads, me.isBroker());
                     mRecyclerView.setAdapter(mAdapter);
                 } else {
@@ -203,7 +242,7 @@ public class MyHistoryActivity extends AppCompatActivity {
             startDate = SDF.format(mStartDate);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(mEndDate);
-            calendar.add(Calendar.DAY_OF_MONTH,1);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
             Date newEndDate = calendar.getTime();
             enadDate = SDF.format(newEndDate);
         }

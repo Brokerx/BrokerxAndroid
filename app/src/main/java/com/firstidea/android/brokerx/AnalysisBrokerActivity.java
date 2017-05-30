@@ -133,6 +133,13 @@ public class AnalysisBrokerActivity extends AppCompatActivity {
                 startActivity(topBroker);
             }
         });
+        findViewById(R.id.more_filters_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(AnalysisBrokerActivity.this, NewBrokerAnalysisActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 

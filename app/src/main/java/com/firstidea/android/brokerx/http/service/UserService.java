@@ -72,7 +72,7 @@ public interface UserService {
 
     @FormUrlEncoded
     @POST("/user/getAnalysisDropDownValues")
-    void getAnalysisDropDownValues(@Field("userID") String mobile,
+    void getAnalysisDropDownValues(@Field("userID") Integer userID,
                                    Callback<MessageDTO> callback);
 
 

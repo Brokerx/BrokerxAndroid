@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context="com.firstidea.android.brokerx.NewBuyerAnalysisActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -21,6 +22,5 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_new_buyer_analysis" />
-
 
 </android.support.design.widget.CoordinatorLayout>

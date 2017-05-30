@@ -44,6 +44,18 @@ public interface LeadService {
                   Callback<MessageDTO> callback);
 
     @FormUrlEncoded
+    @POST("/lead/getAnalysisLeads")
+    void getAnalysisLeads(@Field("userID") Integer userID,
+                  @Field("otherUserID")  Integer otherUserID,
+                  @Field("type") String type,
+                  @Field("status") String status,
+                  @Field("item") String item,
+                  @Field("brokerID") Integer brokerID,
+                  @Field("startDate") String startDate,
+                  @Field("endDate") String endDate,
+                  Callback<MessageDTO> callback);
+
+    @FormUrlEncoded
     @POST("/lead/getLeads")
     void getLeadsByID(@Field("leadID") Integer leadID,
                       Callback<MessageDTO> callback);

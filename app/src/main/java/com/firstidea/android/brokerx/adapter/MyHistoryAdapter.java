@@ -58,15 +58,17 @@ public class MyHistoryAdapter extends RecyclerView.Adapter<MyHistoryAdapter.Hist
         holder.title.setText(mValues.get(position).getItemName());
         String postedByLabel = "<b>Buyer: </b>"+mValues.get(position).getCreatedUser().getFullName();
         String assignedToLabel = "<b>Seller: </b>"+mValues.get(position).getAssignedToUser().getFullName();
+        float brokerage = mValues.get(position).getBuyerBrokerage();
         if(holder.mItem .getType().equals(LeadType.SELLER.getType())) {
             postedByLabel = "<b>Seller: </b>"+mValues.get(position).getCreatedUser().getFullName();
             assignedToLabel = "<b>Buyer: </b>"+mValues.get(position).getAssignedToUser().getFullName();
+            brokerage = mValues.get(position).getSellerBrokerage();
         }
         if(!isBroker) {
             postedByLabel = "<b>Broker: </b>"+mValues.get(position).getBroker().getFullName();
-            holder.brokerage.setText("Brokerage: "+mValues.get(position).getBrokerageAmt());
+            holder.brokerage.setText("Brokerage: "+brokerage);
         } else {
-            holder.brokerage.setText("You get "+mValues.get(position).getBrokerageAmt());
+            holder.brokerage.setText("You get "+(mValues.get(position).getBuyerBrokerage()+mValues.get(position).getSellerBrokerage()));
         }
         holder.userName.setVisibility(View.GONE);
         holder.layoutUsers.setVisibility(View.VISIBLE);

@@ -7,280 +7,281 @@
         android:layout_height="match_parent"
         android:background="@color/activity_background_color"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.firstidea.android.brokerx.NewBrokerAnalysisActivity"
+        tools:context="com.firstidea.android.brokerx.NewBuyerAnalysisActivity"
         tools:showIn="@layout/activity_new_buyer_analysis">
 
-        <ScrollView
-            android:id="@+id/main_layout"
+    <ScrollView
+        android:id="@+id/main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true">
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <!--<TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/left10"
+                android:layout_marginTop="5dp"
+                android:text="Search Enquiry"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />-->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:weightSum="1">
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
 
-                <!--<TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/left10"
-                    android:layout_marginTop="5dp"
-                    android:text="Search Enquiry"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="1"
+                        android:text="Start Date"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginRight="@dimen/left10"
+                        android:layout_weight="1"
+                        android:text="End Date"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:weightSum="2.5">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_weight="1"
-                            android:text="Start Date"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="40dp"
-                            android:layout_marginRight="@dimen/left10"
-                            android:layout_weight="1"
-                            android:text="End Date"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/starDate"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal"
-                        android:weightSum="2.5">
+                        android:layout_marginLeft="@dimen/left10"
+                        android:layout_weight="1.1"
+                        android:background="@drawable/date_box"
+                        android:clickable="true"
+                        android:drawableLeft="@drawable/calendar1"
+                        android:drawablePadding="10dp"
+                        android:gravity="center_vertical"
+                        android:onClick="setStartDate"
+                        android:padding="5dp"
+                        android:text="From Date"
+                        android:textColor="@color/dividerColor"
+                        android:textSize="14sp" />
 
-                        <TextView
-                            android:id="@+id/starDate"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/left10"
-                            android:layout_weight="1.1"
-                            android:background="@drawable/date_box"
-                            android:clickable="true"
-                            android:drawableLeft="@drawable/calendar1"
-                            android:drawablePadding="10dp"
-                            android:gravity="center_vertical"
-                            android:onClick="setStartDate"
-                            android:padding="5dp"
-                            android:text="From Date"
-                            android:textColor="@color/dividerColor"
-                            android:textSize="14sp" />
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0.3"
+                        android:background="@color/black_overlay" />
 
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="2dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="0.3"
-                            android:background="@color/black_overlay" />
-
-                        <TextView
-                            android:id="@+id/endDate"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/left10"
-                            android:layout_weight="1.1"
-                            android:background="@drawable/date_box"
-                            android:clickable="true"
-                            android:drawableLeft="@drawable/calendar1"
-                            android:drawablePadding="10dp"
-                            android:gravity="center_vertical"
-                            android:onClick="setEndDate"
-                            android:padding="5dp"
-                            android:text="To Date"
-                            android:textColor="@color/dividerColor"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/endDate"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_weight="1"
-                            android:text="Select Broker"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <Spinner
-                            android:id="@+id/spinner1"
-                            style="@style/spinner_style"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/left10"
-                            android:layout_marginRight="@dimen/left10"
-                            android:drawSelectorOnTop="true"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_weight="1"
-                            android:text="Select Item"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <Spinner
-                            android:id="@+id/spinner2"
-                            style="@style/spinner_style"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/left10"
-                            android:layout_marginRight="@dimen/left10"
-                            android:layout_marginTop="10dp"
-                            android:drawSelectorOnTop="true"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_weight="1"
-                            android:text="Enquiry Type"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <Spinner
-                            android:id="@+id/spinner3"
-                            style="@style/spinner_style"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/left10"
-                            android:layout_marginRight="@dimen/left10"
-                            android:layout_marginTop="10dp"
-                            android:drawSelectorOnTop="true"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_weight="1"
-                            android:text="Seller I deal with"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <Spinner
-                            android:id="@+id/seller_spinner"
-                            style="@style/spinner_style"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/left10"
-                            android:layout_marginRight="@dimen/left10"
-                            android:layout_marginTop="10dp"
-                            android:drawSelectorOnTop="true"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_weight="1"
-                            android:text="Buyer I deal with"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <Spinner
-                            android:id="@+id/buyer_spinner"
-                            style="@style/spinner_style"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/left10"
-                            android:layout_marginRight="@dimen/left10"
-                            android:layout_marginTop="10dp"
-                            android:drawSelectorOnTop="true"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_weight="1"
-                            android:text="Enquiry Status"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:visibility="gone"/>
-
-                        <Spinner
-                            android:id="@+id/status_spinner"
-                            style="@style/spinner_style"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/left10"
-                            android:layout_marginRight="@dimen/left10"
-                            android:layout_marginTop="10dp"
-                            android:drawSelectorOnTop="true"
-                            android:textSize="16sp"
-                            android:visibility="gone"/>
-                    </LinearLayout>
+                        android:layout_marginRight="@dimen/left10"
+                        android:layout_weight="1.1"
+                        android:background="@drawable/date_box"
+                        android:clickable="true"
+                        android:drawableLeft="@drawable/calendar1"
+                        android:drawablePadding="10dp"
+                        android:gravity="center_vertical"
+                        android:onClick="setEndDate"
+                        android:padding="5dp"
+                        android:text="To Date"
+                        android:textColor="@color/dividerColor"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/button_search"
-                    android:layout_width="125dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="right"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="0.52"
-                    android:background="@drawable/app_btn"
-                    android:text="Get Analysis"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Select Broker"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/spinner1"
+                        style="@style/spinner_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/left10"
+                        android:layout_marginRight="@dimen/left10"
+                        android:drawSelectorOnTop="true"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Select Item"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/spinner2"
+                        style="@style/spinner_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/left10"
+                        android:layout_marginRight="@dimen/left10"
+                        android:layout_marginTop="10dp"
+                        android:drawSelectorOnTop="true"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Enquiry Type"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/spinner3"
+                        style="@style/spinner_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/left10"
+                        android:layout_marginRight="@dimen/left10"
+                        android:layout_marginTop="10dp"
+                        android:drawSelectorOnTop="true"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Seller I deal with"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/seller_spinner"
+                        style="@style/spinner_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/left10"
+                        android:layout_marginRight="@dimen/left10"
+                        android:layout_marginTop="10dp"
+                        android:drawSelectorOnTop="true"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Buyer I deal with"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/buyer_spinner"
+                        style="@style/spinner_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/left10"
+                        android:layout_marginRight="@dimen/left10"
+                        android:layout_marginTop="10dp"
+                        android:drawSelectorOnTop="true"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Enquiry Status"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"/>
+
+                    <Spinner
+                        android:id="@+id/status_spinner"
+                        style="@style/spinner_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/left10"
+                        android:layout_marginRight="@dimen/left10"
+                        android:layout_marginTop="10dp"
+                        android:drawSelectorOnTop="true"
+                        android:textSize="16sp"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+
             </LinearLayout>
-        </ScrollView>
+
+            <Button
+                android:id="@+id/button_search"
+                android:layout_width="125dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="0.52"
+                android:background="@drawable/app_btn"
+                android:text="Search"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </ScrollView>
 
     </RelativeLayout>
 

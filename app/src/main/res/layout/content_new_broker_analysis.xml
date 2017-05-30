@@ -133,7 +133,8 @@
                         android:text="Select Broker"
                         android:textColor="@color/black"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:visibility="gone"/>
 
                     <Spinner
                         android:id="@+id/spinner1"
@@ -144,7 +145,8 @@
                         android:layout_marginLeft="@dimen/left10"
                         android:layout_marginRight="@dimen/left10"
                         android:drawSelectorOnTop="true"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:visibility="gone"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -244,7 +246,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
-                        android:text="Enquiry Status"
+                        android:text="Brokerage"
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />

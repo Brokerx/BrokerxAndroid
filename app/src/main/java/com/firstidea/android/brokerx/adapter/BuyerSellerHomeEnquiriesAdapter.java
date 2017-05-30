@@ -228,7 +228,6 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
                 public void onClick(View v) {
                     Intent intent = new Intent(HeaderViewHolder.this.history.getContext(), MyHistoryActivity.class);
                     HeaderViewHolder.this.history.getContext().startActivity(intent);
-                    Toast.makeText(HeaderViewHolder.this.history.getContext(), "Clicked on History", Toast.LENGTH_SHORT).show();
                 }
             });
             this.myCircle.setOnClickListener(new View.OnClickListener() {
@@ -244,7 +243,6 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
 //                    Intent intent = new Intent(HeaderViewHolder.this.analysis.getContext(), AnalysisActivity.class);
                     Intent intent = new Intent(HeaderViewHolder.this.analysis.getContext(), NewBuyerAnalysisActivity.class);
                     HeaderViewHolder.this.analysis.getContext().startActivity(intent);
-                    Toast.makeText(HeaderViewHolder.this.analysis.getContext(), "Clicked on Analysis", Toast.LENGTH_SHORT).show();
                 }
             });
             this.pendingEnq.setOnClickListener(new View.OnClickListener() {
@@ -252,7 +250,6 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
                 public void onClick(View v) {
                     Intent intent = new Intent(HeaderViewHolder.this.pendingEnq.getContext(), PendingEntriesActivity.class);
                     HeaderViewHolder.this.pendingEnq.getContext().startActivity(intent);
-                    Toast.makeText(HeaderViewHolder.this.pendingEnq.getContext(), "Clicked on Pending Enquiries", Toast.LENGTH_SHORT).show();
                 }
             });
 

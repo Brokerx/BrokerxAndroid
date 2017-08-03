@@ -44,6 +44,7 @@ public class Lead implements Parcelable {
     private float transportCharges;
     private float miscCharges;
     private float brokerageAmt;
+    private float brokeragePerc;
     private float buyerBrokerage;
     private float sellerBrokerage;
     private String againstForm;
@@ -273,6 +274,14 @@ public class Lead implements Parcelable {
         return brokerageAmt;
     }
 
+    public float getBrokeragePerc() {
+        return brokeragePerc;
+    }
+
+    public void setBrokeragePerc(float brokeragePerc) {
+        this.brokeragePerc = brokeragePerc;
+    }
+
     public void setBrokerageAmt(float brokerageAmt) {
         this.brokerageAmt = brokerageAmt;
     }
@@ -460,6 +469,7 @@ public class Lead implements Parcelable {
         dest.writeFloat(this.transportCharges);
         dest.writeFloat(this.miscCharges);
         dest.writeFloat(this.brokerageAmt);
+        dest.writeFloat(this.brokeragePerc);
         dest.writeFloat(this.buyerBrokerage);
         dest.writeFloat(this.sellerBrokerage);
         dest.writeString(this.againstForm);
@@ -506,6 +516,7 @@ public class Lead implements Parcelable {
         this.transportCharges = in.readFloat();
         this.miscCharges = in.readFloat();
         this.brokerageAmt = in.readFloat();
+        this.brokeragePerc = in.readFloat();
         this.buyerBrokerage = in.readFloat();
         this.sellerBrokerage = in.readFloat();
         this.againstForm = in.readString();

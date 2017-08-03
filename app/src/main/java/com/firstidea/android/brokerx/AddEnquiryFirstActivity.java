@@ -28,6 +28,9 @@ public class AddEnquiryFirstActivity extends AppCompatActivity {
         final String type = getIntent().getExtras().getString("type");
         if(getIntent().hasExtra(Lead.KEY_LEAD)) {
             mLead = getIntent().getExtras().getParcelable(Lead.KEY_LEAD);
+            float basicPriceAmt = mLead.getBasicPrice() * mLead.getQty();
+            float brokeragePerc = mLead.getBrokerageAmt() * 100/basicPriceAmt;
+            mLead.setBrokeragePerc(brokeragePerc);
         }
         findViewById(R.id.layout_step_one).setOnClickListener(new View.OnClickListener() {
             @Override

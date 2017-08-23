@@ -13,12 +13,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firstidea.android.brokerx.AnalysisActivity;
+import com.firstidea.android.brokerx.BuyerSellerHomeActivity;
 import com.firstidea.android.brokerx.EnquiryDetailsActivity;
 import com.firstidea.android.brokerx.MyHistoryActivity;
 import com.firstidea.android.brokerx.MycircleActivity;
 import com.firstidea.android.brokerx.NewBuyerAnalysisActivity;
 import com.firstidea.android.brokerx.PendingEntriesActivity;
 import com.firstidea.android.brokerx.R;
+import com.firstidea.android.brokerx.SignupActivity;
+import com.firstidea.android.brokerx.constants.AppConstants;
 import com.firstidea.android.brokerx.enums.LeadCurrentStatus;
 import com.firstidea.android.brokerx.enums.LeadType;
 import com.firstidea.android.brokerx.http.model.Lead;
@@ -248,7 +251,10 @@ public class BuyerSellerHomeEnquiriesAdapter extends HeaderRecyclerViewAdapter<R
             this.pendingEnq.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(HeaderViewHolder.this.pendingEnq.getContext(), PendingEntriesActivity.class);
+//                    Intent intent = new Intent(HeaderViewHolder.this.pendingEnq.getContext(), PendingEntriesActivity.class);
+//                    HeaderViewHolder.this.pendingEnq.getContext().startActivity(intent);
+                    Intent intent = new Intent(HeaderViewHolder.this.pendingEnq.getContext(), SignupActivity.class);
+                    intent.putExtra(AppConstants.KEY_IS_PROFILE_EDIT, true);
                     HeaderViewHolder.this.pendingEnq.getContext().startActivity(intent);
                 }
             });

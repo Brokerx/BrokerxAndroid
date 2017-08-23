@@ -31,7 +31,12 @@ import com.firstidea.android.brokerx.http.model.User;
 import com.firstidea.android.brokerx.model.ChatItem;
 import com.firstidea.android.brokerx.widget.AppProgressDialog;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +52,7 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
     private SearchView mSearchView;
     private User me;
     private final int BROKER_SELECTION_REQUEST = 100;
+    private SimpleDateFormat SDF = new SimpleDateFormat("MMM d, yyyy h:mm:ss a");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,9 +111,21 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
                         ChatListDTO chatListDTO = new ChatListDTO();
                         chatListDTO.setItemName(leadItemMap.get(leadID));
                         chatListDTO.setLeadID(leadID);
+                        try {
+                            Date lastMsgTime = SDF.parse(leadChatMap.get(leadID).get((0)).getLastMsgDateTime());
+                            chatListDTO.setLastChatDttm(lastMsgTime);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                         chatListDTO.setChatSummaryList(leadChatMap.get(leadID));
                         mList.add(chatListDTO);
                     }
+                    Collections.sort(mList, new Comparator<ChatListDTO>() {
+                        @Override
+                        public int compare(ChatListDTO lhs, ChatListDTO rhs) {
+                            return lhs.getLastChatDttm().getTime() > rhs.getLastChatDttm().getTime() ?-1:1;
+                        }
+                    });
                     ChatListAdapter mAdapter = new ChatListAdapter(ChatListActivity.this, mList, ChatListActivity.this);
                     mRecyclerView.setAdapter(mAdapter);
                 }

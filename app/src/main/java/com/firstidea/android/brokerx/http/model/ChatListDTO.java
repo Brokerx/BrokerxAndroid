@@ -1,5 +1,6 @@
 package com.firstidea.android.brokerx.http.model;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -9,6 +10,7 @@ import java.util.List;
 public class ChatListDTO {
     private String itemName;
     private Integer leadID;
+    private Date lastChatDttm;
     private List<ChatSummary> chatSummaryList;
 
     public String getItemName() {
@@ -25,6 +27,14 @@ public class ChatListDTO {
 
     public void setLeadID(Integer leadID) {
         this.leadID = leadID;
+    }
+
+    public Date getLastChatDttm() {
+        return lastChatDttm;
+    }
+
+    public void setLastChatDttm(Date lastChatDttm) {
+        this.lastChatDttm = lastChatDttm;
     }
 
     public List<ChatSummary> getChatSummaryList() {

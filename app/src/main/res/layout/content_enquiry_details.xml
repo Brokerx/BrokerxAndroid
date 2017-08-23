@@ -258,6 +258,27 @@
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="@dimen/l10dp"
+                        android:src="@drawable/calendar1" />
+
+                    <TextView
+                        android:id="@+id/dttm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:text="20 Aug 2017 12:00 AM"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -489,7 +510,7 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
+                    <!--<LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/di10dp"
@@ -520,13 +541,12 @@
                             android:textSize="@dimen/tex12sp" />
 
 
-                    </LinearLayout>
+                    </LinearLayout>-->
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/di10dp"
-                        android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/black_bordered_white_rectangle_drawable"
                         android:orientation="vertical">
@@ -552,34 +572,12 @@
                             android:text="Transport"
                             android:textColor="@color/black"
                             android:textSize="@dimen/tex12sp" />
-
-
                     </LinearLayout>
-
-
-                </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/lbl_excise_type"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:gravity="center"
-                        android:text="Rate inclisive of excise"
-                        android:layout_weight="1"/>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:weightSum="3"
-                    android:orientation="horizontal">
-
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/black_bordered_white_rectangle_drawable"
                         android:orientation="vertical">
@@ -609,6 +607,27 @@
 
                     </LinearLayout>
 
+
+                </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/lbl_excise_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="Rate inclisive of excise"
+                        android:layout_weight="1"
+                        android:visibility="gone"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:weightSum="2"
+                    android:orientation="horizontal">
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -627,25 +646,23 @@
                             android:text="400Rs"
                             android:textColor="@color/black"
                             android:textSize="@dimen/tex12sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"/>
 
                         <TextView
+                            android:id="@+id/tax_amt_lbl"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/light_gray"
                             android:gravity="center"
                             android:padding="5dp"
-                            android:text="Tax Amount"
+                            android:text="GST "
                             android:textColor="@color/black"
-                            android:textSize="@dimen/tex12sp" />
-
-
+                            android:textSize="@dimen/tex12sp"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-
                         android:layout_marginRight="10dp"
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1"
@@ -673,8 +690,6 @@
                             android:text="Total Charges"
                             android:textColor="@color/black"
                             android:textSize="@dimen/tex12sp" />
-
-
                     </LinearLayout>
 
                 </LinearLayout>

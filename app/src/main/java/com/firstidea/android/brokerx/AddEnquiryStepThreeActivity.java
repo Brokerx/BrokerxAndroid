@@ -23,10 +23,10 @@ import com.firstidea.android.brokerx.http.model.Lead;
 
 public class AddEnquiryStepThreeActivity extends AppCompatActivity {
 
-    private EditText editBasicPrice, editExciseDuty, editTransportCharges, editMiscCharges, editTotalCharges, edit_tax_perc;
-    private Spinner spinnerBasicUnit, spinnerExciseUnit;
+    private EditText editBasicPrice,  editTransportCharges, editMiscCharges, editTotalCharges, edit_tax_perc; //editExciseDuty
+    private Spinner spinnerBasicUnit,spinnerGSTType;// spinnerExciseUnit;
     private CheckBox checkAsPerAvailability;
-    private RadioButton radio_excise_inclusive, radio_excise_exclusive;
+//    private RadioButton radio_excise_inclusive, radio_excise_exclusive;
     private Lead mLead;
     private final int NEXT_ACTIVITY_REQ_CODE = 500;
 
@@ -44,13 +44,13 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
 
         mLead = getIntent().getParcelableExtra(Lead.KEY_LEAD);
         editBasicPrice = (EditText) findViewById(R.id.basic_price);
-        editExciseDuty = (EditText) findViewById(R.id.excise_duty);
+//        editExciseDuty = (EditText) findViewById(R.id.excise_duty);
         editTransportCharges = (EditText) findViewById(R.id.transport_charges);
         editMiscCharges = (EditText) findViewById(R.id.misc_charges);
         editTotalCharges = (EditText) findViewById(R.id.total_charges);
         edit_tax_perc = (EditText) findViewById(R.id.edit_tax_perc);
         checkAsPerAvailability = (CheckBox) findViewById(R.id.check_as_per_availability);
-        radio_excise_inclusive = (RadioButton) findViewById(R.id.radio_excise_inclusive);
+        /*radio_excise_inclusive = (RadioButton) findViewById(R.id.radio_excise_inclusive);
         radio_excise_exclusive = (RadioButton) findViewById(R.id.radio_excise_exclusive);
 
         radio_excise_inclusive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -64,7 +64,7 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 calculateTotal();
             }
-        });
+        });*/
         findViewById(R.id.btn_next).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,7 +72,8 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
             }
         });
         spinnerBasicUnit = (Spinner) findViewById(R.id.spinner_basic_price_unit);
-        spinnerExciseUnit = (Spinner) findViewById(R.id.spinner_excise_duty_unit);
+//        spinnerExciseUnit = (Spinner) findViewById(R.id.spinner_excise_duty_unit);
+        spinnerGSTType = (Spinner) findViewById(R.id.spinner_gst_type);
 
         spinnerBasicUnit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -85,10 +86,21 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
 
             }
         });
-        spinnerExciseUnit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//        spinnerExciseUnit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                mLead.setExciseUnit(position);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
+        spinnerGSTType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mLead.setExciseUnit(position);
+                mLead.setGstType(position);
             }
 
             @Override
@@ -101,19 +113,19 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
             || (mLead.getBasicPrice() > 0)) {
             editBasicPrice.setText(mLead.getBasicPrice()+"");
             spinnerBasicUnit.setSelection(mLead.getBasicPriceUnit());
-            editExciseDuty.setText(mLead.getExciseDuty()+"");
-            spinnerExciseUnit.setSelection(mLead.getExciseUnit());
+//            editExciseDuty.setText(mLead.getExciseDuty()+"");
+            /*spinnerExciseUnit.setSelection(mLead.getExciseUnit());
             if(mLead.isAsPerAvailablity()) {
                 checkAsPerAvailability.setChecked(true);
-            }
+            }*/
             editTransportCharges.setText(mLead.getTransportCharges()+"");
             editMiscCharges.setText(mLead.getMiscCharges()+"");
             edit_tax_perc.setText(mLead.getTax()+"");
-            if(mLead.getExcisetype()!= null && mLead.getExcisetype().equals(ExciseType.EXCLUSIVE.getType())) {
+            /*if(mLead.getExcisetype()!= null && mLead.getExcisetype().equals(ExciseType.EXCLUSIVE.getType())) {
                 radio_excise_exclusive.setChecked(true);
             } else {
                 radio_excise_inclusive.setChecked(true);
-            }
+            }*/
             calculateTotal();
         }
         TextWatcher priceWatcher = new TextWatcher() {
@@ -129,7 +141,7 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {}
         };
         editBasicPrice.addTextChangedListener(priceWatcher);
-        editExciseDuty.addTextChangedListener(priceWatcher);
+//        editExciseDuty.addTextChangedListener(priceWatcher);
         editMiscCharges.addTextChangedListener(priceWatcher);
         edit_tax_perc.addTextChangedListener(priceWatcher);
         editTransportCharges.addTextChangedListener(priceWatcher);
@@ -148,9 +160,9 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
         float miscChrg = 0;
         float taxPerc = 0;
 
-        if(editExciseDuty.getText().toString().trim().length() > 0) {
+        /*if(editExciseDuty.getText().toString().trim().length() > 0) {
             exciseDuty = Float.parseFloat(editExciseDuty.getText().toString());
-        }
+        }*/
         if(editTransportCharges.getText().toString().trim().length() > 0) {
             transportChrg = Float.parseFloat(editTransportCharges.getText().toString());
         }
@@ -163,8 +175,9 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
         mLead.setBasicPrice(basicPrice);
         mLead.setBasicPriceUnit(spinnerBasicUnit.getSelectedItemPosition());
         mLead.setExciseDuty(exciseDuty);
-        mLead.setExciseUnit(spinnerExciseUnit.getSelectedItemPosition());
-        mLead.setExcisetype(radio_excise_inclusive.isChecked() ? ExciseType.INCLUSIVE.getType(): ExciseType.EXCLUSIVE.getType());
+        mLead.setGstType(spinnerGSTType.getSelectedItemPosition());
+//        mLead.setExciseUnit(spinnerExciseUnit.getSelectedItemPosition());
+//        mLead.setExcisetype(radio_excise_inclusive.isChecked() ? ExciseType.INCLUSIVE.getType(): ExciseType.EXCLUSIVE.getType());
         mLead.setTransportCharges(transportChrg);
         mLead.setMiscCharges(miscChrg);
         mLead.setTax(taxPerc);
@@ -181,11 +194,11 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
             basicPrice = getFloatValue(editBasicPrice.getText().toString().trim());
         }
         float exciseDuty = 0;
-        if(radio_excise_exclusive.isChecked()) {
+       /* if(radio_excise_exclusive.isChecked()) {
             if (editExciseDuty.getText().toString().trim().length() > 0) {
                 exciseDuty = getFloatValue(editExciseDuty.getText().toString().trim());
             }
-        }
+        }*/
         float taxPerc = 0;
         if(edit_tax_perc.getText().toString().trim().length() > 0) {
             taxPerc = getFloatValue(edit_tax_perc.getText().toString().trim());

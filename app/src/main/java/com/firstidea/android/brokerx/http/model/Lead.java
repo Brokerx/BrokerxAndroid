@@ -39,6 +39,7 @@ public class Lead implements Parcelable {
     private float exciseDuty;
     private Integer exciseUnit;
     private Integer excisetype;
+    private Integer gstType;
     private float tax;
     private boolean asPerAvailablity;
     private float transportCharges;
@@ -52,6 +53,7 @@ public class Lead implements Parcelable {
     private String freeStoragePeriod;
     private String preferredSellerName;
     private String comments;
+    private String dealDoneDttm;
     private String createdDttm;
     private Integer LastUpdUserID;
     private String lastUpdDateTime;
@@ -238,6 +240,14 @@ public class Lead implements Parcelable {
         this.excisetype = excisetype;
     }
 
+    public Integer getGstType() {
+        return gstType;
+    }
+
+    public void setGstType(Integer gstType) {
+        this.gstType = gstType;
+    }
+
     public float getTax() {
         return tax;
     }
@@ -340,6 +350,14 @@ public class Lead implements Parcelable {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public String getDealDoneDttm() {
+        return dealDoneDttm;
+    }
+
+    public void setDealDoneDttm(String dealDoneDttm) {
+        this.dealDoneDttm = dealDoneDttm;
     }
 
     public String getCreatedDttm() {
@@ -464,6 +482,7 @@ public class Lead implements Parcelable {
         dest.writeFloat(this.exciseDuty);
         dest.writeValue(this.exciseUnit);
         dest.writeValue(this.excisetype);
+        dest.writeValue(this.gstType);
         dest.writeFloat(this.tax);
         dest.writeByte(this.asPerAvailablity ? (byte) 1 : (byte) 0);
         dest.writeFloat(this.transportCharges);
@@ -478,6 +497,7 @@ public class Lead implements Parcelable {
         dest.writeString(this.preferredSellerName);
         dest.writeString(this.comments);
         dest.writeString(this.createdUserType);
+        dest.writeString(this.dealDoneDttm);
         dest.writeString(this.createdDttm);
         dest.writeValue(this.LastUpdUserID);
         dest.writeString(this.lastUpdDateTime);
@@ -511,6 +531,7 @@ public class Lead implements Parcelable {
         this.exciseDuty = in.readFloat();
         this.exciseUnit = (Integer) in.readValue(Integer.class.getClassLoader());
         this.excisetype = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.gstType = (Integer) in.readValue(Integer.class.getClassLoader());
         this.tax = in.readFloat();
         this.asPerAvailablity = in.readByte() != 0;
         this.transportCharges = in.readFloat();
@@ -525,6 +546,7 @@ public class Lead implements Parcelable {
         this.preferredSellerName = in.readString();
         this.comments = in.readString();
         this.createdUserType = in.readString();
+        this.dealDoneDttm = in.readString();
         this.createdDttm = in.readString();
         this.LastUpdUserID = (Integer) in.readValue(Integer.class.getClassLoader());
         this.lastUpdDateTime = in.readString();

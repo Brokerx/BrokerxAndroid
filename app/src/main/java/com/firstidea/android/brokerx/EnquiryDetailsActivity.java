@@ -44,6 +44,8 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
     TextView make;
     @BindView(R.id.location)
     TextView location;
+    @BindView(R.id.dttm)
+    TextView dttm;
     @BindView(R.id.basic_price_per_unit)
     TextView basicPricePerUnit;
     @BindView(R.id.qty_unit)
@@ -58,14 +60,16 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
     TextView brokerageAmt;
     @BindView(R.id.basic_price_with_unit)
     TextView basicPriceWithUnit;
-    @BindView(R.id.excise_duty_with_unit)
-    TextView exciseDutyWithUnit;
+//    @BindView(R.id.excise_duty_with_unit)
+//    TextView exciseDutyWithUnit;
     @BindView(R.id.transport_charges)
     TextView transportCharges;
     @BindView(R.id.misc_charges)
     TextView miscCharges;
     @BindView(R.id.tax_amount)
     TextView taxAmount;
+    @BindView(R.id.tax_amt_lbl)
+    TextView taxAmountLbl;
     @BindView(R.id.lbl_excise_type)
     TextView lblExciseType;
     @BindView(R.id.total_charges)
@@ -265,6 +269,7 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         String makeString = "<b>Make: </b>" + mLead.getMake();
         make.setText(Html.fromHtml(makeString));
         location.setText(mLead.getLocation());
+        dttm.setText(mLead.getCreatedDttm());
         String basicPriceString = mLead.getBasicPrice() + " Rs/" + mUnits[mLead.getBasicPriceUnit()];
         basicPricePerUnit.setText(basicPriceString);
         String availableLabel = mLead.getType().startsWith("B")?" to Buy":" to Sell";
@@ -303,14 +308,18 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                     .into(userImage);
         }
         basicPriceWithUnit.setText(basicPriceString);
-        exciseDutyWithUnit.setText(mLead.getExciseDuty() + " Rs/" + mUnits[mLead.getExciseUnit()]);
+//        exciseDutyWithUnit.setText(mLead.getExciseDuty() + " Rs/" + mUnits[mLead.getExciseUnit()]);
         transportCharges.setText(mLead.getTransportCharges() + " Rs/" + mUnits[mLead.getBasicPriceUnit()]);
         miscCharges.setText(mLead.getMiscCharges() + " Rs");
         float basicPriceAmt = mLead.getBasicPrice() * mLead.getQty();
         float excisePriceAmt = mLead.getExciseDuty() * mLead.getQty();
         float taxperc = mLead.getTax();
         float taxAmountrs = basicPriceAmt * (taxperc / 100);
-        taxAmount.setText(taxAmountrs + " Rs ("+taxperc+"%)");
+        taxAmount.setText(taxAmountrs + " Rs ");//("+taxperc+"%)");
+        if(mLead.getGstType() != null) {
+            String gstType = getResources().getStringArray(R.array.gst_type)[mLead.getGstType()]+" ("+taxperc+"%)";
+            taxAmountLbl.setText(gstType);
+        }
         float totalAmt = basicPriceAmt + taxAmountrs + mLead.getTransportCharges() + mLead.getMiscCharges();
         Integer exciseType = mLead.getExcisetype() != null ? mLead.getExcisetype(): ExciseType.INCLUSIVE.getType();
         if(exciseType.equals(ExciseType.INCLUSIVE)) {
@@ -590,10 +599,10 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             totalCharges.setBackgroundColor(hilightColor);
         }
 
-        if(alteredFields.contains("exciseunit") || alteredFields.contains("exciseduty")) {
+        /*if(alteredFields.contains("exciseunit") || alteredFields.contains("exciseduty")) {
             exciseDutyWithUnit.setBackgroundColor(hilightColor);
             totalCharges.setBackgroundColor(hilightColor);
-        }
+        }*/
 
         if(alteredFields.contains("misccharges")) {
             miscCharges.setBackgroundColor(hilightColor);

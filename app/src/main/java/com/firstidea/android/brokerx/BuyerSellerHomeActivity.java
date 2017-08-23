@@ -211,11 +211,12 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
             Intent intent = new Intent(BuyerSellerHomeActivity.this, SplashActivity.class);
             startActivity(intent);
             finish();
-        }else if(id == R.id.action_profile) {
+        }
+        /*else if(id == R.id.action_profile) {
             Intent intent = new Intent(BuyerSellerHomeActivity.this, SignupActivity.class);
             intent.putExtra(AppConstants.KEY_IS_PROFILE_EDIT, true);
             startActivity(intent);
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 

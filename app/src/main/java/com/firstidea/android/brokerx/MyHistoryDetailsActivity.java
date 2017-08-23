@@ -194,8 +194,11 @@ public class MyHistoryDetailsActivity extends AppCompatActivity {
         } else {
             InvoiceNo.setVisibility(View.GONE);
         }
-
-        Date.setText(mLead.getCreatedDttm());
+        if(TextUtils.isEmpty(mLead.getDealDoneDttm())) {
+            Date.setText(mLead.getLastUpdDateTime());
+        } else {
+            Date.setText(mLead.getDealDoneDttm());
+        }
         String basicPriceString = mLead.getBasicPrice() + " Rs/" + mUnits[mLead.getBasicPriceUnit()];
         basic_charge.setText(basicPriceString);
         float basicPriceAmt = mLead.getBasicPrice() * mLead.getQty();

@@ -31,6 +31,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 //import com.google.android.gcm.GCMRegistrar;
@@ -76,6 +78,10 @@ public class AppUtils {
 
     public static String getImagePath(String prefix, Context ctx){
         return Environment.getExternalStorageDirectory()+ File.separator+ctx.getString(R.string.app_name)+ File.separator+"IMAGE_"+prefix+".jpg";
+    }
+
+    public static String getAnalysisFilePath(Context ctx){
+        return Environment.getExternalStorageDirectory()+ File.separator+ctx.getString(R.string.app_name)+ File.separator+"Analysis"+"Analysis_"+(new Date().getTime()) +".jpg";
     }
 
 	public static String getDocumentFilePath(String fileName, Context ctx){

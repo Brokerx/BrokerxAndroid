@@ -197,11 +197,13 @@ public class BrokerHomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_my_circle) {
             Intent intent=new Intent(BrokerHomeActivity.this, MycircleActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_pending_enquiries) {
+        }
+        /*else if (id == R.id.nav_pending_enquiries) {
             Intent intent=new Intent(BrokerHomeActivity.this, PendingEntriesActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_history) {
+        } */
+        else if (id == R.id.nav_history) {
             Intent intent=new Intent(BrokerHomeActivity.this, MyHistoryActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_share) {

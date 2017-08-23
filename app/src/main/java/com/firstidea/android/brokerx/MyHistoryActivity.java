@@ -3,6 +3,7 @@ package com.firstidea.android.brokerx;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
@@ -24,8 +27,18 @@ import com.firstidea.android.brokerx.http.ObjectFactory;
 import com.firstidea.android.brokerx.http.model.Lead;
 import com.firstidea.android.brokerx.http.model.MessageDTO;
 import com.firstidea.android.brokerx.http.model.User;
+import com.firstidea.android.brokerx.utils.AppUtils;
+import com.firstidea.android.brokerx.utils.SharedPreferencesUtil;
 import com.firstidea.android.brokerx.widget.AppProgressDialog;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -167,7 +180,82 @@ public class MyHistoryActivity extends AppCompatActivity {
                 }
             }
         });
+        invalidateOptionsMenu();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if(!mIsFromAnalysis) {
+            return false;
+        }
+        getMenuInflater().inflate(R.menu.menu_analysis, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+
+    private void exportAnalysis() {
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Datatypes in Java");
+        Object[][] datatypes =new Object[mLeads.size()+1][12];
+/*
+
+        {
+                {"Item", "Buyer", "Broker", "Seller", "Deal Date","Quantity","Unit","Basic Charges","Transport Charges", "Misc. Chrges", "Tax Amount", "Total Amount"},
+                {"int", "Primitive", 2},
+                {"float", "Primitive", 4},
+                {"double", "Primitive", 8},
+                {"char", "Primitive", 1},
+                {"String", "Non-Primitive", "No fixed size"}
+        };
+*/
+        datatypes[0] = new Object[]{"Item", "Buyer", "Broker", "Seller", "Deal Date","Quantity","Unit","Basic Charges","Transport Charges", "Misc. Chrges", "Tax Amount", "Total Amount"};
+        for(int i=1; i<=mLeads.size();i++) {
+            Lead lead = mLeads.get(i-1);
+            int j=0;
+            User createdUser = lead.getCreatedUser();
+            User brokerUser = lead.getBroker();
+            User assignedUser = lead.getAssignedToUser();
+            String buyer, broker = brokerUser.getFullName(), seller;
+            if (lead.getType().equals(LeadType.BUYER.getType())) {
+                buyer = createdUser.getFullName();
+                seller = assignedUser.getFullName();
+            } else {
+                seller = createdUser.getFullName();
+                buyer = assignedUser.getFullName();
+            }
+            datatypes[i][j++] = lead.getItemName();
+            datatypes[i][j++] = buyer;
+            datatypes[i][j++] = broker;
+            datatypes[i][j++] = seller;
+
+        }
+        int rowNum = 0;
+        System.out.println("Creating excel");
+
+        for (Object[] datatype : datatypes) {
+            Row row = sheet.createRow(rowNum++);
+            int colNum = 0;
+            for (Object field : datatype) {
+                Cell cell = row.createCell(colNum++);
+                if (field instanceof String) {
+                    cell.setCellValue((String) field);
+                } else if (field instanceof Integer) {
+                    cell.setCellValue((Integer) field);
+                }
+            }
+        }
+
+        try {
+            FileOutputStream outputStream = new FileOutputStream(AppUtils.getAnalysisFilePath(this));
+            workbook.write(outputStream);
+            workbook.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Toast.makeText(mContext, "Excel File Created", Toast.LENGTH_SHORT).show();
+        Log.d("EXCEL Writer","Done");
     }
 
     private void getLeads() {
@@ -324,6 +412,9 @@ public class MyHistoryActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
+        }
+        if(item.getItemId() == R.id.action_excel) {
+            exportAnalysis();
         }
         return super.onOptionsItemSelected(item);
     }

@@ -84,11 +84,11 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_bookmark_black"
+            android:drawableLeft="@drawable/ic_account_box_black_24dp"
             android:drawablePadding="7dp"
             android:gravity="center_vertical"
             android:paddingLeft="8dp"
-            android:text="Pending Enq."
+            android:text="My Profile"
             android:textColor="@color/textColorPrimary"
             android:textSize="16sp" />
     </LinearLayout>

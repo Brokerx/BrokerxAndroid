@@ -38,7 +38,8 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone">
 
                     <EditText
                         android:id="@+id/against_form"
@@ -47,7 +48,8 @@
                         android:hint="Against Form"
                         android:maxLines="1"
                         android:paddingLeft="5dp"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        />
 
                 </android.support.design.widget.TextInputLayout>
 

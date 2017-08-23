@@ -72,13 +72,29 @@ public class PieChartActivity extends AppCompatActivity  {
                 getDesparityResult();
             }
         });
+        findViewById(R.id.button_refresh).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDesparityResult();
+            }
+        });
         getDesparityResult();
     }
 
     private void getDesparityResult() {
         final Dialog dialog = AppProgressDialog.show(this);
+        String startDateString = null, enadDateString = null;
+        if (mStartDate != null && mEndDate != null) {
+            SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+            startDateString = SDF.format(mStartDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(mEndDate);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            Date newEndDate = calendar.getTime();
+            enadDateString = SDF.format(newEndDate);
+        }
         User me = User.getSavedUser(this);
-        ObjectFactory.getInstance().getAnalysisServiceInstance().getBrokerDesparity(me.getUserID(), null, null, new Callback<MessageDTO>() {
+        ObjectFactory.getInstance().getAnalysisServiceInstance().getBrokerDesparity(me.getUserID(), startDateString, enadDateString, new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 if (messageDTO.isSuccess()) {

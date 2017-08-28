@@ -93,7 +93,7 @@
                         android:id="@+id/prefered_seller_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Prefered Seller Name"
+                        android:hint="Prefered Buyer/Seller Name"
                         android:maxLines="1"
                         android:paddingLeft="5dp"
                         android:singleLine="true" />

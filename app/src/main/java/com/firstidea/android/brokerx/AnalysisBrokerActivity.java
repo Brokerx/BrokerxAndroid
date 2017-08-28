@@ -70,8 +70,6 @@ public class AnalysisBrokerActivity extends AppCompatActivity {
             }
         });
 
-        top11Broker();
-
         cal = Calendar.getInstance();
         startDay = endDay = cal.get(Calendar.DAY_OF_MONTH);
         startMonth = endMonth = cal.get(Calendar.MONTH);
@@ -90,6 +88,9 @@ public class AnalysisBrokerActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        top11Broker();
+
     }
 
     //to show next screen of top 11 paying Brokergae

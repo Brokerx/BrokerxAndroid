@@ -42,6 +42,7 @@ public class PieChartActivity extends AppCompatActivity  {
     private Date mStartDate,mEndDate;
     SimpleDateFormat SDF = new SimpleDateFormat("dd MMM yyyy");
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private Calendar cal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,11 @@ public class PieChartActivity extends AppCompatActivity  {
                 getDesparityResult();
             }
         });
+        cal = Calendar.getInstance();
+        startDay = endDay = cal.get(Calendar.DAY_OF_MONTH);
+        startMonth = endMonth = cal.get(Calendar.MONTH);
+        startYear = endYear = cal.get(Calendar.YEAR);
+
         getDesparityResult();
     }
 

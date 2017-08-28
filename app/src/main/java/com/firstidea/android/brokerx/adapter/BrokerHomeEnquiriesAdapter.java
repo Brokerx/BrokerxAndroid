@@ -49,7 +49,11 @@ public class BrokerHomeEnquiriesAdapter extends RecyclerView.Adapter<BrokerHomeE
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.title.setText(mValues.get(position).getItemName());
-        holder.userName.setText("Posted by "+mValues.get(position).getCreatedUser().getFullName());
+        if(holder.mItem.getAssignedToUser() != null) {
+            holder.userName.setText("Posted by You");
+        } else {
+            holder.userName.setText("Posted by " + mValues.get(position).getCreatedUser().getFullName());
+        }
         holder.address.setText(mValues.get(position).getLocation());
         holder.brokerage.setText("You get "+mValues.get(position).getBrokerageAmt());
         holder.qty.setText(mValues.get(position).getQty()+" "+qtys[mValues.get(position).getQtyUnit()]+availableLabel);

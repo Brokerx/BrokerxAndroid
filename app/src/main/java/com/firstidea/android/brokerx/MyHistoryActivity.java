@@ -31,14 +31,6 @@ import com.firstidea.android.brokerx.utils.AppUtils;
 import com.firstidea.android.brokerx.utils.SharedPreferencesUtil;
 import com.firstidea.android.brokerx.widget.AppProgressDialog;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -191,12 +183,14 @@ public class MyHistoryActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+/*
 
     private void exportAnalysis() {
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Datatypes in Java");
         Object[][] datatypes =new Object[mLeads.size()+1][12];
+*/
 /*
 
         {
@@ -207,7 +201,8 @@ public class MyHistoryActivity extends AppCompatActivity {
                 {"char", "Primitive", 1},
                 {"String", "Non-Primitive", "No fixed size"}
         };
-*/
+*//*
+
         datatypes[0] = new Object[]{"Item", "Buyer", "Broker", "Seller", "Deal Date","Quantity","Unit","Basic Charges","Transport Charges", "Misc. Chrges", "Tax Amount", "Total Amount"};
         for(int i=1; i<=mLeads.size();i++) {
             Lead lead = mLeads.get(i-1);
@@ -257,6 +252,7 @@ public class MyHistoryActivity extends AppCompatActivity {
         Toast.makeText(mContext, "Excel File Created", Toast.LENGTH_SHORT).show();
         Log.d("EXCEL Writer","Done");
     }
+*/
 
     private void getLeads() {
         final Dialog dialog = AppProgressDialog.show(mContext);
@@ -414,7 +410,7 @@ public class MyHistoryActivity extends AppCompatActivity {
             return true;
         }
         if(item.getItemId() == R.id.action_excel) {
-            exportAnalysis();
+//            exportAnalysis();
         }
         return super.onOptionsItemSelected(item);
     }

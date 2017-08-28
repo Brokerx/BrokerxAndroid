@@ -24,11 +24,12 @@ import com.firstidea.android.brokerx.http.model.Lead;
 public class AddEnquiryStepThreeActivity extends AppCompatActivity {
 
     private EditText editBasicPrice,  editTransportCharges, editMiscCharges, editTotalCharges, edit_tax_perc; //editExciseDuty
-    private Spinner spinnerBasicUnit,spinnerGSTType;// spinnerExciseUnit;
+    private Spinner spinnerBasicUnit,spinnerGSTType,spinnerGSTPperc;// spinnerExciseUnit;
     private CheckBox checkAsPerAvailability;
 //    private RadioButton radio_excise_inclusive, radio_excise_exclusive;
     private Lead mLead;
     private final int NEXT_ACTIVITY_REQ_CODE = 500;
+    private boolean isSetGstManually = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,7 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
         spinnerBasicUnit = (Spinner) findViewById(R.id.spinner_basic_price_unit);
 //        spinnerExciseUnit = (Spinner) findViewById(R.id.spinner_excise_duty_unit);
         spinnerGSTType = (Spinner) findViewById(R.id.spinner_gst_type);
+        spinnerGSTPperc = (Spinner) findViewById(R.id.spinner_gst_perc);
 
         spinnerBasicUnit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -108,6 +110,45 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
 
             }
         });
+        spinnerGSTPperc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 5) {
+                    findViewById(R.id.layout_gst_perc).setVisibility(View.VISIBLE);
+                    if(isSetGstManually) {
+                        isSetGstManually = false;
+                    } else {
+                        edit_tax_perc.setText("0");
+                    }
+                } else  {
+
+                    findViewById(R.id.layout_gst_perc).setVisibility(View.GONE);
+                    switch (position) {
+                        case 0:
+                            edit_tax_perc.setText("0");
+                            break;
+                        case 1:
+                            edit_tax_perc.setText("5");
+                            break;
+                        case 2:
+                            edit_tax_perc.setText("12");
+                            break;
+                        case 3:
+                            edit_tax_perc.setText("18");
+                            break;
+                        case 4:
+                            edit_tax_perc.setText("28");
+                            break;
+
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         if((mLead.getLeadID() != null && mLead.getLeadID() > 0)
             || (mLead.getBasicPrice() > 0)) {
@@ -121,6 +162,21 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
             editTransportCharges.setText(mLead.getTransportCharges()+"");
             editMiscCharges.setText(mLead.getMiscCharges()+"");
             edit_tax_perc.setText(mLead.getTax()+"");
+            float taxPerc = mLead.getTax();
+            if(taxPerc ==0){
+                spinnerGSTPperc.setSelection(0);
+            } else if(taxPerc ==5){
+                spinnerGSTPperc.setSelection(1);
+            }else if(taxPerc ==12){
+                spinnerGSTPperc.setSelection(2);
+            }else if(taxPerc ==18){
+                spinnerGSTPperc.setSelection(3);
+            }else if(taxPerc ==28){
+                spinnerGSTPperc.setSelection(4);
+            }else{
+                isSetGstManually = true;
+                spinnerGSTPperc.setSelection(5);
+            }
             /*if(mLead.getExcisetype()!= null && mLead.getExcisetype().equals(ExciseType.EXCLUSIVE.getType())) {
                 radio_excise_exclusive.setChecked(true);
             } else {

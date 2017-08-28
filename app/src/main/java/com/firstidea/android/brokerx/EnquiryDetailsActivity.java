@@ -359,7 +359,8 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             if (myStatus.equals(LeadCurrentStatus.Waiting.getStatus())) {
                 Revert_Chat_layout.setVisibility(View.VISIBLE);
                 Rej_Acc_Layout.setVisibility(View.VISIBLE);
-                btnPending.setVisibility(View.VISIBLE);
+                //disable pending deals option for now
+                btnPending.setVisibility(View.GONE);
                 btnPending.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -369,6 +370,9 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
             } else if (myStatus.equals(LeadCurrentStatus.Reverted.getStatus())) {
                 Revert_Chat_layout.setVisibility(View.VISIBLE);
                 Rej_Acc_Layout.setVisibility(View.GONE);
+                //disable pending deals option for now
+                findViewById(R.id.revert_enquiery).setVisibility(View.GONE);
+                lblRevert.setVisibility(View.GONE);
                 lblRevert.setText("Move to Pending");
                 lblRevert.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -507,7 +511,8 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                             startActivity(intent);
                         }
                     });
-                    btnPending.setVisibility(View.VISIBLE);
+                    //disable pending deals option for now
+                    btnPending.setVisibility(View.GONE);
                     btnPending.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -632,6 +637,12 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
 
         if(alteredFields.contains("comments,")) {
             comments.setBackgroundColor(hilightColor);
+        }
+        if (alteredFields.contains("gsttype")) {
+            taxAmountLbl.setBackgroundColor(hilightColor);
+        }
+        if (alteredFields.contains("tax")) {
+            taxAmount.setBackgroundColor(hilightColor);
         }
 
 

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -89,9 +90,9 @@ public class MyCircleRecyclerViewAdapter extends SectionedRecyclerViewAdapter<My
         holder.rating.setText(holder.mItem.getRating());
         holder.address.setText(holder.mItem.getAddress());
         if (holder.mItem.getStatus().equals(ConnectionStatus.PENDING.getStatus()) && !holder.mItem.isMyRequest()) {
-            holder.mOverflowIcon.setVisibility(View.VISIBLE);
+            holder.layout_btn.setVisibility(View.VISIBLE);
         } else {
-            holder.mOverflowIcon.setVisibility(View.GONE);
+            holder.layout_btn.setVisibility(View.GONE);
         }
        if(!TextUtils.isEmpty(holder.mItem.getImageURL())) {
             String imgUrl = SingletonRestClient.BASE_PROFILE_IMAGE_URL+"thumb_"+holder.mItem.getImageURL();
@@ -109,16 +110,32 @@ public class MyCircleRecyclerViewAdapter extends SectionedRecyclerViewAdapter<My
                     activity.setResult(Activity.RESULT_OK, intent);
                     activity.finish();
                 } else {
-                    Intent intent = new Intent(holder.mOverflowIcon.getContext(), BrokerDetailsActivity.class);
+                    Intent intent = new Intent(holder.mView.getContext(), BrokerDetailsActivity.class);
                     intent.putExtra(User.KEY, holder.mItem);
-                    holder.mOverflowIcon.getContext().startActivity(intent);
+                    holder.mView.getContext().startActivity(intent);
                 }
             }
         });
-        if (holder.mOverflowIcon.getVisibility() == View.VISIBLE) {
+
+        holder.btn_accept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                     mChangeStatusListener.onChangeStatus(holder.mItem,ConnectionStatus.ACCEPTED.getStatus());
+            }
+        });
+
+        holder.btn_reject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mChangeStatusListener.onChangeStatus(holder.mItem,ConnectionStatus.REJECTED.getStatus());
+            }
+        });
+
+        /*if (holder.layout_btn.getVisibility() == View.VISIBLE) {
             holder.mOverflowIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                         PopupMenu popup = new PopupMenu(v.getContext(), v);
                         popup.inflate(R.menu.menu_my_circle_list_item);
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -135,7 +152,7 @@ public class MyCircleRecyclerViewAdapter extends SectionedRecyclerViewAdapter<My
                         popup.show();
                 }
             });
-        }
+        }*/
     }
 
 
@@ -162,8 +179,9 @@ public class MyCircleRecyclerViewAdapter extends SectionedRecyclerViewAdapter<My
         public final TextView address;
         public final TextView rating;
         public User mItem;
-        private ImageView mOverflowIcon;
+//        private ImageView mOverflowIcon;
         private ImageView profileImage;
+        private LinearLayout layout_btn,btn_reject,btn_accept;
 
         public ViewHolder(View view) {
             super(view);
@@ -172,8 +190,11 @@ public class MyCircleRecyclerViewAdapter extends SectionedRecyclerViewAdapter<My
             address = (TextView) view.findViewById(R.id.address);
             title = (TextView) view.findViewById(R.id.title);
             rating = (TextView) view.findViewById(R.id.rating);
-            mOverflowIcon = (ImageView) view.findViewById(R.id.mfp_context_menu);
+//            mOverflowIcon = (ImageView) view.findViewById(R.id.mfp_context_menu);
             profileImage = (ImageView) view.findViewById(R.id.user_image);
+            layout_btn = (LinearLayout) view.findViewById(R.id.layout_btn);
+            btn_reject = (LinearLayout) view.findViewById(R.id.btn_reject);
+            btn_accept = (LinearLayout) view.findViewById(R.id.btn_accept);
 
         }
 

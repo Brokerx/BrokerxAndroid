@@ -67,6 +67,14 @@
         <item>GST</item>
         <item>IGST</item>
     </string-array>
+    <string-array name="gst_perc">
+        <item>Gst Percentage</item>
+        <item>5%</item>
+        <item>12%</item>
+        <item>18%</item>
+        <item>28%</item>
+        <item>Other</item>
+    </string-array>
     <string-array name="packing">
         <item>MS regular drum</item>
         <item>MS Brand new drum</item>

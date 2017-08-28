@@ -912,7 +912,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:gravity="center_horizontal"
-                            android:text="Revet With Enquiry"
+                            android:text="Revert With Enquiry"
                             android:textColor="@color/teal"
                             android:textSize="16sp" />
 

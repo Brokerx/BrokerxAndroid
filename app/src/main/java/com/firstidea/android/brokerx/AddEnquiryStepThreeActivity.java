@@ -177,6 +177,9 @@ public class AddEnquiryStepThreeActivity extends AppCompatActivity {
                 isSetGstManually = true;
                 spinnerGSTPperc.setSelection(5);
             }
+            if(mLead.getGstType() != null) {
+                spinnerGSTType.setSelection(mLead.getGstType());
+            }
             /*if(mLead.getExcisetype()!= null && mLead.getExcisetype().equals(ExciseType.EXCLUSIVE.getType())) {
                 radio_excise_exclusive.setChecked(true);
             } else {

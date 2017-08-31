@@ -138,9 +138,9 @@ public class AddEnquiryStepOneActivity extends AppCompatActivity {
             findViewById(R.id.layout_item_spinner).setVisibility(View.VISIBLE);
             spinnerItem.setSelection(selection);
             User me = User.getSavedUser(this);
-            if(me.getUserID().equals(mLead.getBrokerID())) {
+//            if(me.getUserID().equals(mLead.getBrokerID())) {
                 spinnerItem.setEnabled(false);
-            }
+//            }
             /*if(spinnerPacking.getAdapter().getCount()-1 == mLead.getPacking().intValue()) {
                 findViewById(R.id.layout_packing_type).setVisibility(View.VISIBLE);
                 if(mLead.getLeadID() != null && !TextUtils.isEmpty(mLead.getPackingType())) {

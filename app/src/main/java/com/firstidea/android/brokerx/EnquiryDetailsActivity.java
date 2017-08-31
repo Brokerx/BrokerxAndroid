@@ -244,6 +244,9 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
         if(myStatus.equals(otherUserStatus) && myStatus.equals(LeadCurrentStatus.Pending.getStatus())) {
             mLead.setMoveToPending(true);
         }
+        if(myStatus.equals(LeadCurrentStatus.Rejected.getStatus())) {
+            mLead.setRejectingDeal(true);
+        }
         mLead.setLastUpdUserID(me.getUserID());
         final Dialog dialog = AppProgressDialog.show(this);
        /* LeadService leadService = SingletonRestClient.createService(LeadService.class, this);

@@ -63,6 +63,7 @@ public class Lead implements Parcelable {
     User assignedToUser;
     private String fieldsAltered;
     private Boolean isMoveToPending;
+    private Boolean isRejectingDeal;
 
     public Integer getLeadID() {
         return leadID;
@@ -422,6 +423,14 @@ public class Lead implements Parcelable {
 
     public void setMoveToPending(Boolean moveToPending) {
         isMoveToPending = moveToPending;
+    }
+
+    public Boolean getRejectingDeal() {
+        return isRejectingDeal;
+    }
+
+    public void setRejectingDeal(Boolean rejectingDeal) {
+        isRejectingDeal = rejectingDeal;
     }
 
     public String getCreatedUserType() {

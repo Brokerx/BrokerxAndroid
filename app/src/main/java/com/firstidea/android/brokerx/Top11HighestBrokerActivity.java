@@ -28,6 +28,8 @@ import com.firstidea.android.brokerx.widget.AppProgressDialog;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -113,6 +115,19 @@ public class Top11HighestBrokerActivity extends AppCompatActivity implements Ana
             public void success(MessageDTO messageDTO, Response response) {
                 if(messageDTO.isSuccess()) {
                     mList = Lead.createListFromJson(messageDTO.getData());
+                    Collections.sort(mList, new Comparator<Lead>() {
+                        @Override
+                        public int compare(Lead lhs, Lead rhs) {
+                            float lhsBuyerBrokerage = lhs.getBuyerBrokerage();
+                            float lhsSellerBrokerage = lhs.getSellerBrokerage();
+                            float lhsTotalBrokerage = lhsBuyerBrokerage+lhsSellerBrokerage;
+
+                            float rhsBuyerBrokerage = rhs.getBuyerBrokerage();
+                            float rhsSellerBrokerage = rhs.getSellerBrokerage();
+                            float rhsTotalBrokerage = rhsBuyerBrokerage+rhsSellerBrokerage;
+                            return (lhsTotalBrokerage > rhsTotalBrokerage ? -1 : 1);
+                        }
+                    });
                     Analysis11HighestBrokerAdapter mAdapter = new Analysis11HighestBrokerAdapter(mContext, mList, Top11HighestBrokerActivity.this);
                     mRecyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();

@@ -11,16 +11,26 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firstidea.android.brokerx.BrokerHomeActivity;
 import com.firstidea.android.brokerx.ChatActivity;
 import com.firstidea.android.brokerx.Constants;
+import com.firstidea.android.brokerx.MyHistoryActivity;
 import com.firstidea.android.brokerx.MycircleActivity;
 import com.firstidea.android.brokerx.NotificationActivity;
 import com.firstidea.android.brokerx.R;
 import com.firstidea.android.brokerx.SplashActivity;
+import com.firstidea.android.brokerx.adapter.BuyerSellerHomeEnquiriesAdapter;
 import com.firstidea.android.brokerx.enums.ChatType;
 import com.firstidea.android.brokerx.http.model.Chat;
 import com.firstidea.android.brokerx.http.model.Notification;
@@ -40,6 +50,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static String TYPE_CONNECTION_REQUEST_REJECTED = "ConnectionRequestRejected";
     public static String TYPE_USER_COMMUNICATION = "UserCommunication";
     public static String TYPE_NEW_NOTIFICATION = "NewNotification";
+    public static String TYPE_DEAL_DONE = "DealDone";
+    Notification notification = null;
     /**
      * Called when message is received.
      *
@@ -61,7 +73,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
-
         Map<String, String> dataMap = remoteMessage.getData();
         // Check if message contains a data payload.
         if (dataMap.size() > 0) {
@@ -75,15 +86,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 generateNotification("Broker-X", dataContent+" has created a lead for you", type, null);
                 SharedPreferencesUtil.putSharedPreferencesBoolean(this, Constants.KEY_LEAD_LIST_UPDATED, true);
                 //also send broadcast
-            }else if(type != null && type.equals(TYPE_NEW_NOTIFICATION)) {
+            }else if(type != null && (type.equals(TYPE_NEW_NOTIFICATION)
+                    || type.equals(TYPE_DEAL_DONE))) {
                 String dataContent =  dataMap.get("data");
                 String payload =  dataMap.get("payload");
-                Notification notification = null;
+
                 if(!TextUtils.isEmpty(payload)) {
                     Gson gson = new Gson();
                     notification = gson.fromJson(payload, Notification.class);
                 }
-                generateNotification("Broker-X", "New Notification", type, null);
+               /* if(type.equals(TYPE_DEAL_DONE)) {
+                    showDealDoneDialog(dataContent, notification);
+                } else {*/
+                    generateNotification(dataContent, "Dela Done", type, null);
+//                }
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Constants.ACTION_NEW_NOTIFICATION);
                 broadcastIntent.putExtra("type","notification");
@@ -129,6 +145,38 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See generateNotification method below.
     }
+
+    private void showDealDoneDialog(String dataContent, final Notification notification) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog alertDialog = builder.create();
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = layoutInflater.inflate(R.layout.deal_done_notification_dialog,null);
+        String msg = "Hello, our <b>"+notification.getItemName()+"</b> Deal has been <b>DONE</b>. you can see the deal details in History.";
+        ((TextView)customView.findViewById(R.id.message)).setText(Html.fromHtml(msg));
+        ((TextView)customView.findViewById(R.id.title)).setText(dataContent);
+        customView.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        customView.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO open lead details activity
+//                Toast.makeText(MyFirebaseMessagingService.this, "TODO open lead details activity", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MyFirebaseMessagingService.this, MyHistoryActivity.class);
+                intent.putExtra("IS_FROM_NOTIFICATION", true);
+                intent.putExtra("NOTIFICATION_LED_ID", notification.getLeadID());
+                startActivity(intent);
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.setContentView(customView);
+        alertDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        alertDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED,0);
+        alertDialog.show();
+    }
     // [END receive_message]
 
     /**
@@ -144,6 +192,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             intent = new Intent(this, MycircleActivity.class);
         } else if(type.equals(TYPE_NEW_NOTIFICATION)) {
             intent = new Intent(this, NotificationActivity.class);
+        } else if(type.equals(TYPE_DEAL_DONE)) {
+            intent = new Intent(MyFirebaseMessagingService.this, MyHistoryActivity.class);
+            intent.putExtra("IS_FROM_NOTIFICATION", true);
+            intent.putExtra("NOTIFICATION_LED_ID", notification.getLeadID());
         } else if(type.equals(TYPE_USER_COMMUNICATION)) {
             intent = new Intent(this, ChatActivity.class);
             intent.putExtra(Constants.OTHER_USER_NAME, chat.getFromUserName());
@@ -162,7 +214,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.app_icon)
                 .setContentTitle(title)
                 .setContentText(content)
                 .setAutoCancel(true)

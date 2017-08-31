@@ -339,6 +339,18 @@ public class MyHistoryActivity extends AppCompatActivity {
                     mLeads.addAll(leads);
                     MyHistoryAdapter mAdapter = new MyHistoryAdapter(mContext, mLeads, me.isBroker());
                     mRecyclerView.setAdapter(mAdapter);
+                    if(getIntent().hasExtra("IS_FROM_NOTIFICATION") && getIntent().getBooleanExtra("IS_FROM_NOTIFICATION", false)) {
+                        Integer leadID = getIntent().getIntExtra("NOTIFICATION_ID", 0);
+                        for(Lead lead: mLeads) {
+                            if(lead.getLeadID().equals(leadID)) {
+                                Intent next = new Intent(MyHistoryActivity.this, MyHistoryDetailsActivity.class);
+                                next.putExtra(Lead.KEY_LEAD,lead);
+                                startActivity(next);
+                                getIntent().removeExtra("IS_FROM_NOTIFICATION");
+                                break;
+                            }
+                        }
+                    }
                 } else {
                     Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
                 }

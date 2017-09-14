@@ -220,6 +220,10 @@
             android:name=".NewBuyerAnalysisActivity"
             android:label="@string/title_activity_new_buyer_analysis"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NewNotificationActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

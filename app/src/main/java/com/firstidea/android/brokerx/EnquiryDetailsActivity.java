@@ -12,6 +12,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -122,6 +123,8 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
     LinearLayout Revert_Chat_layout;
     @BindView(R.id.cur_status_layout)
     LinearLayout CurStatusLayout;
+    @BindView(R.id.btn_delete)
+    Button btnDelete;
 
     private Lead mLead;
     private User me;
@@ -387,6 +390,29 @@ public class EnquiryDetailsActivity extends AppCompatActivity {
                 Revert_Chat_layout.setVisibility(View.GONE);
                 Rej_Acc_Layout.setVisibility(View.GONE);
                 lblCancelled.setVisibility(View.VISIBLE);
+                btnDelete.setVisibility(View.VISIBLE);
+                btnDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mLead.setDeletedbyUserIDs(me.getUserID().toString());
+                        mLead.setDeleting(true);
+                        final Dialog dialog = AppProgressDialog.show(EnquiryDetailsActivity.this);
+                        ObjectFactory.getInstance().getLeadServiceInstance().saveLead(mLead, new Callback<MessageDTO>() {
+                            @Override
+                            public void success(MessageDTO messageDTO, Response response) {
+                                dialog.dismiss();
+                                isRefreshParent = true;
+                                finish();
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                                Toast.makeText(EnquiryDetailsActivity.this, "Some Error Occurred, Please Try again", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+                });
             } else if (myStatus.equals(LeadCurrentStatus.Pending.getStatus())) {
                 btnReOpen.setVisibility(View.VISIBLE);
                 btnReOpen.setOnClickListener(new View.OnClickListener() {

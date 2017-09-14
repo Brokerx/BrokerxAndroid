@@ -95,11 +95,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     Gson gson = new Gson();
                     notification = gson.fromJson(payload, Notification.class);
                 }
-               /* if(type.equals(TYPE_DEAL_DONE)) {
-                    showDealDoneDialog(dataContent, notification);
-                } else {*/
-                    generateNotification(dataContent, "Dela Done", type, null);
-//                }
+                if(!type.equals(TYPE_DEAL_DONE)) {
+                    generateNotification("Broker-X", "New Notification", type, null);
+                } else {
+                    generateNotification(dataContent, "Deal Done", type, null);
+                }
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Constants.ACTION_NEW_NOTIFICATION);
                 broadcastIntent.putExtra("type","notification");

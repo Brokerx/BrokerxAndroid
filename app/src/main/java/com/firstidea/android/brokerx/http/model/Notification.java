@@ -22,6 +22,7 @@ public class Notification implements Parcelable {
     private String message;
     private Boolean isRead;
     private String createdDttm;
+    private String category;
     private User fromUser;
 
     public Integer getNotificationID() {
@@ -104,6 +105,14 @@ public class Notification implements Parcelable {
         this.fromUser = fromUser;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public Notification() {
     }
 
@@ -119,6 +128,7 @@ public class Notification implements Parcelable {
         dest.writeValue(this.fromUserID);
         dest.writeValue(this.leadID);
         dest.writeString(this.type);
+        dest.writeString(this.category);
         dest.writeString(this.itemName);
         dest.writeString(this.message);
         dest.writeValue(this.isRead);
@@ -132,6 +142,7 @@ public class Notification implements Parcelable {
         this.fromUserID = (Integer) in.readValue(Integer.class.getClassLoader());
         this.leadID = (Integer) in.readValue(Integer.class.getClassLoader());
         this.type = in.readString();
+        this.category = in.readString();
         this.itemName = in.readString();
         this.message = in.readString();
         this.isRead = (Boolean) in.readValue(Boolean.class.getClassLoader());

@@ -151,7 +151,7 @@ public class BrokerHomeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 unreadNotifCount.setVisibility(View.GONE);
-                Intent intent = new Intent(BrokerHomeActivity.this, NotificationActivity.class);
+                Intent intent = new Intent(BrokerHomeActivity.this, NewNotificationActivity.class);
                 startActivity(intent);
             }
         });
@@ -178,7 +178,7 @@ public class BrokerHomeActivity extends AppCompatActivity
             startActivity(intent);
         }
         if (id == R.id.action_notification) {
-            Intent intent = new Intent(this, NotificationActivity.class);
+            Intent intent = new Intent(this, NewNotificationActivity.class);
             startActivity(intent);
             return true;
         }

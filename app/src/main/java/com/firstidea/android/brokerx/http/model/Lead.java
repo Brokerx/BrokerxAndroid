@@ -58,12 +58,14 @@ public class Lead implements Parcelable {
     private Integer LastUpdUserID;
     private String lastUpdDateTime;
     private String createdUserType;
+    private String deletedbyUserIDs;
     User createdUser;
     User broker;
     User assignedToUser;
     private String fieldsAltered;
     private Boolean isMoveToPending;
     private Boolean isRejectingDeal;
+    private Boolean isDeleting;
 
     public Integer getLeadID() {
         return leadID;
@@ -427,6 +429,22 @@ public class Lead implements Parcelable {
 
     public Boolean getRejectingDeal() {
         return isRejectingDeal;
+    }
+
+    public Boolean getDeleting() {
+        return isDeleting;
+    }
+
+    public void setDeleting(Boolean deleting) {
+        isDeleting = deleting;
+    }
+
+    public String getDeletedbyUserIDs() {
+        return deletedbyUserIDs;
+    }
+
+    public void setDeletedbyUserIDs(String deletedbyUserIDs) {
+        this.deletedbyUserIDs = deletedbyUserIDs;
     }
 
     public void setRejectingDeal(Boolean rejectingDeal) {

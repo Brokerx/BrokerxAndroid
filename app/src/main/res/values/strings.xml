@@ -124,4 +124,5 @@
     <string name="title_activity_chat">ChatActivity</string>
     <string name="title_activity_new_broker_analysis">NewBrokerAnalysisActivity</string>
     <string name="title_activity_new_buyer_analysis">NewBuyerAnalysisActivity</string>
+    <string name="title_activity_new_notification">NewNotificationActivity</string>
 </resources>

@@ -73,6 +73,7 @@ public class MyHistoryActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("My History");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
         mContext = this;
         me = User.getSavedUser(this);
         mStartDateView = (TextView) findViewById(R.id.starDate);
@@ -177,7 +178,7 @@ public class MyHistoryActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if(!mIsFromAnalysis) {
-            return false;
+            return super.onCreateOptionsMenu(menu);
         }
         getMenuInflater().inflate(R.menu.menu_analysis, menu);
         return super.onCreateOptionsMenu(menu);

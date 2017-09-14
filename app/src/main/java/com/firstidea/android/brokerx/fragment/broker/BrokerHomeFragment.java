@@ -10,6 +10,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -117,13 +118,13 @@ public class BrokerHomeFragment extends Fragment {
 
     public void getBrokerLeads() {
         final Dialog dialog = AppProgressDialog.show(mContext);
-        User user = User.getSavedUser(mContext);
+        final User user = User.getSavedUser(mContext);
         ObjectFactory.getInstance().getLeadServiceInstance().getBrokerLeads(user.getUserID(), null, null, null, null, new Callback<MessageDTO>() {
             @Override
             public void success(MessageDTO messageDTO, Response response) {
                 if(messageDTO.isSuccess()) {
                     ArrayList<Lead> leads = Lead.createListFromJson(messageDTO.getData());
-                    sortLeadsAndInitViews(leads);
+                    sortLeadsAndInitViews(leads, user);
                 } else {
                     Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
                 }
@@ -140,10 +141,13 @@ public class BrokerHomeFragment extends Fragment {
         });
     }
 
-    private void sortLeadsAndInitViews(ArrayList<Lead> leads) {
+    private void sortLeadsAndInitViews(ArrayList<Lead> leads, User user) {
         ArrayList<Lead> buyerLeads = new ArrayList<>();
         ArrayList<Lead> sellerLeads = new ArrayList<>();
         for(Lead lead: leads) {
+                if(!TextUtils.isEmpty(lead.getDeletedbyUserIDs()) && lead.getDeletedbyUserIDs().contains(","+user.getSavedUser(mContext).getUserID()+",")){
+                    continue;
+                }
             if(lead.getType().equals(LeadType.BUYER.getType())) {
                 buyerLeads.add(lead);
             } else {

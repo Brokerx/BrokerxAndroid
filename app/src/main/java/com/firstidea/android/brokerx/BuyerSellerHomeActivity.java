@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -125,7 +126,7 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
 
     private void getLeads() {
         final Dialog dialog = AppProgressDialog.show(mContext);
-        User user = User.getSavedUser(mContext);
+        final User user = User.getSavedUser(mContext);
         String type = isUserTypeSpinnerInitilized ? spinner_nav.getSelectedItem().toString().toUpperCase().charAt(0)+"":LeadType.BUYER.getType();
         String status = ""+ LeadCurrentStatus.Accepted;
         ObjectFactory.getInstance().getLeadServiceInstance().getActiveLeads(user.getUserID(), type, new Callback<MessageDTO>() {
@@ -138,14 +139,18 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
                     Collections.sort(leads, new Comparator<Lead>() {
                         @Override
                         public int compare(Lead lhs, Lead rhs) {
-                            String lhsString = lhs.getLastUpdDateTime();
-                            String rhsString = rhs.getLastUpdDateTime();
                             Date lhsDate = ApptDateUtils.getServerFormatedDateAndTime(lhs.getLastUpdDateTime());
                             Date rhsDate = ApptDateUtils.getServerFormatedDateAndTime(rhs.getLastUpdDateTime());
                             return (lhsDate.getTime() > rhsDate.getTime() ? -1 : 1);
                         }
                     });
-                    mLeads.addAll(leads);
+
+                    for (Lead lead: leads) {
+                        if(!TextUtils.isEmpty(lead.getDeletedbyUserIDs()) && lead.getDeletedbyUserIDs().contains(","+user.getSavedUser(mContext).getUserID()+",")){
+                            continue;
+                        }
+                        mLeads.add(lead);
+                    }
                     /*if(!isUserTypeSpinnerInitilized){
                         initActionbarSpinner();
                     }*/
@@ -176,7 +181,7 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 unreadNotifCount.setVisibility(View.GONE);
-                Intent intent = new Intent(BuyerSellerHomeActivity.this, NotificationActivity.class);
+                Intent intent = new Intent(BuyerSellerHomeActivity.this, NewNotificationActivity.class);
                 startActivity(intent);
             }
         });
@@ -200,7 +205,7 @@ public class BuyerSellerHomeActivity extends AppCompatActivity  {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.action_notification) {
-            Intent intent = new Intent(BuyerSellerHomeActivity.this, NotificationActivity.class);
+            Intent intent = new Intent(BuyerSellerHomeActivity.this, NewNotificationActivity.class);
             startActivity(intent);
         } else if(id == R.id.action_chat) {
             Intent intent = new Intent(BuyerSellerHomeActivity.this, ChatListActivity.class);
